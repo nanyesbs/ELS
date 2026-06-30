@@ -26,18 +26,12 @@ const Navbar: React.FC<NavbarProps> = ({
             <div className="px-4 md:px-8 py-3 md:py-4 max-w-[1400px] mx-auto flex items-center justify-between">
                 
                 {/* Brand Logo Slot */}
-                <div className="flex items-center gap-3">
-                    <div 
-                        onClick={() => navigate('/')}
-                        className="h-10 px-4 border border-dashed border-white/20 dark:border-black/20 rounded flex items-center justify-center text-[10px] uppercase tracking-widest text-white/40 dark:text-black/40 cursor-pointer hover:border-[#1552ab] transition-colors"
-                    >
-                        [ Logo Slot ]
-                    </div>
-                    <span 
-                        onClick={() => navigate('/')}
-                        className="text-[9px] md:text-[10px] font-avenir-bold text-white dark:text-black uppercase tracking-[0.2em] md:tracking-[0.3em] cursor-pointer hidden sm:block"
-                    >
-                        {t('nav.tagline', 'ELS MADRID 2026')}
+                <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
+                    <img src="/logo-e21.png" alt="E21 Logo" className="h-6 md:h-7 w-auto object-contain" />
+                    <img src="/logo-esbs.png" alt="ESBS Logo" className="h-6 md:h-7 w-auto object-contain" />
+                    <div className="w-[1px] h-5 bg-white/20 dark:bg-black/20 mx-1" />
+                    <span className="text-[9px] md:text-[10px] font-avenir-bold text-white dark:text-black uppercase tracking-[0.25em] md:tracking-[0.3em]">
+                        ELS | MADRID 2026
                     </span>
                 </div>
 

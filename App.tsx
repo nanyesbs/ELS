@@ -70,54 +70,67 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
-      <nav className="w-full px-6 md:px-12 py-6 flex items-center justify-between border-b border-white/5">
+    <div className="min-h-screen bg-[#efefef] dark:bg-[#0a0a0a] text-black dark:text-white flex flex-col transition-colors duration-500">
+      {/* Navigation */}
+      <nav className="w-full px-6 md:px-12 py-5 flex items-center justify-between border-b border-black/5 dark:border-white/5">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-[#1552ab]/20 border border-[#1552ab]/30 flex items-center justify-center text-[#1552ab] text-xs font-bold">E</div>
-          <span className="text-xs font-avenir-bold uppercase tracking-[3px] text-white/60">ELS Madrid 2026</span>
+          <img src="/logo-e21.png" alt="E21 Logo" className="h-6 md:h-7 w-auto object-contain" />
+          <img src="/logo-esbs.png" alt="ESBS Logo" className="h-6 md:h-7 w-auto object-contain" />
+          <div className="w-[1px] h-5 bg-black/10 dark:bg-white/10 mx-1" />
+          <span className="text-[9px] md:text-[10px] font-avenir-bold uppercase tracking-[0.25em] text-[#1552ab] dark:text-white">
+            ELS | Madrid 2026
+          </span>
         </div>
         <button
           onClick={() => navigate('/admin/login')}
-          className="text-[10px] font-avenir-bold uppercase tracking-widest text-white/30 hover:text-white/60 transition-colors flex items-center gap-1.5"
+          className="text-[9px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/70 dark:text-white/50 hover:text-[#1552ab] dark:hover:text-white transition-colors flex items-center gap-1.5"
         >
           <Shield size={12} /> Admin
         </button>
       </nav>
 
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1552ab]/10 border border-[#1552ab]/20 rounded-full mb-10">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#1552ab] animate-pulse" />
-          <span className="text-[10px] font-avenir-bold uppercase tracking-[3px] text-[#1552ab]">
-            10–12 November 2026 · Madrid, Spain
-          </span>
+      {/* Hero Body */}
+      <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 md:py-24 text-center max-w-[1400px] mx-auto w-full">
+        {/* Logo and Flame stack */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-8 md:mb-12">
+          <img src="/logo-text.png" alt="European Leaders Summit" className="h-14 sm:h-20 md:h-24 lg:h-28 w-auto object-contain dark:invert" />
+          <div className="flex items-center gap-3">
+            <img src="/logo-e21.png" alt="E21 Logo" className="h-10 sm:h-14 md:h-16 w-auto object-contain" />
+            <img src="/logo-esbs.png" alt="ESBS Logo" className="h-10 sm:h-14 md:h-16 w-auto object-contain" />
+          </div>
         </div>
 
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold uppercase tracking-tight text-white max-w-4xl leading-none mb-6">
-          Europe Shall<br />Be Saved
-        </h1>
-
-        <p className="text-base md:text-lg text-white/50 max-w-xl leading-relaxed mb-12">
-          The ELS Retreat participant directory — connect with leaders, ministers,
-          and change-makers gathering in Madrid this November.
+        {/* Date Subtitle */}
+        <p className="text-[11px] sm:text-xs md:text-sm font-avenir-bold text-[#1552ab] dark:text-white/70 uppercase tracking-[0.3em] sm:tracking-[0.4em] mb-6">
+          10 - 12 November 2026
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center gap-4">
+        {/* Location badge */}
+        <div className="inline-block border-2 border-[#1552ab] px-8 py-2.5 rounded-xl text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[3px] mb-12 sm:mb-16 bg-transparent">
+          Madrid, Spain
+        </div>
+
+        {/* Actions panel */}
+        <div className="flex flex-col items-center gap-6 z-10">
           <button
             onClick={() => navigate('/sign-up')}
-            className="flex items-center gap-3 px-8 py-5 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-2xl font-avenir-bold uppercase text-xs tracking-[3px] transition-all hover:scale-105 active:scale-95 shadow-lg"
+            className="flex items-center gap-3 px-10 py-5 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] active:scale-95 transition-all shadow-glow hover:shadow-xl"
           >
-            Join the Directory <ArrowRight size={16} />
+            Join the Directory <ArrowRight size={14} />
           </button>
-          <p className="text-[10px] text-white/30 font-avenir-medium uppercase tracking-wider">
+          <p className="text-[9px] text-[#1552ab]/60 dark:text-white/40 font-avenir-medium uppercase tracking-[2px]">
             Already registered?{' '}
-            <span className="text-white/50">Check your email for your personal link.</span>
+            <span className="text-[#1552ab] dark:text-white underline cursor-pointer" onClick={() => alert('Search your email inbox for "ELS Connection" or "esbsinterview@gmail.com" to find your secure access link.')}>
+              Check your email for your personal link.
+            </span>
           </p>
         </div>
       </main>
 
-      <footer className="border-t border-white/5 py-8 text-center">
-        <p className="text-[10px] text-white/20 font-avenir-medium uppercase tracking-widest">
-          Empowered21 + Europe Shall Be Saved · Global Church
+      {/* Footer */}
+      <footer className="border-t border-black/5 dark:border-white/5 py-8 text-center bg-black/2 dark:bg-white/2">
+        <p className="text-[9px] text-[#1552ab]/40 dark:text-white/20 font-avenir-bold uppercase tracking-[0.3em]">
+          Empowered21 • Europe Shall Be Saved • Global Church
         </p>
       </footer>
     </div>
@@ -146,7 +159,7 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black dark:bg-white text-white dark:text-black py-20 md:py-32 px-4 animate-fade-in">
+    <div className="min-h-screen bg-black dark:bg-[#efefef] text-white dark:text-black py-20 md:py-32 px-4 animate-fade-in">
       <div className="max-w-3xl mx-auto mb-8">
         <button
           onClick={() => navigate('/')}
@@ -186,7 +199,10 @@ const TokenPage: React.FC = () => {
   const [layoutMode, setLayoutMode] = useState<LayoutMode>(
     () => (localStorage.getItem('els_layout') as LayoutMode) || 'grid4'
   );
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('els_theme') === 'dark');
+  const [darkMode, setDarkMode] = useState(() => {
+    const val = localStorage.getItem('els_theme');
+    return val === null ? true : val === 'dark';
+  });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filterCountry, setFilterCountry] = useState('ALL');
   const [filterRole, setFilterRole] = useState('ALL');
@@ -561,128 +577,6 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
   );
 };
 
-
-// ─────────────────────────────────────────────
-//  Bios Gallery — admin view of completed profiles
-// ─────────────────────────────────────────────
-const BiosGallery: React.FC<{
-  bios: Participant[];
-  onDelete: (id: string) => Promise<void>;
-}> = ({ bios, onDelete }) => {
-  const [selected, setSelected] = useState<Participant | null>(null);
-  const [search, setSearch] = useState('');
-
-  const filtered = React.useMemo(() =>
-    bios.filter(p => {
-      const q = search.toLowerCase();
-      return !q ||
-        (p.name || '').toLowerCase().includes(q) ||
-        (p.organization || '').toLowerCase().includes(q) ||
-        (p.country || '').toLowerCase().includes(q) ||
-        (p.role || '').toLowerCase().includes(q);
-    }), [bios, search]);
-
-  return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Search */}
-      <div className="relative max-w-md">
-        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" />
-        <input
-          type="text"
-          placeholder="Search bios by name, role, org, country…"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full bg-white/5 border border-white/10 rounded-xl p-3 pl-12 text-sm text-white outline-none placeholder:text-white/20 focus:border-[#1552ab] transition-all"
-        />
-      </div>
-
-      {/* Count */}
-      <p className="text-xs text-white/40 font-avenir-medium">
-        {filtered.length} bio{filtered.length !== 1 ? 's' : ''} completed
-      </p>
-
-      {/* Cards grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-        {filtered.map(p => (
-          <button
-            key={p.id}
-            onClick={() => setSelected(p)}
-            className="group text-left bg-white/5 border border-white/10 hover:border-[#1552ab]/40 rounded-2xl p-6 transition-all duration-300 hover:bg-white/8 hover:shadow-lg hover:shadow-[#1552ab]/5"
-          >
-            {/* Avatar + name row */}
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 rounded-full bg-[#1552ab]/20 border border-[#1552ab]/30 flex items-center justify-center shrink-0">
-                <span className="text-[#1552ab] font-avenir-bold text-lg">
-                  {(p.name || p.registered_name || '?')[0].toUpperCase()}
-                </span>
-              </div>
-              <div className="min-w-0">
-                <div className="font-avenir-bold text-white text-sm truncate">
-                  {p.name || p.registered_name}
-                </div>
-                <div className="text-[10px] text-[#1552ab] truncate mt-0.5">
-                  {p.role || '—'}
-                </div>
-              </div>
-            </div>
-
-            {/* Details */}
-            <div className="space-y-1.5 mb-4">
-              {p.organization && (
-                <div className="text-[11px] text-white/60 truncate">
-                  🏛 {p.organization}
-                </div>
-              )}
-              {p.country && (
-                <div className="text-[11px] text-white/60 truncate">
-                  📍 {p.city ? `${p.city}, ` : ''}{p.country}
-                </div>
-              )}
-              {p.languages_spoken && p.languages_spoken.length > 0 && (
-                <div className="text-[11px] text-white/40 truncate">
-                  🗣 {p.languages_spoken.slice(0, 3).join(' · ')}
-                  {p.languages_spoken.length > 3 ? ` +${p.languages_spoken.length - 3}` : ''}
-                </div>
-              )}
-            </div>
-
-            {/* Bio excerpt */}
-            {p.short_bio && (
-              <p className="text-[11px] text-white/50 line-clamp-3 leading-relaxed">
-                {p.short_bio}
-              </p>
-            )}
-
-            {/* CTA */}
-            <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
-              <span className="text-[9px] font-avenir-bold uppercase tracking-widest text-white/30 group-hover:text-[#1552ab] transition-colors">
-                View full bio
-              </span>
-              <ArrowRight size={12} className="text-white/20 group-hover:text-[#1552ab] group-hover:translate-x-0.5 transition-all" />
-            </div>
-          </button>
-        ))}
-
-        {filtered.length === 0 && (
-          <div className="col-span-full py-20 text-center text-white/30 text-sm italic">
-            No bios match the current search.
-          </div>
-        )}
-      </div>
-
-      {/* Profile modal */}
-      {selected && (
-        <ProfileModal
-          participant={selected}
-          onClose={() => setSelected(null)}
-          isAdmin={true}
-          onDelete={async (id) => { await onDelete(id); setSelected(null); }}
-        />
-      )}
-    </div>
-  );
-};
-
 // ─────────────────────────────────────────────
 //  SCREEN E: Admin Dashboard (/admin)
 // ─────────────────────────────────────────────
@@ -690,7 +584,6 @@ const AdminDashboard: React.FC<{ isAdmin: boolean; onLogout: () => void }> = ({ 
   const navigate = useNavigate();
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'participants' | 'bios'>('participants');
 
   useEffect(() => {
     if (!isAdmin) { navigate('/admin/login'); return; }
@@ -706,8 +599,6 @@ const AdminDashboard: React.FC<{ isAdmin: boolean; onLogout: () => void }> = ({ 
 
   if (!isAdmin) return null;
 
-  const completedBios = participants.filter(p => p.status === 'completed');
-
   return (
     <div className="min-h-screen bg-black text-white py-20 px-4">
       <div className="max-w-[1400px] mx-auto">
@@ -721,36 +612,12 @@ const AdminDashboard: React.FC<{ isAdmin: boolean; onLogout: () => void }> = ({ 
             <LogOut size={14} /> Log out
           </button>
         </div>
-
-        {/* Tabs */}
-        <div className="flex gap-2 mb-8">
-          {(['participants', 'bios'] as const).map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-6 py-2.5 rounded-xl text-xs font-avenir-bold uppercase tracking-widest transition-all border ${
-                activeTab === tab
-                  ? 'bg-[#1552ab] border-[#1552ab] text-white'
-                  : 'border-white/10 text-white/50 hover:text-white hover:border-white/30'
-              }`}
-            >
-              {tab === 'participants' ? 'Participants' : (
-                <>Bios{completedBios.length > 0 && (
-                  <span className="ml-1.5 bg-white/20 px-1.5 py-0.5 rounded-full text-[9px]">
-                    {completedBios.length}
-                  </span>
-                )}</>
-              )}
-            </button>
-          ))}
-        </div>
-
         {loading ? (
           <div className="flex flex-col items-center py-40">
             <Loader2 className="animate-spin text-[#1552ab] mb-4" size={32} />
             <p className="text-xs text-white/40 uppercase tracking-wider">Loading data...</p>
           </div>
-        ) : activeTab === 'participants' ? (
+        ) : (
           <AdminConsole
             participants={participants}
             onAdd={async () => loadData()}
@@ -761,17 +628,11 @@ const AdminDashboard: React.FC<{ isAdmin: boolean; onLogout: () => void }> = ({ 
             editingId={null}
             onSetEditingId={() => {}}
           />
-        ) : (
-          <BiosGallery
-            bios={completedBios}
-            onDelete={async (id) => { await api.adminDeleteParticipant(id); loadData(); }}
-          />
         )}
       </div>
     </div>
   );
 };
-
 
 // ─────────────────────────────────────────────
 //  ROOT APP — SessionContext + Router

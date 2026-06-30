@@ -22,12 +22,10 @@ const Header: React.FC<HeaderProps> = ({ darkMode }) => {
       />
       <div className={`absolute inset-0 z-10 bg-gradient-to-b from-transparent ${darkMode ? 'via-white/70 to-white' : 'via-black/70 to-black'}`} />
 
-      {/* SVG Logo (Top Right Slot - Reservation) */}
-      <div className="absolute top-8 right-8 z-20 hidden lg:block">
-        {/* Placeholder container for logo asset later */}
-        <div className="h-16 w-32 border border-dashed border-white/20 dark:border-black/20 rounded flex items-center justify-center text-[10px] uppercase tracking-widest text-white/40 dark:text-black/40">
-          [ Logo Slot ]
-        </div>
+      {/* Brand Logos (Top Right Slot) */}
+      <div className="absolute top-8 right-8 z-20 hidden lg:flex items-center gap-3 bg-white/5 dark:bg-black/5 p-3 rounded-2xl backdrop-blur-md border border-white/10 dark:border-black/5">
+        <img src="/logo-e21.png" alt="E21 Logo" className="h-7 w-auto object-contain" />
+        <img src="/logo-esbs.png" alt="ESBS Logo" className="h-7 w-auto object-contain" />
       </div>
 
       {/* Hero Content */}
