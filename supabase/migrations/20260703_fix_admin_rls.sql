@@ -23,6 +23,6 @@ CREATE POLICY admin_profile_policy ON public.admin_users
     USING (auth.uid() = id);
 
 -- Promote esbsinterview@gmail.com to Admin
-INSERT INTO public.admin_users (id)
-SELECT id FROM auth.users WHERE email = 'esbsinterview@gmail.com'
+INSERT INTO public.admin_users (id, email)
+SELECT id, email FROM auth.users WHERE email = 'esbsinterview@gmail.com'
 ON CONFLICT (id) DO NOTHING;
