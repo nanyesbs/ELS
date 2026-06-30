@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Participant } from '../types';
 import * as XLSX from 'xlsx';
 import { api } from '../services/api';
+import ProfileModal from './ProfileModal';
 import {
   Search, FileSpreadsheet, Trash2, Send,
   Loader2, Mail, Phone, Filter
@@ -19,11 +20,12 @@ interface AdminConsoleProps {
 }
 
 const AdminConsole: React.FC<AdminConsoleProps> = ({
-  participants, onDelete
+  participants, onDelete, onUpdate
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'registered' | 'completed'>('ALL');
   const [resendingId, setResendingId] = useState<string | null>(null);
+  const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
 
   const filteredParticipants = React.useMemo(() => {
     return participants.filter(p => {
@@ -156,10 +158,13 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
             </thead>
             <tbody className="divide-y divide-white/5 dark:divide-black/5 text-xs">
               {filteredParticipants.map(p => (
-                <tr key={p.id} className="hover:bg-white/2 dark:hover:bg-black/2 transition-all">
+                <tr key={p.id} className="hover:bg-white/5 dark:hover:bg-black/5 transition-all">
 
                   {/* Registrant identity */}
-                  <td className="p-4 pl-6 space-y-1">
+                  <td 
+                    onClick={() => setSelectedParticipant(p)}
+                    className="p-4 pl-6 space-y-1 cursor-pointer hover:text-[#1b52a9] transition-colors"
+                  >
                     <div className="font-avenir-bold text-white dark:text-black">
                       {p.registered_name || p.name || '—'}
                     </div>
@@ -169,7 +174,10 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
                   </td>
 
                   {/* Bio details */}
-                  <td className="p-4 space-y-1">
+                  <td 
+                    onClick={() => setSelectedParticipant(p)}
+                    className="p-4 space-y-1 cursor-pointer"
+                  >
                     {p.status === 'completed' ? (
                       <>
                         <div className="font-avenir-bold text-[#1b52a9]">{p.name}</div>
@@ -185,7 +193,10 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
                   </td>
 
                   {/* Contact */}
-                  <td className="p-4 space-y-1 text-white/60 dark:text-black/60">
+                  <td 
+                    onClick={() => setSelectedParticipant(p)}
+                    className="p-4 space-y-1 text-white/60 dark:text-black/60 cursor-pointer"
+                  >
                     <div className="flex items-center gap-1.5">
                       <Mail size={10} /> {p.email}
                     </div>
@@ -197,7 +208,10 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
                   </td>
 
                   {/* Status badge */}
-                  <td className="p-4">
+                  <td 
+                    onClick={() => setSelectedParticipant(p)}
+                    className="p-4 cursor-pointer"
+                  >
                     {p.status === 'completed' ? (
                       <span className="px-2.5 py-1 bg-green-500/10 border border-green-500/20 text-green-500 rounded-full font-avenir-bold uppercase text-[9px] tracking-wider">
                         Completed
@@ -210,7 +224,7 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
                   </td>
 
                   {/* Actions */}
-                  <td className="p-4 pr-6 text-right">
+                  <td className="p-4 pr-6 text-right animate-none">
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => handleResendAccess(p)}
@@ -250,6 +264,19 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
           </table>
         </div>
       </div>
+
+      {/* Render detailed profile modal if active */}
+      {selectedParticipant && (
+        <ProfileModal
+          participant={selectedParticipant}
+          onClose={() => setSelectedParticipant(null)}
+          isAdmin={true}
+          onDelete={async (id) => {
+            await onDelete(id);
+            setSelectedParticipant(null);
+          }}
+        />
+      )}
     </div>
   );
 };
