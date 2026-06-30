@@ -475,7 +475,7 @@ const TokenPage: React.FC = () => {
 // ─────────────────────────────────────────────
 const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -486,16 +486,11 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
     setLoading(true);
     setError('');
     try {
-      // Map username → real email for Supabase Auth
-      const adminMap: Record<string, string> = {
-        'admin123': 'esbsinterview@gmail.com',
-      };
-      const internalEmail = adminMap[username.trim().toLowerCase()] || `${username.trim().toLowerCase()}@els-admin.internal`;
       const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email: internalEmail,
+        email: email.trim().toLowerCase(),
         password,
       });
-      if (authError) throw new Error('Invalid username or password.');
+      if (authError) throw new Error('Invalid email or password.');
 
       const { data: adminUser, error: dbError } = await supabase
         .from('admin_users').select('*').eq('id', data.user.id).single();
@@ -526,11 +521,11 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
         </div>
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">Username</label>
-            <input type="text" value={username} onChange={e => setUsername(e.target.value)} required
+            <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">Email</label>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
               className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm text-white outline-none focus:border-[#1b52a9] transition-all"
-              placeholder="admin123"
-              autoComplete="username" />
+              placeholder="esbsinterview@gmail.com"
+              autoComplete="email" />
           </div>
           <div className="space-y-2">
             <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">Password</label>
