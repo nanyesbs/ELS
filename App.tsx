@@ -475,7 +475,7 @@ const TokenPage: React.FC = () => {
 // ─────────────────────────────────────────────
 const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -485,8 +485,13 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
     setLoading(true);
     setError('');
     try {
-      const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
-      if (authError) throw authError;
+      // Map username → internal email (Supabase Auth requires email format)
+      const internalEmail = `${username.trim().toLowerCase()}@els-admin.internal`;
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: internalEmail,
+        password,
+      });
+      if (authError) throw new Error('Invalid username or password.');
 
       const { data: adminUser, error: dbError } = await supabase
         .from('admin_users').select('*').eq('id', data.user.id).single();
@@ -517,16 +522,18 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
         </div>
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">Email</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
+            <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">Username</label>
+            <input type="text" value={username} onChange={e => setUsername(e.target.value)} required
               className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm text-white outline-none focus:border-[#1b52a9] transition-all"
-              placeholder="admin@example.com" />
+              placeholder="admin123"
+              autoComplete="username" />
           </div>
           <div className="space-y-2">
             <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">Password</label>
             <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
               className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm text-white outline-none focus:border-[#1b52a9] transition-all"
-              placeholder="••••••••" />
+              placeholder="••••••••"
+              autoComplete="current-password" />
           </div>
           {error && <p className="text-[10px] font-avenir-bold text-red-500 text-center uppercase tracking-wider">{error}</p>}
           <button type="submit" disabled={loading}
