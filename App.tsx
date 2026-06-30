@@ -486,8 +486,11 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
     setLoading(true);
     setError('');
     try {
-      // Map username → internal email (Supabase Auth requires email format)
-      const internalEmail = `${username.trim().toLowerCase()}@els-admin.internal`;
+      // Map username → real email for Supabase Auth
+      const adminMap: Record<string, string> = {
+        'admin123': 'esbsinterview@gmail.com',
+      };
+      const internalEmail = adminMap[username.trim().toLowerCase()] || `${username.trim().toLowerCase()}@els-admin.internal`;
       const { data, error: authError } = await supabase.auth.signInWithPassword({
         email: internalEmail,
         password,
