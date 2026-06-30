@@ -126,7 +126,16 @@ Deno.serve(async (req) => {
         const recipientName =
           existing?.registered_name || existing?.name || name;
 
-        await sendEmail("resend", recipientName, email, newRawToken);
+        const newAccessLink = `${Deno.env.get("APP_URL") || "https://elsconnection.vercel.app"}/${newRawToken}`;
+        try {
+          await sendEmail("resend", recipientName, email, newRawToken);
+          console.log(`[RESEND] Email sent to: ${email} | Link: ${newAccessLink}`);
+        } catch (emailError: any) {
+          console.warn(
+            `[RESEND] Email delivery failed for ${email}: ${emailError.message}. ` +
+            `Access link: ${newAccessLink}`
+          );
+        }
 
         return new Response(
           JSON.stringify({
@@ -140,8 +149,20 @@ Deno.serve(async (req) => {
       throw rpcError;
     }
 
-    // ── Send confirmation email ───────────────────────────────────
-    await sendEmail("new", name, email, rawToken);
+    // ── Send confirmation email (non-fatal) ──────────────────────
+    // Email delivery may fail if the sender domain is not yet verified
+    // in Resend. Registration always succeeds — the access link is logged
+    // below so an admin can resend it manually if needed.
+    const accessLink = `${Deno.env.get("APP_URL") || "https://elsconnection.vercel.app"}/${rawToken}`;
+    try {
+      await sendEmail("new", name, email, rawToken);
+      console.log(`[NEW] Email sent to: ${email} | Link: ${accessLink}`);
+    } catch (emailError: any) {
+      console.warn(
+        `[NEW] Email delivery failed for ${email}: ${emailError.message}. ` +
+        `Access link (share manually if needed): ${accessLink}`
+      );
+    }
 
     return new Response(
       JSON.stringify({
@@ -153,9 +174,9 @@ Deno.serve(async (req) => {
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error: any) {
-    console.error("register-participant error:", error);
+    console.error("register-participant error:", error?.message || error);
     return new Response(
-      JSON.stringify({ error: "Registration failed. Please try again." }),
+      JSON.stringify({ error: error?.message || "Registration failed. Please try again." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
