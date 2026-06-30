@@ -23,6 +23,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.8";
 import {
   getEmailConfig,
+  buildEmailPayload,
   registrationConfirmationEmail,
   resendAccessEmail,
 } from "../_shared/email-templates.ts";
@@ -184,18 +185,22 @@ async function sendEmail(
       ? registrationConfirmationEmail(cfg, recipientName, rawToken)
       : resendAccessEmail(cfg, recipientName, rawToken);
 
+  const payload = buildEmailPayload(
+    cfg,
+    recipientName,
+    recipientEmail,
+    rawToken,
+    subject,
+    html
+  );
+
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${resendApiKey}`,
     },
-    body: JSON.stringify({
-      from: `${cfg.senderName} <${cfg.senderEmail}>`,
-      to: [recipientEmail],
-      subject,
-      html,
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {

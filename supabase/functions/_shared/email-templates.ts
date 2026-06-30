@@ -1,6 +1,7 @@
 // ELS App — Shared Email Templates
-// All branding vars read from env so they can be changed in one place.
-// Import this module from any Edge Function that sends email.
+// RESEND TEMPLATE SUPPORT:
+//   Set RESEND_TEMPLATE_ID in Supabase Edge Function secrets to use a
+//   Resend.com template. Falls back to built-in HTML when not set.
 
 export interface EmailConfig {
   appUrl: string;
@@ -11,6 +12,7 @@ export interface EmailConfig {
   eventName: string;
   eventDates: string;
   eventLocation: string;
+  resendTemplateId: string | null;
 }
 
 export function getEmailConfig(): EmailConfig {
@@ -21,12 +23,61 @@ export function getEmailConfig(): EmailConfig {
     brandColor: Deno.env.get("BRAND_COLOR") || "#1552ab",
     brandColorDark: Deno.env.get("BRAND_COLOR_DARK") || "#0f387a",
     eventName: "Empowered21 + Europe Shall Be Saved (ELS) Retreat",
-    eventDates: "10–12 November 2026",
+    eventDates: "10-12 November 2026",
     eventLocation: "Madrid, Spain",
+    resendTemplateId: Deno.env.get("RESEND_TEMPLATE_ID") || null,
   };
 }
 
-// Shared HTML email wrapper — header, footer, branding
+// Build the Resend API payload — template or raw HTML
+export function buildEmailPayload(
+  cfg: EmailConfig,
+  recipientName: string,
+  recipientEmail: string,
+  rawToken: string,
+  subject: string,
+  htmlFallback: string
+): object {
+  const accessLink = `${cfg.appUrl}/${rawToken}`;
+
+  if (cfg.resendTemplateId) {
+    // Use Resend Template API — covers all common variable name conventions
+    return {
+      from: `${cfg.senderName} <${cfg.senderEmail}>`,
+      to: [recipientEmail],
+      subject,
+      template: {
+        id: cfg.resendTemplateId,
+        variables: {
+          name: recipientName,
+          user_name: recipientName,
+          recipient_name: recipientName,
+          first_name: recipientName.split(" ")[0],
+          full_name: recipientName,
+          link: accessLink,
+          access_link: accessLink,
+          url: accessLink,
+          token_link: accessLink,
+          token_url: accessLink,
+          event_name: cfg.eventName,
+          event_dates: cfg.eventDates,
+          event_location: cfg.eventLocation,
+          location: cfg.eventLocation,
+        },
+      },
+    };
+  }
+
+  // Fallback to inline HTML
+  return {
+    from: `${cfg.senderName} <${cfg.senderEmail}>`,
+    to: [recipientEmail],
+    subject,
+    html: htmlFallback,
+  };
+}
+
+// Shared HTML email wrapper
 function emailWrapper(cfg: EmailConfig, bodyHtml: string): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -35,63 +86,36 @@ function emailWrapper(cfg: EmailConfig, bodyHtml: string): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${cfg.eventName}</title>
 </head>
-<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:40px 16px;">
-    <tr>
-      <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
-
-          <!-- HEADER -->
-          <tr>
-            <td style="background-color:${cfg.brandColor};padding:32px 40px;text-align:center;">
-              <!-- Logo placeholder: replace src with actual logo URL via LOGO_URL env var -->
-              <div style="margin-bottom:16px;">
-                <div style="display:inline-block;width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:50%;line-height:48px;text-align:center;font-size:24px;">✝</div>
-              </div>
-              <p style="margin:0;color:rgba(255,255,255,0.85);font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:600;">
-                ${cfg.eventName}
-              </p>
-              <p style="margin:6px 0 0;color:rgba(255,255,255,0.65);font-size:12px;">
-                ${cfg.eventDates} · ${cfg.eventLocation}
-              </p>
-            </td>
-          </tr>
-
-          <!-- BODY -->
-          <tr>
-            <td style="padding:40px 40px 32px;">
-              ${bodyHtml}
-            </td>
-          </tr>
-
-          <!-- FOOTER -->
-          <tr>
-            <td style="background-color:#f8f8f8;padding:24px 40px;border-top:1px solid #eeeeee;text-align:center;">
-              <p style="margin:0;font-size:11px;color:#999999;line-height:1.6;">
-                This message was sent by <strong>${cfg.senderName}</strong>.<br/>
-                This link is unique to you — please do not forward or share it.
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </td>
-    </tr>
+<body style="margin:0;padding:0;background-color:#efefef;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#efefef;padding:40px 16px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(21,82,171,0.08);">
+        <tr>
+          <td style="background-color:${cfg.brandColor};padding:32px 40px;text-align:center;">
+            <p style="margin:0;color:rgba(255,255,255,0.90);font-size:11px;letter-spacing:4px;text-transform:uppercase;font-weight:700;">${cfg.eventName}</p>
+            <p style="margin:8px 0 0;color:rgba(255,255,255,0.65);font-size:12px;">${cfg.eventDates} · ${cfg.eventLocation}</p>
+          </td>
+        </tr>
+        <tr><td style="padding:40px 40px 32px;">${bodyHtml}</td></tr>
+        <tr>
+          <td style="background-color:#f8f8f8;padding:24px 40px;border-top:1px solid #e8edf5;text-align:center;">
+            <p style="margin:0;font-size:11px;color:#999999;line-height:1.6;">
+              This message was sent by <strong>${cfg.senderName}</strong>.<br/>
+              This link is unique to you — please do not share it.
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
   </table>
 </body>
 </html>`;
 }
 
-// CTA button helper
 function ctaButton(cfg: EmailConfig, href: string, label: string): string {
   return `
 <div style="text-align:center;margin:32px 0;">
-  <a href="${href}"
-     style="display:inline-block;background-color:${cfg.brandColor};color:#ffffff;
-            font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-            text-decoration:none;padding:16px 36px;border-radius:8px;">
-    ${label}
-  </a>
+  <a href="${href}" style="display:inline-block;background-color:${cfg.brandColor};color:#ffffff;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:16px 36px;border-radius:8px;">${label}</a>
 </div>
 <p style="text-align:center;font-size:11px;color:#aaaaaa;word-break:break-all;margin-top:-16px;">
   If the button doesn't work, copy this link:<br/>
@@ -99,48 +123,25 @@ function ctaButton(cfg: EmailConfig, href: string, label: string): string {
 </p>`;
 }
 
-// ----------------------------------------------------------------
-// Template 1: Registration confirmation + access link
-// ----------------------------------------------------------------
+// Template 1: Registration confirmation
 export function registrationConfirmationEmail(
   cfg: EmailConfig,
   recipientName: string,
   accessToken: string
 ): { subject: string; html: string } {
   const accessLink = `${cfg.appUrl}/${accessToken}`;
-
   const body = `
-<h2 style="margin:0 0 8px;color:#111111;font-size:22px;font-weight:700;">
-  Welcome, ${recipientName}!
-</h2>
-<p style="margin:0 0 20px;font-size:13px;color:#666666;line-height:1.6;font-weight:600;letter-spacing:1px;text-transform:uppercase;">
-  You're registered for ELS Madrid 2026
-</p>
-<p style="font-size:15px;color:#333333;line-height:1.7;margin:0 0 16px;">
-  Thank you for registering for the <strong>${cfg.eventName}</strong>.
-  We look forward to welcoming you to Madrid this November.
-</p>
-<p style="font-size:15px;color:#333333;line-height:1.7;margin:0 0 24px;">
-  Use the link below to access the ELS participant directory, complete your profile, 
-  and connect with fellow participants ahead of the event.
-</p>
+<h2 style="margin:0 0 8px;color:#1552ab;font-size:22px;font-weight:700;">Welcome, ${recipientName}!</h2>
+<p style="margin:0 0 20px;font-size:13px;color:#1552ab;line-height:1.6;font-weight:600;letter-spacing:1px;text-transform:uppercase;">You're registered for ELS Madrid 2026</p>
+<p style="font-size:15px;color:#333333;line-height:1.7;margin:0 0 16px;">Thank you for registering for the <strong>${cfg.eventName}</strong>. We look forward to welcoming you to Madrid this November.</p>
+<p style="font-size:15px;color:#333333;line-height:1.7;margin:0 0 24px;">Use the link below to access the ELS participant directory, complete your profile, and connect with fellow participants ahead of the event.</p>
 ${ctaButton(cfg, accessLink, "Access the ELS Directory →")}
-<hr style="border:none;border-top:1px solid #eeeeee;margin:32px 0;" />
-<p style="font-size:13px;color:#888888;line-height:1.6;margin:0;">
-  <strong>Important:</strong> This is your personal access link. 
-  It is valid for 30 days and tied to your registration. 
-  Keep it safe — you can return to the directory anytime using this link.
-</p>`;
-
-  return {
-    subject: `Your ELS Madrid 2026 Access Link`,
-    html: emailWrapper(cfg, body),
-  };
+<hr style="border:none;border-top:1px solid #e8edf5;margin:32px 0;" />
+<p style="font-size:13px;color:#888888;line-height:1.6;margin:0;"><strong>Important:</strong> This is your personal access link. Keep it safe — you can return to the directory anytime using this link.</p>`;
+  return { subject: `Your ELS Madrid 2026 Access Link`, html: emailWrapper(cfg, body) };
 }
 
-// ----------------------------------------------------------------
-// Template 2: Reminder email (3-day or 7-day follow-up)
-// ----------------------------------------------------------------
+// Template 2: Reminder email
 export function reminderEmail(
   cfg: EmailConfig,
   recipientName: string,
@@ -151,51 +152,24 @@ export function reminderEmail(
   const subject = isSecondReminder
     ? `Final reminder: Complete your ELS profile`
     : `Reminder: Your ELS directory profile is waiting`;
-
   const body = `
-<h2 style="margin:0 0 8px;color:#111111;font-size:22px;font-weight:700;">
-  ${isSecondReminder ? "One last reminder," : "A quick reminder,"} ${recipientName}
-</h2>
-<p style="font-size:15px;color:#333333;line-height:1.7;margin:16px 0;">
-  We noticed you haven't yet completed your participant profile for the
-  <strong>${cfg.eventName}</strong>.
-</p>
-<p style="font-size:15px;color:#333333;line-height:1.7;margin:0 0 24px;">
-  Your profile helps other participants discover who you are, what you do, 
-  and how your ministry aligns — before you even arrive in Madrid.
-  It only takes a few minutes.
-</p>
-${ctaButton(cfg, accessLink, "Complete My Profile Now →")}
-<hr style="border:none;border-top:1px solid #eeeeee;margin:32px 0;" />
-<p style="font-size:12px;color:#aaaaaa;line-height:1.6;margin:0;">
-  Note: For security, this reminder has deactivated any previous access links. 
-  Only this new link is active.
-</p>`;
-
+<h2 style="margin:0 0 8px;color:#1552ab;font-size:22px;font-weight:700;">${isSecondReminder ? "One last reminder," : "A quick reminder,"} ${recipientName}</h2>
+<p style="font-size:15px;color:#333333;line-height:1.7;margin:16px 0;">We noticed you haven't yet completed your participant profile for the <strong>${cfg.eventName}</strong>.</p>
+<p style="font-size:15px;color:#333333;line-height:1.7;margin:0 0 24px;">Your profile helps other participants discover who you are and how your ministry aligns — before you even arrive in Madrid.</p>
+${ctaButton(cfg, accessLink, "Complete My Profile Now →")}`;
   return { subject, html: emailWrapper(cfg, body) };
 }
 
-// ----------------------------------------------------------------
-// Template 3: Admin — resend access link
-// ----------------------------------------------------------------
+// Template 3: Admin resend access link
 export function resendAccessEmail(
   cfg: EmailConfig,
   recipientName: string,
   accessToken: string
 ): { subject: string; html: string } {
   const accessLink = `${cfg.appUrl}/${accessToken}`;
-
   const body = `
-<h2 style="margin:0 0 8px;color:#111111;font-size:22px;font-weight:700;">
-  Your ELS access link
-</h2>
-<p style="font-size:15px;color:#333333;line-height:1.7;margin:16px 0 24px;">
-  Hi <strong>${recipientName}</strong>, here is a fresh access link for the ELS Madrid 2026 participant directory.
-</p>
+<h2 style="margin:0 0 8px;color:#1552ab;font-size:22px;font-weight:700;">Your ELS access link</h2>
+<p style="font-size:15px;color:#333333;line-height:1.7;margin:16px 0 24px;">Hi <strong>${recipientName}</strong>, here is a fresh access link for the ELS Madrid 2026 participant directory.</p>
 ${ctaButton(cfg, accessLink, "Access the ELS Directory →")}`;
-
-  return {
-    subject: `Your ELS Madrid 2026 access link`,
-    html: emailWrapper(cfg, body),
-  };
+  return { subject: `Your ELS Madrid 2026 access link`, html: emailWrapper(cfg, body) };
 }

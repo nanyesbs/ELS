@@ -6,6 +6,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.8";
 import {
   getEmailConfig,
+  buildEmailPayload,
   reminderEmail,
 } from "../_shared/email-templates.ts";
 
@@ -127,18 +128,22 @@ Deno.serve(async (req) => {
           isSecond
         );
 
+        const payload = buildEmailPayload(
+          cfg,
+          recipientName,
+          recipientEmail,
+          rawToken,
+          subject,
+          html
+        );
+
         const emailRes = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${resendApiKey}`,
           },
-          body: JSON.stringify({
-            from: `${cfg.senderName} <${cfg.senderEmail}>`,
-            to: [recipientEmail],
-            subject,
-            html,
-          }),
+          body: JSON.stringify(payload),
         });
 
         if (!emailRes.ok) {
