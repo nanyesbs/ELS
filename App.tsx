@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Loader2, Search, RefreshCcw, LayoutGrid, Columns,
   Square, Filter, X, Shield, LogOut, ArrowRight,
-  CheckCircle2, Mail, Edit3,
+  CheckCircle2, Mail, Edit3, Eye, EyeOff,
 } from 'lucide-react';
 
 import Navbar from './components/Navbar';
@@ -477,6 +477,7 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -530,10 +531,26 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
           </div>
           <div className="space-y-2">
             <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">Password</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
-              className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm text-white outline-none focus:border-[#1b52a9] transition-all"
-              placeholder="••••••••"
-              autoComplete="current-password" />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+                className="w-full bg-white/5 border border-white/10 p-4 pr-12 rounded-xl text-sm text-white outline-none focus:border-[#1b52a9] transition-all"
+                placeholder="••••••••"
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(v => !v)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors"
+                tabIndex={-1}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
           {error && <p className="text-[10px] font-avenir-bold text-red-500 text-center uppercase tracking-wider">{error}</p>}
           <button type="submit" disabled={loading}
