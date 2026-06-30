@@ -2,8 +2,8 @@
 import { Country } from './types';
 
 export const ADMIN_PASSWORD = 'RGR@ESBSJesus!';
-export const BRAND_GOLD = '#1b52a9'; // ELS Primary Blue
-export const BRAND_GOLD_LIGHT = '#1b52a9'; // ELS Blue Light
+export const BRAND_GOLD = '#1552ab'; // ELS Primary Blue
+export const BRAND_GOLD_LIGHT = '#1552ab'; // ELS Blue Light
 export const BRAND_GOLD_DARK = '#0f387a';
 export const BRAND_BLACK = '#050505';
 

@@ -73,7 +73,7 @@ const LandingPage: React.FC = () => {
     <div className="min-h-screen bg-black text-white flex flex-col">
       <nav className="w-full px-6 md:px-12 py-6 flex items-center justify-between border-b border-white/5">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-[#1b52a9]/20 border border-[#1b52a9]/30 flex items-center justify-center text-[#1b52a9] text-xs font-bold">E</div>
+          <div className="w-8 h-8 rounded-full bg-[#1552ab]/20 border border-[#1552ab]/30 flex items-center justify-center text-[#1552ab] text-xs font-bold">E</div>
           <span className="text-xs font-avenir-bold uppercase tracking-[3px] text-white/60">ELS Madrid 2026</span>
         </div>
         <button
@@ -85,9 +85,9 @@ const LandingPage: React.FC = () => {
       </nav>
 
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1b52a9]/10 border border-[#1b52a9]/20 rounded-full mb-10">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#1b52a9] animate-pulse" />
-          <span className="text-[10px] font-avenir-bold uppercase tracking-[3px] text-[#1b52a9]">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1552ab]/10 border border-[#1552ab]/20 rounded-full mb-10">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#1552ab] animate-pulse" />
+          <span className="text-[10px] font-avenir-bold uppercase tracking-[3px] text-[#1552ab]">
             10–12 November 2026 · Madrid, Spain
           </span>
         </div>
@@ -104,7 +104,7 @@ const LandingPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <button
             onClick={() => navigate('/sign-up')}
-            className="flex items-center gap-3 px-8 py-5 bg-[#1b52a9] hover:bg-[#1b52a9]/90 text-white rounded-2xl font-avenir-bold uppercase text-xs tracking-[3px] transition-all hover:scale-105 active:scale-95 shadow-lg"
+            className="flex items-center gap-3 px-8 py-5 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-2xl font-avenir-bold uppercase text-xs tracking-[3px] transition-all hover:scale-105 active:scale-95 shadow-lg"
           >
             Join the Directory <ArrowRight size={16} />
           </button>
@@ -150,7 +150,7 @@ const SignUpPage: React.FC = () => {
       <div className="max-w-3xl mx-auto mb-8">
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-[10px] font-avenir-bold uppercase tracking-widest text-white/40 dark:text-black/40 hover:text-[#1b52a9] transition-colors"
+          className="flex items-center gap-2 text-[10px] font-avenir-bold uppercase tracking-widest text-white/40 dark:text-black/40 hover:text-[#1552ab] transition-colors"
         >
           ← Back
         </button>
@@ -280,7 +280,7 @@ const TokenPage: React.FC = () => {
         </p>
         <button
           onClick={() => navigate('/sign-up')}
-          className="px-6 py-3 bg-[#1b52a9] hover:bg-[#1b52a9]/90 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all"
+          className="px-6 py-3 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all"
         >
           Register / Get a New Link
         </button>
@@ -292,7 +292,7 @@ const TokenPage: React.FC = () => {
   if (loadStatus === 'loading') {
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white gap-4">
-        <Loader2 size={36} className="animate-spin text-[#1b52a9]" />
+        <Loader2 size={36} className="animate-spin text-[#1552ab]" />
         <p className="text-[10px] uppercase tracking-widest text-white/40">Verifying access...</p>
       </div>
     );
@@ -305,7 +305,7 @@ const TokenPage: React.FC = () => {
         <div className="max-w-3xl mx-auto mb-8">
           <button
             onClick={() => setShowEditForm(false)}
-            className="flex items-center gap-2 text-[10px] font-avenir-bold uppercase tracking-widest text-white/40 dark:text-black/40 hover:text-[#1b52a9] transition-colors"
+            className="flex items-center gap-2 text-[10px] font-avenir-bold uppercase tracking-widest text-white/40 dark:text-black/40 hover:text-[#1552ab] transition-colors"
           >
             ← Back to Directory
           </button>
@@ -341,7 +341,7 @@ const TokenPage: React.FC = () => {
       <div className="fixed bottom-8 right-6 z-50">
         <button
           onClick={() => setShowEditForm(true)}
-          className="flex items-center gap-2 px-5 py-3.5 bg-[#1b52a9] hover:bg-[#1b52a9]/90 text-white rounded-2xl font-avenir-bold uppercase text-[10px] tracking-[2px] shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95"
+          className="flex items-center gap-2 px-5 py-3.5 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-2xl font-avenir-bold uppercase text-[10px] tracking-[2px] shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95"
         >
           <Edit3 size={14} />
           {participant?.status === 'completed' ? 'Edit my Bio' : 'Complete my Bio'}
@@ -352,7 +352,7 @@ const TokenPage: React.FC = () => {
         {/* Controls */}
         <div className="flex flex-col xl:flex-row justify-between items-stretch xl:items-center gap-4 bg-white/5 dark:bg-black/5 p-3 md:p-4 rounded-3xl border border-white/10 dark:border-black/5 backdrop-blur-md mb-10">
           <div className="relative flex-1">
-            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1b52a9]" />
+            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1552ab]" />
             <input
               type="text"
               placeholder={t('app.search', 'Search participants...')}
@@ -362,21 +362,21 @@ const TokenPage: React.FC = () => {
             />
           </div>
           <div className="flex items-center justify-end gap-2 h-full px-2">
-            <button onClick={loadDirectory} className="p-3 text-[#1b52a9]/60 hover:text-[#1b52a9] hover:bg-white/5 rounded-xl transition-all">
+            <button onClick={loadDirectory} className="p-3 text-[#1552ab]/60 hover:text-[#1552ab] hover:bg-white/5 rounded-xl transition-all">
               <RefreshCcw size={18} />
             </button>
             <div className="w-px h-8 bg-white/10 dark:bg-black/10 mx-1 hidden sm:block" />
             <div className="hidden sm:flex gap-1">
               {(['list', 'grid2', 'grid4'] as LayoutMode[]).map(mode => (
                 <button key={mode} onClick={() => setLayoutMode(mode)}
-                  className={`p-3 rounded-xl transition-all ${layoutMode === mode ? 'bg-[#1b52a9] text-white' : 'text-[#1b52a9] hover:bg-white/5'}`}>
+                  className={`p-3 rounded-xl transition-all ${layoutMode === mode ? 'bg-[#1552ab] text-white' : 'text-[#1552ab] hover:bg-white/5'}`}>
                   {mode === 'list' ? <Square size={20} /> : mode === 'grid2' ? <Columns size={20} /> : <LayoutGrid size={20} />}
                 </button>
               ))}
             </div>
             <div className="w-px h-8 bg-white/10 dark:bg-black/10 mx-1" />
             <button onClick={() => setIsFilterOpen(true)}
-              className={`flex items-center gap-2 px-4 py-3 rounded-xl font-avenir-bold text-[10px] uppercase tracking-[2px] transition-all ${hasActiveFilters ? 'bg-[#1b52a9] text-white' : 'bg-white/5 text-[#1b52a9] border border-[#1b52a9]/20'}`}>
+              className={`flex items-center gap-2 px-4 py-3 rounded-xl font-avenir-bold text-[10px] uppercase tracking-[2px] transition-all ${hasActiveFilters ? 'bg-[#1552ab] text-white' : 'bg-white/5 text-[#1552ab] border border-[#1552ab]/20'}`}>
               <Filter size={14} />
               <span className="hidden xs:inline">Filters</span>
               {hasActiveFilters && <span className="w-2 h-2 rounded-full bg-white animate-pulse" />}
@@ -387,8 +387,8 @@ const TokenPage: React.FC = () => {
         {/* Directory grid */}
         {dirLoading ? (
           <div className="flex flex-col items-center justify-center py-40">
-            <Loader2 className="animate-spin text-[#1b52a9] mb-4" size={32} />
-            <p className="text-[10px] text-[#1b52a9] uppercase font-avenir-medium tracking-widest">Loading profiles...</p>
+            <Loader2 className="animate-spin text-[#1552ab] mb-4" size={32} />
+            <p className="text-[10px] text-[#1552ab] uppercase font-avenir-medium tracking-widest">Loading profiles...</p>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-40 border border-dashed border-white/10 rounded-3xl">
@@ -417,7 +417,7 @@ const TokenPage: React.FC = () => {
           <p className="font-didot italic text-3xl text-white/30 dark:text-black/20 max-w-3xl mx-auto leading-relaxed">
             {t('footer.vision')}
           </p>
-          <div className="text-[10px] font-avenir-bold text-[#1b52a9] uppercase tracking-[4px]">
+          <div className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[4px]">
             {t('footer.tagline')}
           </div>
         </div>
@@ -437,16 +437,16 @@ const TokenPage: React.FC = () => {
         <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsFilterOpen(false)} />
         <div className={`absolute right-0 top-0 h-full w-full max-w-sm bg-[#0a0a0a] dark:bg-white shadow-2xl border-l border-white/10 flex flex-col transition-transform duration-500 ${isFilterOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="p-8 border-b border-white/10 flex justify-between items-center bg-white/5">
-            <h3 className="text-xs font-avenir-bold text-[#1b52a9] uppercase tracking-[4px]">Filters</h3>
-            <button onClick={() => setIsFilterOpen(false)} className="p-2 text-white/40 hover:text-[#1b52a9]"><X size={24} /></button>
+            <h3 className="text-xs font-avenir-bold text-[#1552ab] uppercase tracking-[4px]">Filters</h3>
+            <button onClick={() => setIsFilterOpen(false)} className="p-2 text-white/40 hover:text-[#1552ab]"><X size={24} /></button>
           </div>
           <div className="flex-1 overflow-y-auto p-8 space-y-10">
             {[['Country', filterCountry, setFilterCountry, countriesList], ['Role', filterRole, setFilterRole, rolesList]].map(
               ([label, value, setter, list]) => (
                 <div key={label as string} className="space-y-4">
-                  <span className="text-[9px] font-avenir-bold text-[#1b52a9] uppercase tracking-[2px] block">{label as string}</span>
+                  <span className="text-[9px] font-avenir-bold text-[#1552ab] uppercase tracking-[2px] block">{label as string}</span>
                   <select value={value as string} onChange={e => (setter as any)(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs font-avenir-medium text-white outline-none focus:border-[#1b52a9]">
+                    className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs font-avenir-medium text-white outline-none focus:border-[#1552ab]">
                     <option value="ALL">All</option>
                     {(list as string[]).map(c => <option key={c} value={c} className="bg-[#0a0a0a]">{c}</option>)}
                   </select>
@@ -456,11 +456,11 @@ const TokenPage: React.FC = () => {
           </div>
           <div className="p-8 border-t border-white/10 space-y-4">
             <button onClick={() => { setFilterCountry('ALL'); setFilterRole('ALL'); setSearchQuery(''); }}
-              className="w-full py-4 text-[10px] font-avenir-bold text-white/40 hover:text-[#1b52a9] uppercase tracking-[3px] transition-colors">
+              className="w-full py-4 text-[10px] font-avenir-bold text-white/40 hover:text-[#1552ab] uppercase tracking-[3px] transition-colors">
               Clear Filters
             </button>
             <button onClick={() => setIsFilterOpen(false)}
-              className="w-full py-5 bg-[#1b52a9] text-white font-avenir-bold uppercase text-[10px] tracking-[4px] rounded-2xl active:scale-95 transition-all">
+              className="w-full py-5 bg-[#1552ab] text-white font-avenir-bold uppercase text-[10px] tracking-[4px] rounded-2xl active:scale-95 transition-all">
               Apply
             </button>
           </div>
@@ -513,8 +513,8 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
     <div className="min-h-screen bg-black flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-[2rem] p-8 md:p-12 shadow-2xl backdrop-blur-2xl">
         <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 bg-[#1b52a9]/20 border border-[#1b52a9]/40 rounded-full flex items-center justify-center mb-6">
-            <Shield size={28} className="text-[#1b52a9]" />
+          <div className="w-16 h-16 bg-[#1552ab]/20 border border-[#1552ab]/40 rounded-full flex items-center justify-center mb-6">
+            <Shield size={28} className="text-[#1552ab]" />
           </div>
           <h1 className="text-xl font-avenir-bold text-center tracking-tight text-white uppercase">Admin Console</h1>
           <p className="text-[10px] tracking-[0.2em] font-avenir-medium uppercase text-white/40 mt-2">ELS Madrid 2026</p>
@@ -523,7 +523,7 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
           <div className="space-y-2">
             <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">Email</label>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
-              className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm text-white outline-none focus:border-[#1b52a9] transition-all"
+              className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm text-white outline-none focus:border-[#1552ab] transition-all"
               placeholder="esbsinterview@gmail.com"
               autoComplete="email" />
           </div>
@@ -535,7 +535,7 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                className="w-full bg-white/5 border border-white/10 p-4 pr-12 rounded-xl text-sm text-white outline-none focus:border-[#1b52a9] transition-all"
+                className="w-full bg-white/5 border border-white/10 p-4 pr-12 rounded-xl text-sm text-white outline-none focus:border-[#1552ab] transition-all"
                 placeholder="••••••••"
                 autoComplete="current-password"
               />
@@ -552,11 +552,133 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
           </div>
           {error && <p className="text-[10px] font-avenir-bold text-red-500 text-center uppercase tracking-wider">{error}</p>}
           <button type="submit" disabled={loading}
-            className="w-full py-5 bg-[#1b52a9] hover:bg-[#1b52a9]/90 text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] active:scale-95 transition-all flex items-center justify-center gap-2">
+            className="w-full py-5 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] active:scale-95 transition-all flex items-center justify-center gap-2">
             {loading ? <><Loader2 size={14} className="animate-spin" /> Authorizing...</> : 'Sign In'}
           </button>
         </form>
       </div>
+    </div>
+  );
+};
+
+
+// ─────────────────────────────────────────────
+//  Bios Gallery — admin view of completed profiles
+// ─────────────────────────────────────────────
+const BiosGallery: React.FC<{
+  bios: Participant[];
+  onDelete: (id: string) => Promise<void>;
+}> = ({ bios, onDelete }) => {
+  const [selected, setSelected] = useState<Participant | null>(null);
+  const [search, setSearch] = useState('');
+
+  const filtered = React.useMemo(() =>
+    bios.filter(p => {
+      const q = search.toLowerCase();
+      return !q ||
+        (p.name || '').toLowerCase().includes(q) ||
+        (p.organization || '').toLowerCase().includes(q) ||
+        (p.country || '').toLowerCase().includes(q) ||
+        (p.role || '').toLowerCase().includes(q);
+    }), [bios, search]);
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      {/* Search */}
+      <div className="relative max-w-md">
+        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" />
+        <input
+          type="text"
+          placeholder="Search bios by name, role, org, country…"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="w-full bg-white/5 border border-white/10 rounded-xl p-3 pl-12 text-sm text-white outline-none placeholder:text-white/20 focus:border-[#1552ab] transition-all"
+        />
+      </div>
+
+      {/* Count */}
+      <p className="text-xs text-white/40 font-avenir-medium">
+        {filtered.length} bio{filtered.length !== 1 ? 's' : ''} completed
+      </p>
+
+      {/* Cards grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+        {filtered.map(p => (
+          <button
+            key={p.id}
+            onClick={() => setSelected(p)}
+            className="group text-left bg-white/5 border border-white/10 hover:border-[#1552ab]/40 rounded-2xl p-6 transition-all duration-300 hover:bg-white/8 hover:shadow-lg hover:shadow-[#1552ab]/5"
+          >
+            {/* Avatar + name row */}
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 rounded-full bg-[#1552ab]/20 border border-[#1552ab]/30 flex items-center justify-center shrink-0">
+                <span className="text-[#1552ab] font-avenir-bold text-lg">
+                  {(p.name || p.registered_name || '?')[0].toUpperCase()}
+                </span>
+              </div>
+              <div className="min-w-0">
+                <div className="font-avenir-bold text-white text-sm truncate">
+                  {p.name || p.registered_name}
+                </div>
+                <div className="text-[10px] text-[#1552ab] truncate mt-0.5">
+                  {p.role || '—'}
+                </div>
+              </div>
+            </div>
+
+            {/* Details */}
+            <div className="space-y-1.5 mb-4">
+              {p.organization && (
+                <div className="text-[11px] text-white/60 truncate">
+                  🏛 {p.organization}
+                </div>
+              )}
+              {p.country && (
+                <div className="text-[11px] text-white/60 truncate">
+                  📍 {p.city ? `${p.city}, ` : ''}{p.country}
+                </div>
+              )}
+              {p.languages_spoken && p.languages_spoken.length > 0 && (
+                <div className="text-[11px] text-white/40 truncate">
+                  🗣 {p.languages_spoken.slice(0, 3).join(' · ')}
+                  {p.languages_spoken.length > 3 ? ` +${p.languages_spoken.length - 3}` : ''}
+                </div>
+              )}
+            </div>
+
+            {/* Bio excerpt */}
+            {p.short_bio && (
+              <p className="text-[11px] text-white/50 line-clamp-3 leading-relaxed">
+                {p.short_bio}
+              </p>
+            )}
+
+            {/* CTA */}
+            <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+              <span className="text-[9px] font-avenir-bold uppercase tracking-widest text-white/30 group-hover:text-[#1552ab] transition-colors">
+                View full bio
+              </span>
+              <ArrowRight size={12} className="text-white/20 group-hover:text-[#1552ab] group-hover:translate-x-0.5 transition-all" />
+            </div>
+          </button>
+        ))}
+
+        {filtered.length === 0 && (
+          <div className="col-span-full py-20 text-center text-white/30 text-sm italic">
+            No bios match the current search.
+          </div>
+        )}
+      </div>
+
+      {/* Profile modal */}
+      {selected && (
+        <ProfileModal
+          participant={selected}
+          onClose={() => setSelected(null)}
+          isAdmin={true}
+          onDelete={async (id) => { await onDelete(id); setSelected(null); }}
+        />
+      )}
     </div>
   );
 };
@@ -568,6 +690,7 @@ const AdminDashboard: React.FC<{ isAdmin: boolean; onLogout: () => void }> = ({ 
   const navigate = useNavigate();
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'participants' | 'bios'>('participants');
 
   useEffect(() => {
     if (!isAdmin) { navigate('/admin/login'); return; }
@@ -583,12 +706,14 @@ const AdminDashboard: React.FC<{ isAdmin: boolean; onLogout: () => void }> = ({ 
 
   if (!isAdmin) return null;
 
+  const completedBios = participants.filter(p => p.status === 'completed');
+
   return (
     <div className="min-h-screen bg-black text-white py-20 px-4">
       <div className="max-w-[1400px] mx-auto">
         <div className="flex justify-between items-center mb-10 pb-6 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <Shield size={24} className="text-[#1b52a9]" />
+            <Shield size={24} className="text-[#1552ab]" />
             <h1 className="text-xl font-avenir-bold uppercase tracking-widest">ELS Administration</h1>
           </div>
           <button onClick={async () => { await supabase.auth.signOut(); onLogout(); navigate('/admin/login'); }}
@@ -596,12 +721,36 @@ const AdminDashboard: React.FC<{ isAdmin: boolean; onLogout: () => void }> = ({ 
             <LogOut size={14} /> Log out
           </button>
         </div>
+
+        {/* Tabs */}
+        <div className="flex gap-2 mb-8">
+          {(['participants', 'bios'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-2.5 rounded-xl text-xs font-avenir-bold uppercase tracking-widest transition-all border ${
+                activeTab === tab
+                  ? 'bg-[#1552ab] border-[#1552ab] text-white'
+                  : 'border-white/10 text-white/50 hover:text-white hover:border-white/30'
+              }`}
+            >
+              {tab === 'participants' ? 'Participants' : (
+                <>Bios{completedBios.length > 0 && (
+                  <span className="ml-1.5 bg-white/20 px-1.5 py-0.5 rounded-full text-[9px]">
+                    {completedBios.length}
+                  </span>
+                )}</>
+              )}
+            </button>
+          ))}
+        </div>
+
         {loading ? (
           <div className="flex flex-col items-center py-40">
-            <Loader2 className="animate-spin text-[#1b52a9] mb-4" size={32} />
+            <Loader2 className="animate-spin text-[#1552ab] mb-4" size={32} />
             <p className="text-xs text-white/40 uppercase tracking-wider">Loading data...</p>
           </div>
-        ) : (
+        ) : activeTab === 'participants' ? (
           <AdminConsole
             participants={participants}
             onAdd={async () => loadData()}
@@ -612,11 +761,17 @@ const AdminDashboard: React.FC<{ isAdmin: boolean; onLogout: () => void }> = ({ 
             editingId={null}
             onSetEditingId={() => {}}
           />
+        ) : (
+          <BiosGallery
+            bios={completedBios}
+            onDelete={async (id) => { await api.adminDeleteParticipant(id); loadData(); }}
+          />
         )}
       </div>
     </div>
   );
 };
+
 
 // ─────────────────────────────────────────────
 //  ROOT APP — SessionContext + Router
@@ -682,7 +837,7 @@ const App: React.FC = () => {
   if (checkingAdmin) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center text-white">
-        <Loader2 className="animate-spin text-[#1b52a9]" size={32} />
+        <Loader2 className="animate-spin text-[#1552ab]" size={32} />
       </div>
     );
   }

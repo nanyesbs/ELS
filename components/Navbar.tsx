@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 <div className="flex items-center gap-3">
                     <div 
                         onClick={() => navigate('/')}
-                        className="h-10 px-4 border border-dashed border-white/20 dark:border-black/20 rounded flex items-center justify-center text-[10px] uppercase tracking-widest text-white/40 dark:text-black/40 cursor-pointer hover:border-[#1b52a9] transition-colors"
+                        className="h-10 px-4 border border-dashed border-white/20 dark:border-black/20 rounded flex items-center justify-center text-[10px] uppercase tracking-widest text-white/40 dark:text-black/40 cursor-pointer hover:border-[#1552ab] transition-colors"
                     >
                         [ Logo Slot ]
                     </div>
@@ -47,7 +47,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         onClick={() => navigate('/')}
                         className={`text-[10px] font-avenir-bold uppercase flex items-center gap-2 transition-all ${
                             viewMode === 'directory' 
-                                ? 'text-[#1b52a9]' 
+                                ? 'text-[#1552ab]' 
                                 : 'text-white/40 dark:text-black/40 hover:text-white dark:hover:text-black'
                         }`}
                     >
@@ -58,7 +58,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         onClick={() => navigate('/admin')}
                         className={`text-[10px] font-avenir-bold uppercase flex items-center gap-2 transition-all ${
                             viewMode === 'admin' 
-                                ? 'text-[#1b52a9]' 
+                                ? 'text-[#1552ab]' 
                                 : 'text-white/40 dark:text-black/40 hover:text-white dark:hover:text-black'
                         }`}
                     >
@@ -70,7 +70,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     
                     <button 
                         onClick={() => setDarkMode(!darkMode)} 
-                        className="text-[#1b52a9] hover:scale-110 active:scale-95 transition-all"
+                        className="text-[#1552ab] hover:scale-110 active:scale-95 transition-all"
                     >
                         {darkMode ? <Sun size={20} /> : <Moon size={20} />}
                     </button>

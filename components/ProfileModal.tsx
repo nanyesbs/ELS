@@ -67,18 +67,18 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
         {/* Close Button */}
         <button 
           onClick={onClose} 
-          className="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center bg-black/40 backdrop-blur-2xl rounded-full text-white/80 hover:text-[#1b52a9] hover:scale-110 hover:rotate-90 transition-all border border-white/10"
+          className="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center bg-black/40 backdrop-blur-2xl rounded-full text-white/80 hover:text-[#1552ab] hover:scale-110 hover:rotate-90 transition-all border border-white/10"
         >
           <X size={20} />
         </button>
 
         {/* Left Section: Photo and Basic Info */}
         <div className="w-full md:w-2/5 p-8 flex flex-col items-center bg-white/2 dark:bg-black/2 border-b md:border-b-0 md:border-r border-white/5 dark:border-black/5 relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1b52a9]/5 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1552ab]/5 to-transparent pointer-events-none" />
 
           {/* Profile Picture */}
           <div className="relative mb-6 group z-10">
-            <div className="w-32 h-32 rounded-3xl overflow-hidden border-2 border-[#1b52a9]/30 shadow-2xl relative">
+            <div className="w-32 h-32 rounded-3xl overflow-hidden border-2 border-[#1552ab]/30 shadow-2xl relative">
               <img 
                 src={participant.photo_url || getIdentityPlaceholder(participant.name || 'ELS')} 
                 alt={participant.name} 
@@ -86,7 +86,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
               />
             </div>
             {participant.status === 'completed' && (
-              <div className="absolute -bottom-2 -right-2 px-3 py-1 bg-[#1b52a9] text-white text-[8px] font-avenir-bold uppercase rounded-full shadow-glow flex items-center gap-1 border border-[#1b52a9]/50">
+              <div className="absolute -bottom-2 -right-2 px-3 py-1 bg-[#1552ab] text-white text-[8px] font-avenir-bold uppercase rounded-full shadow-glow flex items-center gap-1 border border-[#1552ab]/50">
                 <ShieldCheck size={10} /> Active
               </div>
             )}
@@ -97,7 +97,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
             <h2 className="text-xl font-extrabold uppercase tracking-wide text-white dark:text-black leading-tight">
               {participant.name}
             </h2>
-            <div className="inline-flex items-center gap-1 bg-[#1b52a9]/10 text-[#1b52a9] px-3 py-1 rounded-full text-[10px] font-avenir-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1 bg-[#1552ab]/10 text-[#1552ab] px-3 py-1 rounded-full text-[10px] font-avenir-bold uppercase tracking-wider">
               {participant.role}
             </div>
             <p className="text-xs text-white/50 dark:text-black/50 font-avenir-medium tracking-wide">
@@ -108,7 +108,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
           {/* Social media links */}
           {participant.social_media && participant.social_media.length > 0 && (
             <div className="mt-8 w-full border-t border-white/5 dark:border-black/5 pt-6 z-10">
-              <h4 className="text-[10px] font-avenir-bold text-[#1b52a9] uppercase tracking-[4px] mb-4 text-center">Social Media</h4>
+              <h4 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[4px] mb-4 text-center">Social Media</h4>
               <div className="flex flex-col gap-2">
                 {participant.social_media.map((account, idx) => (
                   <a 
@@ -116,13 +116,13 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
                     href={account.handle.startsWith('http') ? account.handle : `https://${account.platform.toLowerCase() === 'instagram' ? 'instagram.com/' : ''}${account.handle.replace('@', '')}`}
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between p-3 bg-white/5 dark:bg-black/5 rounded-xl border border-white/5 dark:border-black/5 hover:border-[#1b52a9]/30 transition-all text-xs font-avenir-medium group"
+                    className="flex items-center justify-between p-3 bg-white/5 dark:bg-black/5 rounded-xl border border-white/5 dark:border-black/5 hover:border-[#1552ab]/30 transition-all text-xs font-avenir-medium group"
                   >
                     <span className="flex items-center gap-2">
                       <span>{getPlatformIcon(account.platform)}</span>
                       <span className="capitalize">{account.platform}</span>
                     </span>
-                    <span className="text-white/40 dark:text-black/40 group-hover:text-[#1b52a9] transition-colors flex items-center gap-1">
+                    <span className="text-white/40 dark:text-black/40 group-hover:text-[#1552ab] transition-colors flex items-center gap-1">
                       {account.handle} <ExternalLink size={10} />
                     </span>
                   </a>
@@ -139,8 +139,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
             {/* Short Bio */}
             {participant.short_bio && (
               <div className="relative pl-6">
-                <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#1b52a9]" />
-                <h4 className="text-[10px] font-avenir-bold text-[#1b52a9] uppercase tracking-[4px] mb-3">Short Bio</h4>
+                <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#1552ab]" />
+                <h4 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[4px] mb-3">Short Bio</h4>
                 <p className="text-sm md:text-base font-avenir-roman leading-relaxed text-white/80 dark:text-black/80">
                   {participant.short_bio}
                 </p>
@@ -151,7 +151,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {participant.ministry && (
                 <div className="space-y-1">
-                  <span className="text-[8px] font-avenir-bold text-[#1b52a9] uppercase tracking-widest block">Ministry Focus</span>
+                  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Ministry Focus</span>
                   <div className="text-sm font-avenir-medium text-white dark:text-black flex items-center gap-2">
                     <Building size={14} className="text-white/20 dark:text-black/20" />
                     {participant.ministry}
@@ -161,7 +161,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
 
               {participant.church && (
                 <div className="space-y-1">
-                  <span className="text-[8px] font-avenir-bold text-[#1b52a9] uppercase tracking-widest block">Church Affiliation</span>
+                  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Church Affiliation</span>
                   <div className="text-sm font-avenir-medium text-white dark:text-black flex items-center gap-2">
                     <Globe size={14} className="text-white/20 dark:text-black/20" />
                     {participant.church}
@@ -170,7 +170,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
               )}
 
               <div className="space-y-1">
-                <span className="text-[8px] font-avenir-bold text-[#1b52a9] uppercase tracking-widest block">Residency Location</span>
+                <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Residency Location</span>
                 <div className="text-sm font-avenir-medium text-white dark:text-black flex items-center gap-2">
                   <MapPin size={14} className="text-white/20 dark:text-black/20" />
                   {participant.city ? `${participant.city}, ` : ''}{countryInfo.flag} {countryInfo.name}
@@ -182,7 +182,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
             <div className="space-y-6 pt-6 border-t border-white/5 dark:border-black/5">
               {participant.areas_of_interest && participant.areas_of_interest.length > 0 && (
                 <div className="space-y-2">
-                  <span className="text-[8px] font-avenir-bold text-[#1b52a9] uppercase tracking-widest block">Areas of Interest</span>
+                  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Areas of Interest</span>
                   <div className="flex flex-wrap gap-1.5">
                     {participant.areas_of_interest.map(interest => (
                       <span key={interest} className="px-3 py-1 bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 rounded-full text-[9px] font-avenir-bold uppercase text-white/70 dark:text-black/70">
@@ -195,10 +195,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
 
               {participant.languages_spoken && participant.languages_spoken.length > 0 && (
                 <div className="space-y-2">
-                  <span className="text-[8px] font-avenir-bold text-[#1b52a9] uppercase tracking-widest block">Languages Spoken</span>
+                  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Languages Spoken</span>
                   <div className="flex flex-wrap gap-1.5">
                     {participant.languages_spoken.map(lang => (
-                      <span key={lang} className="px-3 py-1 bg-[#1b52a9]/5 border border-[#1b52a9]/10 rounded-full text-[9px] font-avenir-bold uppercase text-[#1b52a9]">
+                      <span key={lang} className="px-3 py-1 bg-[#1552ab]/5 border border-[#1552ab]/10 rounded-full text-[9px] font-avenir-bold uppercase text-[#1552ab]">
                         {lang}
                       </span>
                     ))}
@@ -217,14 +217,14 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <span className="text-[8px] font-avenir-bold text-white/30 dark:text-black/30 uppercase tracking-widest block">Contact Email</span>
-                    <a href={`mailto:${participant.email}`} className="text-xs font-avenir-medium text-white dark:text-black hover:text-[#1b52a9] flex items-center gap-1.5">
+                    <a href={`mailto:${participant.email}`} className="text-xs font-avenir-medium text-white dark:text-black hover:text-[#1552ab] flex items-center gap-1.5">
                       <Mail size={12} /> {participant.email || 'None'}
                     </a>
                   </div>
 
                   <div className="space-y-1">
                     <span className="text-[8px] font-avenir-bold text-white/30 dark:text-black/30 uppercase tracking-widest block">Phone Number</span>
-                    <a href={`tel:${participant.phone}`} className="text-xs font-avenir-medium text-white dark:text-black hover:text-[#1b52a9] flex items-center gap-1.5">
+                    <a href={`tel:${participant.phone}`} className="text-xs font-avenir-medium text-white dark:text-black hover:text-[#1552ab] flex items-center gap-1.5">
                       <Phone size={12} /> {participant.phone || 'None'}
                     </a>
                   </div>
@@ -240,7 +240,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
               {onEdit && (
                 <button
                   onClick={() => onEdit(participant.id)}
-                  className="px-5 py-2.5 bg-white/5 border border-white/10 hover:border-[#1b52a9] hover:bg-[#1b52a9]/5 text-xs font-avenir-bold uppercase tracking-wider rounded-lg transition-all"
+                  className="px-5 py-2.5 bg-white/5 border border-white/10 hover:border-[#1552ab] hover:bg-[#1552ab]/5 text-xs font-avenir-bold uppercase tracking-wider rounded-lg transition-all"
                 >
                   Edit profile
                 </button>

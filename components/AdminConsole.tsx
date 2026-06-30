@@ -90,7 +90,7 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
           <span className="text-[10px] font-avenir-bold text-white/50 dark:text-black/50 uppercase tracking-[2px]">
             Total Registered
           </span>
-          <span className="text-4xl font-extrabold mt-2 block text-[#1b52a9]">
+          <span className="text-4xl font-extrabold mt-2 block text-[#1552ab]">
             {participants.length}
           </span>
         </div>
@@ -163,7 +163,7 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
                   {/* Registrant identity */}
                   <td 
                     onClick={() => setSelectedParticipant(p)}
-                    className="p-4 pl-6 space-y-1 cursor-pointer hover:text-[#1b52a9] transition-colors"
+                    className="p-4 pl-6 space-y-1 cursor-pointer hover:text-[#1552ab] transition-colors"
                   >
                     <div className="font-avenir-bold text-white dark:text-black">
                       {p.registered_name || p.name || '—'}
@@ -180,7 +180,7 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
                   >
                     {p.status === 'completed' ? (
                       <>
-                        <div className="font-avenir-bold text-[#1b52a9]">{p.name}</div>
+                        <div className="font-avenir-bold text-[#1552ab]">{p.name}</div>
                         <div className="text-[10px] text-white/50 dark:text-black/50">
                           {p.role}{p.organization ? ` · ${p.organization}` : ''}
                         </div>
@@ -230,7 +230,7 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
                         onClick={() => handleResendAccess(p)}
                         disabled={resendingId === p.id}
                         title="Resend access link"
-                        className="p-2 bg-white/5 hover:bg-[#1b52a9]/10 border border-white/10 hover:border-[#1b52a9] text-[#1b52a9] rounded-lg transition-all disabled:opacity-40"
+                        className="p-2 bg-white/5 hover:bg-[#1552ab]/10 border border-white/10 hover:border-[#1552ab] text-[#1552ab] rounded-lg transition-all disabled:opacity-40"
                       >
                         {resendingId === p.id
                           ? <Loader2 size={14} className="animate-spin" />

@@ -18,7 +18,7 @@ export function getEmailConfig(): EmailConfig {
     appUrl: Deno.env.get("APP_URL") || "https://elsconnection.vercel.app",
     senderEmail: Deno.env.get("SENDER_EMAIL") || "onboarding@resend.dev",
     senderName: Deno.env.get("SENDER_NAME") || "ELS Madrid 2026",
-    brandColor: Deno.env.get("BRAND_COLOR") || "#1b52a9",
+    brandColor: Deno.env.get("BRAND_COLOR") || "#1552ab",
     brandColorDark: Deno.env.get("BRAND_COLOR_DARK") || "#0f387a",
     eventName: "Empowered21 + Europe Shall Be Saved (ELS) Retreat",
     eventDates: "10–12 November 2026",

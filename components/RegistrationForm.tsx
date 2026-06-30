@@ -174,7 +174,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
         return (
             <div className="flex flex-col items-center justify-center py-20 animate-fade-in text-center px-4 max-w-xl mx-auto">
                 <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mb-8 border border-green-500/20 shadow-glow">
-                    <CheckCircle2 size={36} className="text-[#1b52a9] dark:text-green-600" />
+                    <CheckCircle2 size={36} className="text-[#1552ab] dark:text-green-600" />
                 </div>
                 <h2 className="text-3xl font-extrabold text-white dark:text-black uppercase tracking-tight mb-4">
                     {isDuplicate ? 'Access Link Sent!' : t('registration.completeTitle', 'Profile Synchronized!')}
@@ -187,7 +187,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                 {!isDuplicate && onComplete && (
                     <button
                         onClick={() => onComplete()}
-                        className="px-10 py-5 bg-[#1b52a9] hover:bg-[#1b52a9]/90 text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] shadow-glow active:scale-95 transition-all"
+                        className="px-10 py-5 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] shadow-glow active:scale-95 transition-all"
                     >
                         {t('registration.returnDir', 'Go to Directory')}
                     </button>
@@ -200,7 +200,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
         <div className="w-full max-w-3xl mx-auto">
             {/* Header Section */}
             <div className="mb-16 text-center">
-                <h2 className="text-xs font-avenir-bold text-[#1b52a9] uppercase tracking-[0.4em] mb-4">
+                <h2 className="text-xs font-avenir-bold text-[#1552ab] uppercase tracking-[0.4em] mb-4">
                     {t('registration.protocol', 'ELS Madrid 2026')}
                 </h2>
                 <h1 className="text-3xl md:text-5xl font-extrabold text-white dark:text-black uppercase tracking-tight leading-none italic mb-8">
@@ -213,9 +213,9 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                         <div key={num} className="flex flex-col items-center gap-2 relative z-10">
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-avenir-bold transition-all duration-300 border-2 ${
                                 step === num 
-                                    ? 'bg-black dark:bg-white border-[#1b52a9] text-[#1b52a9] scale-110' 
+                                    ? 'bg-black dark:bg-white border-[#1552ab] text-[#1552ab] scale-110' 
                                     : step > num 
-                                        ? 'bg-[#1b52a9] border-[#1b52a9] text-white' 
+                                        ? 'bg-[#1552ab] border-[#1552ab] text-white' 
                                         : 'bg-white/5 dark:bg-black/5 border-white/10 dark:border-black/10 text-white/40 dark:text-black/40'
                             }`}>
                                 {step > num ? <CheckCircle2 size={16} /> : `0${num}`}
@@ -227,15 +227,15 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
             </div>
 
             <div className="bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/5 rounded-3xl p-6 sm:p-10 md:p-12 relative overflow-hidden backdrop-blur-2xl">
-                <div className="absolute top-0 right-0 w-48 h-48 bg-[#1b52a9]/5 blur-[80px] pointer-events-none" />
+                <div className="absolute top-0 right-0 w-48 h-48 bg-[#1552ab]/5 blur-[80px] pointer-events-none" />
 
                 <form onSubmit={handleSubmit} className="space-y-8 relative">
                     
                     {/* STEP 1: Basic Bio Info */}
                     {step === 1 && (
                         <div className="animate-slide-up space-y-6">
-                            <div className="border-l-2 border-[#1b52a9] pl-6 space-y-2 mb-8">
-                                <h3 className="text-[10px] font-avenir-bold text-[#1b52a9] uppercase tracking-[3px]">Section 1 of 3</h3>
+                            <div className="border-l-2 border-[#1552ab] pl-6 space-y-2 mb-8">
+                                <h3 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[3px]">Section 1 of 3</h3>
                                 <h4 className="text-lg font-avenir-bold text-white dark:text-black uppercase tracking-wider">Bio Profile Credentials</h4>
                             </div>
 
@@ -244,7 +244,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                     <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-white/50 dark:text-black/50 pl-1 block">Full Name *</label>
                                     <input
                                         type="text" name="name" value={formData.name} onChange={handleChange} required
-                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1b52a9] transition-all"
+                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
                                         placeholder="Full Name"
                                     />
                                 </div>
@@ -253,7 +253,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                     <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-white/50 dark:text-black/50 pl-1 block">Country *</label>
                                     <select
                                         name="country" value={formData.country} onChange={handleChange} required
-                                        className="w-full bg-[#151515] dark:bg-[#f5f5f5] border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1b52a9] transition-all"
+                                        className="w-full bg-[#151515] dark:bg-[#f5f5f5] border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
                                     >
                                         <option value="" disabled>Select country</option>
                                         {allCountries.map(c => (
@@ -266,7 +266,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                     <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-white/50 dark:text-black/50 pl-1 block">City *</label>
                                     <input
                                         type="text" name="city" value={formData.city} onChange={handleChange} required
-                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1b52a9] transition-all"
+                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
                                         placeholder="City (e.g. Madrid)"
                                     />
                                 </div>
@@ -275,7 +275,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                     <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-white/50 dark:text-black/50 pl-1 block">Role / Position *</label>
                                     <input
                                         type="text" name="role" value={formData.role} onChange={handleChange} required
-                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1b52a9] transition-all"
+                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
                                         placeholder="e.g. Executive Director, Pastor, Leader"
                                     />
                                 </div>
@@ -284,7 +284,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                     <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-white/50 dark:text-black/50 pl-1 block">Organization Name *</label>
                                     <input
                                         type="text" name="organization" value={formData.organization} onChange={handleChange} required
-                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1b52a9] transition-all"
+                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
                                         placeholder="Organization Name"
                                     />
                                 </div>
@@ -293,7 +293,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                     <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-white/50 dark:text-black/50 pl-1 block">Church Name *</label>
                                     <input
                                         type="text" name="church" value={formData.church} onChange={handleChange} required
-                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1b52a9] transition-all"
+                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
                                         placeholder="Church Name"
                                     />
                                 </div>
@@ -302,7 +302,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                     <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-white/50 dark:text-black/50 pl-1 block">Ministry / Field *</label>
                                     <input
                                         type="text" name="ministry" value={formData.ministry} onChange={handleChange} required
-                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1b52a9] transition-all"
+                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
                                         placeholder="Primary Ministry Focus (e.g. Media Missions, Church Planting)"
                                     />
                                 </div>
@@ -310,11 +310,11 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                 <div className="space-y-2 md:col-span-2">
                                     <div className="flex justify-between items-center pl-1">
                                         <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-white/50 dark:text-black/50 block">Short Bio *</label>
-                                        <span className="text-[9px] font-avenir-bold text-[#1b52a9]/70 uppercase">{500 - formData.short_bio.length} chars left</span>
+                                        <span className="text-[9px] font-avenir-bold text-[#1552ab]/70 uppercase">{500 - formData.short_bio.length} chars left</span>
                                     </div>
                                     <textarea
                                         name="short_bio" value={formData.short_bio} onChange={handleChange} required maxLength={500} rows={4}
-                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1b52a9] transition-all resize-none"
+                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1552ab] transition-all resize-none"
                                         placeholder="A brief bio summarizing your story, mission, and background (max 500 characters)..."
                                     />
                                 </div>
@@ -325,8 +325,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                     {/* STEP 2: Photo upload & selections */}
                     {step === 2 && (
                         <div className="animate-slide-up space-y-6">
-                            <div className="border-l-2 border-[#1b52a9] pl-6 space-y-2 mb-8">
-                                <h3 className="text-[10px] font-avenir-bold text-[#1b52a9] uppercase tracking-[3px]">Section 2 of 3</h3>
+                            <div className="border-l-2 border-[#1552ab] pl-6 space-y-2 mb-8">
+                                <h3 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[3px]">Section 2 of 3</h3>
                                 <h4 className="text-lg font-avenir-bold text-white dark:text-black uppercase tracking-wider">Media & Engagement parameters</h4>
                             </div>
 
@@ -348,7 +348,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                     <p className="text-[10px] text-white/40 dark:text-black/40 leading-relaxed max-w-sm">
                                         Please upload a clear portrait of yourself. It will be printed in the participant networking brochure. Max file size: 5MB.
                                     </p>
-                                    <label className="mt-2 inline-flex items-center gap-2 px-4 py-2 border border-[#1b52a9]/20 hover:border-[#1b52a9]/50 hover:bg-[#1b52a9]/5 text-[#1b52a9] rounded-lg text-[10px] font-avenir-bold uppercase tracking-wider transition-all cursor-pointer">
+                                    <label className="mt-2 inline-flex items-center gap-2 px-4 py-2 border border-[#1552ab]/20 hover:border-[#1552ab]/50 hover:bg-[#1552ab]/5 text-[#1552ab] rounded-lg text-[10px] font-avenir-bold uppercase tracking-wider transition-all cursor-pointer">
                                         <Camera size={12} /> Choose Image File
                                         <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
                                     </label>
@@ -366,8 +366,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                                 key={interest} type="button" onClick={() => toggleInterest(interest)}
                                                 className={`px-4 py-2 text-[10px] font-avenir-bold uppercase tracking-wider rounded-lg border transition-all ${
                                                     isSelected 
-                                                        ? 'bg-[#1b52a9] border-[#1b52a9] text-white shadow-glow' 
-                                                        : 'border-white/10 dark:border-black/10 text-white/50 dark:text-black/50 hover:border-[#1b52a9]/50'
+                                                        ? 'bg-[#1552ab] border-[#1552ab] text-white shadow-glow' 
+                                                        : 'border-white/10 dark:border-black/10 text-white/50 dark:text-black/50 hover:border-[#1552ab]/50'
                                                 }`}
                                             >
                                                 {interest}
@@ -388,8 +388,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                                 key={lang} type="button" onClick={() => toggleLanguage(lang)}
                                                 className={`px-4 py-2 text-[10px] font-avenir-bold uppercase tracking-wider rounded-lg border transition-all ${
                                                     isSelected 
-                                                        ? 'bg-[#1b52a9] border-[#1b52a9] text-white shadow-glow' 
-                                                        : 'border-white/10 dark:border-black/10 text-white/50 dark:text-black/50 hover:border-[#1b52a9]/50'
+                                                        ? 'bg-[#1552ab] border-[#1552ab] text-white shadow-glow' 
+                                                        : 'border-white/10 dark:border-black/10 text-white/50 dark:text-black/50 hover:border-[#1552ab]/50'
                                                 }`}
                                             >
                                                 {lang}
@@ -404,8 +404,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                     {/* STEP 3: Contact & Links */}
                     {step === 3 && (
                         <div className="animate-slide-up space-y-6">
-                            <div className="border-l-2 border-[#1b52a9] pl-6 space-y-2 mb-8">
-                                <h3 className="text-[10px] font-avenir-bold text-[#1b52a9] uppercase tracking-[3px]">Section 3 of 3</h3>
+                            <div className="border-l-2 border-[#1552ab] pl-6 space-y-2 mb-8">
+                                <h3 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[3px]">Section 3 of 3</h3>
                                 <h4 className="text-lg font-avenir-bold text-white dark:text-black uppercase tracking-wider">Contact Credentials & Web presence</h4>
                             </div>
 
@@ -416,7 +416,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                     </label>
                                     <input
                                         type="email" name="email" value={formData.email} onChange={handleChange} required
-                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1b52a9] transition-all"
+                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
                                         placeholder="public@example.com"
                                     />
                                     <p className="text-[9px] text-white/30 dark:text-black/30 pl-1">Note: This email will be visible to attendees on your profile details card.</p>
@@ -428,7 +428,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                     </label>
                                     <input
                                         type="tel" name="phone" value={formData.phone} onChange={handleChange} required
-                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1b52a9] transition-all"
+                                        className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
                                         placeholder="+1 234 567 8900"
                                     />
                                 </div>
@@ -447,7 +447,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                                                     type="text" 
                                                     value={account.handle} 
                                                     onChange={e => handleSocialChange(index, e.target.value)}
-                                                    className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-xs font-avenir-medium text-white dark:text-black outline-none focus:border-[#1b52a9] transition-all"
+                                                    className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-xs font-avenir-medium text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
                                                     placeholder={account.platform === 'Website' ? 'https://...' : '@handle'}
                                                 />
                                             </div>
@@ -469,7 +469,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                         {step > 1 ? (
                             <button
                                 type="button" onClick={handleBack} disabled={loading}
-                                className="px-6 py-4 border border-white/10 dark:border-black/10 text-white/60 dark:text-black/60 rounded-xl font-avenir-bold uppercase text-[10px] tracking-[3px] hover:text-[#1b52a9] transition-all flex items-center gap-2"
+                                className="px-6 py-4 border border-white/10 dark:border-black/10 text-white/60 dark:text-black/60 rounded-xl font-avenir-bold uppercase text-[10px] tracking-[3px] hover:text-[#1552ab] transition-all flex items-center gap-2"
                             >
                                 <ChevronLeft size={14} /> Back
                             </button>
@@ -480,14 +480,14 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                         {step < 3 ? (
                             <button
                                 type="button" onClick={handleNext}
-                                className="px-6 py-4 bg-white/5 dark:bg-black/5 border border-[#1b52a9]/20 hover:border-[#1b52a9] hover:bg-[#1b52a9] text-[#1b52a9] hover:text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[3px] transition-all flex items-center gap-2"
+                                className="px-6 py-4 bg-white/5 dark:bg-black/5 border border-[#1552ab]/20 hover:border-[#1552ab] hover:bg-[#1552ab] text-[#1552ab] hover:text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[3px] transition-all flex items-center gap-2"
                             >
                                 Next <ChevronRight size={14} />
                             </button>
                         ) : (
                             <button
                                 type="submit" disabled={loading}
-                                className="px-8 py-5 bg-[#1b52a9] text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] shadow-glow active:scale-95 transition-all flex items-center gap-2"
+                                className="px-8 py-5 bg-[#1552ab] text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] shadow-glow active:scale-95 transition-all flex items-center gap-2"
                             >
                                 {loading ? (
                                     <>
