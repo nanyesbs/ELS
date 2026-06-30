@@ -70,20 +70,20 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#efefef] dark:bg-[#0a0a0a] text-black dark:text-white flex flex-col transition-colors duration-500">
+    <div className="min-h-screen bg-black dark:bg-[#efefef] text-white dark:text-black flex flex-col transition-colors duration-500">
       {/* Navigation */}
-      <nav className="w-full px-6 md:px-12 py-5 flex items-center justify-between border-b border-black/5 dark:border-white/5">
+      <nav className="w-full px-6 md:px-12 py-5 flex items-center justify-between border-b border-white/5 dark:border-black/5">
         <div className="flex items-center gap-3">
           <img src="/logo-e21.png" alt="E21 Logo" className="h-6 md:h-7 w-auto object-contain" />
           <img src="/logo-esbs.png" alt="ESBS Logo" className="h-6 md:h-7 w-auto object-contain" />
-          <div className="w-[1px] h-5 bg-black/10 dark:bg-white/10 mx-1" />
-          <span className="text-[9px] md:text-[10px] font-avenir-bold uppercase tracking-[0.25em] text-[#1552ab] dark:text-white">
+          <div className="w-[1px] h-5 bg-white/10 dark:bg-black/10 mx-1" />
+          <span className="text-[9px] md:text-[10px] font-avenir-bold uppercase tracking-[0.25em] text-white dark:text-[#1552ab]">
             ELS | Madrid 2026
           </span>
         </div>
         <button
           onClick={() => navigate('/admin/login')}
-          className="text-[9px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/70 dark:text-white/50 hover:text-[#1552ab] dark:hover:text-white transition-colors flex items-center gap-1.5"
+          className="text-[9px] font-avenir-bold uppercase tracking-widest text-white/50 dark:text-[#1552ab]/70 hover:text-white dark:hover:text-[#1552ab] transition-colors flex items-center gap-1.5"
         >
           <Shield size={12} /> Admin
         </button>
@@ -101,12 +101,12 @@ const LandingPage: React.FC = () => {
         </div>
 
         {/* Date Subtitle */}
-        <p className="text-[11px] sm:text-xs md:text-sm font-avenir-bold text-[#1552ab] dark:text-white/70 uppercase tracking-[0.3em] sm:tracking-[0.4em] mb-6">
+        <p className="text-[11px] sm:text-xs md:text-sm font-avenir-bold text-white/70 dark:text-[#1552ab] uppercase tracking-[0.3em] sm:tracking-[0.4em] mb-6">
           10 - 12 November 2026
         </p>
 
         {/* Location badge */}
-        <div className="inline-block border-2 border-[#1552ab] px-8 py-2.5 rounded-xl text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[3px] mb-12 sm:mb-16 bg-transparent">
+        <div className="inline-block border-2 border-white/20 dark:border-[#1552ab] px-8 py-2.5 rounded-xl text-[10px] font-avenir-bold text-white dark:text-[#1552ab] uppercase tracking-[3px] mb-12 sm:mb-16 bg-transparent">
           Madrid, Spain
         </div>
 
@@ -118,9 +118,9 @@ const LandingPage: React.FC = () => {
           >
             Join the Directory <ArrowRight size={14} />
           </button>
-          <p className="text-[9px] text-[#1552ab]/60 dark:text-white/40 font-avenir-medium uppercase tracking-[2px]">
+          <p className="text-[9px] text-white/40 dark:text-[#1552ab]/60 font-avenir-medium uppercase tracking-[2px]">
             Already registered?{' '}
-            <span className="text-[#1552ab] dark:text-white underline cursor-pointer" onClick={() => alert('Search your email inbox for "ELS Connection" or "esbsinterview@gmail.com" to find your secure access link.')}>
+            <span className="text-white dark:text-[#1552ab] underline cursor-pointer" onClick={() => alert('Search your email inbox for "ELS Connection" or "esbsinterview@gmail.com" to find your secure access link.')}>
               Check your email for your personal link.
             </span>
           </p>
@@ -128,8 +128,8 @@ const LandingPage: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-black/5 dark:border-white/5 py-8 text-center bg-black/2 dark:bg-white/2">
-        <p className="text-[9px] text-[#1552ab]/40 dark:text-white/20 font-avenir-bold uppercase tracking-[0.3em]">
+      <footer className="border-t border-white/5 dark:border-black/5 py-8 text-center bg-white/2 dark:bg-black/2">
+        <p className="text-[9px] text-white/20 dark:text-[#1552ab]/40 font-avenir-bold uppercase tracking-[0.3em]">
           Empowered21 • Europe Shall Be Saved • Global Church
         </p>
       </footer>
@@ -526,39 +526,39 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-6">
-      <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-[2rem] p-8 md:p-12 shadow-2xl backdrop-blur-2xl">
+    <div className="min-h-screen bg-black dark:bg-[#efefef] text-white dark:text-black flex items-center justify-center p-6 transition-colors duration-500">
+      <div className="w-full max-w-md bg-white/5 dark:bg-white border border-white/10 dark:border-black/10 rounded-[2rem] p-8 md:p-12 shadow-2xl backdrop-blur-2xl">
         <div className="flex flex-col items-center mb-10">
           <div className="w-16 h-16 bg-[#1552ab]/20 border border-[#1552ab]/40 rounded-full flex items-center justify-center mb-6">
             <Shield size={28} className="text-[#1552ab]" />
           </div>
-          <h1 className="text-xl font-avenir-bold text-center tracking-tight text-white uppercase">Admin Console</h1>
-          <p className="text-[10px] tracking-[0.2em] font-avenir-medium uppercase text-white/40 mt-2">ELS Madrid 2026</p>
+          <h1 className="text-xl font-avenir-bold text-center tracking-tight text-white dark:text-black uppercase">Admin Console</h1>
+          <p className="text-[10px] tracking-[0.2em] font-avenir-medium uppercase text-white/40 dark:text-black/40 mt-2">ELS Madrid 2026</p>
         </div>
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">Email</label>
+            <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 dark:text-black/50 pl-1 block">Email</label>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
-              className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm text-white outline-none focus:border-[#1552ab] transition-all"
+              className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 rounded-xl text-sm text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
               placeholder="esbsinterview@gmail.com"
               autoComplete="email" />
           </div>
           <div className="space-y-2">
-            <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">Password</label>
+            <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 dark:text-black/50 pl-1 block">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                className="w-full bg-white/5 border border-white/10 p-4 pr-12 rounded-xl text-sm text-white outline-none focus:border-[#1552ab] transition-all"
+                className="w-full bg-white/5 dark:bg-black/5 border border-white/10 dark:border-black/10 p-4 pr-12 rounded-xl text-sm text-white dark:text-black outline-none focus:border-[#1552ab] transition-all"
                 placeholder="••••••••"
                 autoComplete="current-password"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(v => !v)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 dark:text-black/30 hover:text-white/70 dark:hover:text-black/70 transition-colors"
                 tabIndex={-1}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
