@@ -20,25 +20,45 @@ export interface Participant {
   last_reminder_sent_at?: string;
   token_expires_at?: string;
 
-  // Bio Fields (populated when status = 'completed')
+  // Bio Fields — Section 1: Personal Information
   name?: string;
-  country?: string;
+  country?: string;           // Resident country
+  nationality?: string;       // [NEW] Nationality
+  short_bio?: string;         // Bio / Background
+
+  // Bio Fields — Section 2: Ministry Information
+  organization?: string;      // Ministry / Church / Org / Business name
+  role?: string;              // Legacy text role (kept for AdminConsole + ParticipantCard)
+  role_tags?: string[];       // [NEW] Multi-select role tags
+  org_description?: string;   // [NEW] Description of organization
+  photo_url?: string;
+  promotional_picture_url?: string; // [NEW] Company flyer / logo / promo
+
+  // Bio Fields — Section 3: Public Contact Information
+  public_phone?: string;      // [NEW] Public phone number
+  public_email?: string;      // [NEW] Public contact email (separate from registration email)
+  public_website?: string;    // [NEW] Website URL
+  public_other?: string;      // [NEW] @handle / social link
+
+  // Bio Fields — Section 4: Testimonies & Additional Information
+  areas_of_interest?: string[];
+  testimony?: string;              // [NEW] PRIVATE — admin only
+  upcoming_kingdom_events?: string; // [NEW] PRIVATE — admin only
+  dietary_restrictions?: string;   // [NEW] PRIVATE — admin only
+
+  // Legacy fields — kept for backward compat, not shown in new form
   city?: string;
-  organization?: string;
   church?: string;
   ministry?: string;
-  role?: string;
-  photo_url?: string;
-  social_media?: SocialAccount[];
-  areas_of_interest?: string[];
   languages_spoken?: string[];
-  short_bio?: string;
+  social_media?: SocialAccount[];
 
-  // Private fields (visible to admins or via secure token session only)
+  // Legacy private field (replaced by public_phone in new form)
   phone?: string;
 
   created_at?: string;
   updated_at?: string;
 }
+
 
 export type LayoutMode = 'grid4' | 'grid2' | 'list';
