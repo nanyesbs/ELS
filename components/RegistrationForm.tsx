@@ -176,10 +176,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
  <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mb-8 border border-green-500/20 shadow-glow">
  <CheckCircle2 size={36} className="text-[#1552ab] dark:text-green-600" />
  </div>
- <h2 className="text-3xl font-extrabold text-[#111827] uppercase tracking-tight mb-4">
+ <h2 className="text-3xl font-extrabold text-[#1552ab] uppercase tracking-tight mb-4">
  {isDuplicate ? 'Access Link Sent!' : t('registration.completeTitle', 'Profile Synchronized!')}
  </h2>
- <p className="text-[#111827]/60 text-sm leading-relaxed mb-12">
+ <p className="text-[#1552ab]/60 text-sm leading-relaxed mb-12">
  {isDuplicate
  ? `${formData.email} is already registered. A new access link has been sent.`
  : t('registration.completeDesc', 'Your bio has been saved successfully. An email has been sent containing your dashboard link and a permanent link to edit your details in the future.')}
@@ -203,7 +203,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
  <h2 className="text-xs font-avenir-bold text-[#1552ab] uppercase tracking-[0.4em] mb-4">
  {t('registration.protocol', 'ELS Madrid 2026')}
  </h2>
- <h1 className="text-3xl md:text-5xl font-extrabold text-[#111827] uppercase tracking-tight leading-none italic mb-8">
+ <h1 className="text-3xl md:text-5xl font-extrabold text-[#1552ab] uppercase tracking-tight leading-none italic mb-8">
  {mode === 'create' ? t('registration.title', 'Complete Your Bio') : 'Edit Your Bio'}
  </h1>
  
@@ -216,7 +216,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
  ? 'bg-[#efefef] border-[#1552ab] text-[#1552ab] scale-110' 
  : step > num 
  ? 'bg-[#1552ab] border-[#1552ab] text-white' 
- : 'bg-black/5 border-black/10 text-[#111827]/40'
+ : 'bg-black/5 border-black/10 text-[#1552ab]/40'
  }`}>
  {step > num ? <CheckCircle2 size={16} /> : `0${num}`}
  </div>
@@ -236,24 +236,24 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
  <div className="animate-slide-up space-y-6">
  <div className="border-l-2 border-[#1552ab] pl-6 space-y-2 mb-8">
  <h3 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[3px]">Section 1 of 3</h3>
- <h4 className="text-lg font-avenir-bold text-[#111827] uppercase tracking-wider">Bio Profile Credentials</h4>
+ <h4 className="text-lg font-avenir-bold text-[#1552ab] uppercase tracking-wider">Bio Profile Credentials</h4>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
  <div className="space-y-2">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block">Full Name *</label>
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block">Full Name *</label>
  <input
  type="text" name="name" value={formData.name} onChange={handleChange} required
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  placeholder="Full Name"
  />
  </div>
 
  <div className="space-y-2">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block">Country *</label>
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block">Country *</label>
  <select
  name="country" value={formData.country} onChange={handleChange} required
- className="w-full bg-[#e8e8e8] border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-[#e8e8e8] border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  >
  <option value="" disabled>Select country</option>
  {allCountries.map(c => (
@@ -263,58 +263,58 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
  </div>
 
  <div className="space-y-2">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block">City *</label>
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block">City *</label>
  <input
  type="text" name="city" value={formData.city} onChange={handleChange} required
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  placeholder="City (e.g. Madrid)"
  />
  </div>
 
  <div className="space-y-2">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block">Role / Position *</label>
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block">Role / Position *</label>
  <input
  type="text" name="role" value={formData.role} onChange={handleChange} required
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  placeholder="e.g. Executive Director, Pastor, Leader"
  />
  </div>
 
  <div className="space-y-2">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block">Organization Name *</label>
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block">Organization Name *</label>
  <input
  type="text" name="organization" value={formData.organization} onChange={handleChange} required
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  placeholder="Organization Name"
  />
  </div>
 
  <div className="space-y-2">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block">Church Name *</label>
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block">Church Name *</label>
  <input
  type="text" name="church" value={formData.church} onChange={handleChange} required
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  placeholder="Church Name"
  />
  </div>
 
  <div className="space-y-2 md:col-span-2">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block">Ministry / Field *</label>
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block">Ministry / Field *</label>
  <input
  type="text" name="ministry" value={formData.ministry} onChange={handleChange} required
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  placeholder="Primary Ministry Focus (e.g. Media Missions, Church Planting)"
  />
  </div>
 
  <div className="space-y-2 md:col-span-2">
  <div className="flex justify-between items-center pl-1">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 block">Short Bio *</label>
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 block">Short Bio *</label>
  <span className="text-[9px] font-avenir-bold text-[#1552ab]/70 uppercase">{500 - formData.short_bio.length} chars left</span>
  </div>
  <textarea
  name="short_bio" value={formData.short_bio} onChange={handleChange} required maxLength={500} rows={4}
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab] transition-all resize-none"
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all resize-none"
  placeholder="A brief bio summarizing your story, mission, and background (max 500 characters)..."
  />
  </div>
@@ -327,7 +327,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
  <div className="animate-slide-up space-y-6">
  <div className="border-l-2 border-[#1552ab] pl-6 space-y-2 mb-8">
  <h3 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[3px]">Section 2 of 3</h3>
- <h4 className="text-lg font-avenir-bold text-[#111827] uppercase tracking-wider">Media & Engagement parameters</h4>
+ <h4 className="text-lg font-avenir-bold text-[#1552ab] uppercase tracking-wider">Media & Engagement parameters</h4>
  </div>
 
  {/* Photo upload section */}
@@ -336,16 +336,16 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
  {previewUrl ? (
  <img src={previewUrl} alt="Avatar Preview" className="w-full h-full object-cover" />
  ) : (
- <User className="text-[#111827]/20" size={32} />
+ <User className="text-[#1552ab]/20" size={32} />
  )}
  <label className="absolute inset-0 bg-[#efefef]/50 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity">
- <Camera className="text-[#111827]" size={20} />
+ <Camera className="text-[#1552ab]" size={20} />
  <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
  </label>
  </div>
  <div className="space-y-1 text-center sm:text-left">
- <h4 className="text-xs font-avenir-bold text-[#111827] uppercase tracking-wider">Profile Photo Upload *</h4>
- <p className="text-[10px] text-[#111827]/40 leading-relaxed max-w-sm">
+ <h4 className="text-xs font-avenir-bold text-[#1552ab] uppercase tracking-wider">Profile Photo Upload *</h4>
+ <p className="text-[10px] text-[#1552ab]/40 leading-relaxed max-w-sm">
  Please upload a clear portrait of yourself. It will be printed in the participant networking brochure. Max file size: 5MB.
  </p>
  <label className="mt-2 inline-flex items-center gap-2 px-4 py-2 border border-[#1552ab]/20 hover:border-[#1552ab]/50 hover:bg-[#1552ab]/5 text-[#1552ab] rounded-lg text-[10px] font-avenir-bold uppercase tracking-wider transition-all cursor-pointer">
@@ -357,7 +357,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
 
  {/* Areas of interest */}
  <div className="space-y-3">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block">Areas of Interest (Select all that apply)</label>
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block">Areas of Interest (Select all that apply)</label>
  <div className="flex flex-wrap gap-2">
  {INTERESTS_OPTIONS.map(interest => {
  const isSelected = selectedInterests.includes(interest);
@@ -367,7 +367,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
  className={`px-4 py-2 text-[10px] font-avenir-bold uppercase tracking-wider rounded-lg border transition-all ${
  isSelected 
  ? 'bg-[#1552ab] border-[#1552ab] text-white shadow-glow' 
- : 'border-black/10 text-[#111827]/50 hover:border-[#1552ab]/50'
+ : 'border-black/10 text-[#1552ab]/50 hover:border-[#1552ab]/50'
  }`}
  >
  {interest}
@@ -379,7 +379,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
 
  {/* Languages Spoken */}
  <div className="space-y-3">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block">Languages Spoken (Select all that apply)</label>
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block">Languages Spoken (Select all that apply)</label>
  <div className="flex flex-wrap gap-2">
  {LANGUAGES_OPTIONS.map(lang => {
  const isSelected = selectedLanguages.includes(lang);
@@ -389,7 +389,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
  className={`px-4 py-2 text-[10px] font-avenir-bold uppercase tracking-wider rounded-lg border transition-all ${
  isSelected 
  ? 'bg-[#1552ab] border-[#1552ab] text-white shadow-glow' 
- : 'border-black/10 text-[#111827]/50 hover:border-[#1552ab]/50'
+ : 'border-black/10 text-[#1552ab]/50 hover:border-[#1552ab]/50'
  }`}
  >
  {lang}
@@ -406,48 +406,48 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
  <div className="animate-slide-up space-y-6">
  <div className="border-l-2 border-[#1552ab] pl-6 space-y-2 mb-8">
  <h3 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[3px]">Section 3 of 3</h3>
- <h4 className="text-lg font-avenir-bold text-[#111827] uppercase tracking-wider">Contact Credentials & Web presence</h4>
+ <h4 className="text-lg font-avenir-bold text-[#1552ab] uppercase tracking-wider">Contact Credentials & Web presence</h4>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
  <div className="space-y-2">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block flex items-center gap-2">
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block flex items-center gap-2">
  <Mail size={12} /> Contact Email *
  </label>
  <input
  type="email" name="email" value={formData.email} onChange={handleChange} required
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  placeholder="public@example.com"
  />
- <p className="text-[9px] text-[#111827]/30 pl-1">Note: This email will be visible to attendees on your profile details card.</p>
+ <p className="text-[9px] text-[#1552ab]/30 pl-1">Note: This email will be visible to attendees on your profile details card.</p>
  </div>
 
  <div className="space-y-2">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block flex items-center gap-2">
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block flex items-center gap-2">
  <Phone size={12} /> Phone Number *
  </label>
  <input
  type="tel" name="phone" value={formData.phone} onChange={handleChange} required
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  placeholder="+1 234 567 8900"
  />
  </div>
 
  {/* Social handles */}
  <div className="md:col-span-2 space-y-4 pt-4 border-t border-black/8">
- <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/50 pl-1 block flex items-center gap-2">
+ <label className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block flex items-center gap-2">
  <Globe size={12} /> Social Media Links (Optional)
  </label>
  
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
  {socialAccounts.map((account, index) => (
  <div key={account.platform} className="space-y-2">
- <span className="text-[9px] font-avenir-bold uppercase tracking-wide text-[#111827]/40 pl-1">{account.platform}</span>
+ <span className="text-[9px] font-avenir-bold uppercase tracking-wide text-[#1552ab]/40 pl-1">{account.platform}</span>
  <input
  type="text" 
  value={account.handle} 
  onChange={e => handleSocialChange(index, e.target.value)}
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-xs font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-xs font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  placeholder={account.platform === 'Website' ? 'https://...' : '@handle'}
  />
  </div>
@@ -469,7 +469,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
  {step > 1 ? (
  <button
  type="button" onClick={handleBack} disabled={loading}
- className="px-6 py-4 border border-black/10 text-[#111827]/60 rounded-xl font-avenir-bold uppercase text-[10px] tracking-[3px] hover:text-[#1552ab] transition-all flex items-center gap-2"
+ className="px-6 py-4 border border-black/10 text-[#1552ab]/60 rounded-xl font-avenir-bold uppercase text-[10px] tracking-[3px] hover:text-[#1552ab] transition-all flex items-center gap-2"
  >
  <ChevronLeft size={14} /> Back
  </button>

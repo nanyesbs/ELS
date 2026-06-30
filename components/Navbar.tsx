@@ -4,79 +4,67 @@ import { LayoutGrid, Shield, Moon, Sun } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface NavbarProps {
- viewMode: 'directory' | 'admin';
- setViewMode: (mode: 'directory' | 'admin') => void;
- darkMode: boolean;
- setDarkMode: (dark: boolean) => void;
- isAdminAuthorized: boolean;
+  viewMode: 'directory' | 'admin';
+  setViewMode: (mode: 'directory' | 'admin') => void;
+  isAdminAuthorized: boolean;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
- viewMode,
- setViewMode,
- darkMode,
- setDarkMode,
- isAdminAuthorized
+  viewMode,
+  setViewMode,
+  isAdminAuthorized
 }) => {
- const { t } = useTranslation();
- const navigate = useNavigate();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
  return (
- <nav className="fixed top-0 left-0 right-0 z-[100] bg-[#efefef]/90 bg-white/90 backdrop-blur-xl border-b border-black/10">
- <div className="px-4 md:px-8 py-3 md:py-4 max-w-[1400px] mx-auto flex items-center justify-between">
- 
- {/* Brand Logo Slot */}
- <div className="flex items-center gap-3">
- <div 
- onClick={() => navigate('/')}
- className="h-10 px-4 border border-dashed border-white/20 dark:border-black/20 rounded flex items-center justify-center text-[10px] uppercase tracking-widest text-[#111827]/40 cursor-pointer hover:border-[#1552ab] transition-colors"
- >
- [ Logo Slot ]
- </div>
- <span 
- onClick={() => navigate('/')}
- className="text-[9px] md:text-[10px] font-avenir-bold text-[#111827] uppercase tracking-[0.2em] md:tracking-[0.3em] cursor-pointer hidden sm:block"
- >
- {t('nav.tagline', 'ELS MADRID 2026')}
- </span>
- </div>
+  <nav className="fixed top-0 left-0 right-0 z-[100] bg-[#efefef]/95 backdrop-blur-xl border-b border-[#1552ab]/10">
+    <div className="px-4 md:px-8 py-3 max-w-[1400px] mx-auto flex items-center justify-between">
+      
+      {/* Brand Logo Group */}
+      <div className="flex items-center gap-3">
+        <div 
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 cursor-pointer py-1"
+        >
+          <img src="/logo-e21.png" alt="21 Europe" className="h-7 object-contain" />
+          <img src="/logo-esbs.png" alt="Europe Shall Be Saved" className="h-7 object-contain" />
+        </div>
+        <span 
+          onClick={() => navigate('/')}
+          className="text-[9px] md:text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[0.2em] md:tracking-[0.3em] cursor-pointer hidden sm:block border-l border-[#1552ab]/20 pl-3"
+        >
+          {t('nav.tagline', 'ELS | MADRID 2026')}
+        </span>
+      </div>
 
- {/* Navigation Items */}
- <div className="flex items-center gap-6">
- <button
- onClick={() => navigate('/')}
- className={`text-[10px] font-avenir-bold uppercase flex items-center gap-2 transition-all ${
- viewMode === 'directory' 
- ? 'text-[#1552ab]' 
- : 'text-[#111827]/40 hover:text-white dark:hover:text-black'
- }`}
- >
- <LayoutGrid size={14} /> {t('nav.directory', 'Directory')}
- </button>
+      {/* Navigation Items */}
+      <div className="flex items-center gap-6">
+        <button
+          onClick={() => navigate('/')}
+          className={`text-[10px] font-avenir-bold uppercase flex items-center gap-2 transition-all ${
+            viewMode === 'directory' 
+              ? 'text-[#1552ab] border-b-2 border-[#1552ab] pb-1' 
+              : 'text-[#1552ab]/50 hover:text-[#1552ab]'
+          }`}
+        >
+          <LayoutGrid size={13} /> {t('nav.directory', 'Directory')}
+        </button>
 
- <button
- onClick={() => navigate('/admin')}
- className={`text-[10px] font-avenir-bold uppercase flex items-center gap-2 transition-all ${
- viewMode === 'admin' 
- ? 'text-[#1552ab]' 
- : 'text-[#111827]/40 hover:text-white dark:hover:text-black'
- }`}
- >
- <Shield size={14} /> {t('nav.admin', 'Admin')}
- {isAdminAuthorized && <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />}
- </button>
-
- <div className="w-[1px] h-4 bg-white bg-[#efefef]/10 mx-2" />
- 
- <button 
- onClick={() => setDarkMode(!darkMode)} 
- className="text-[#1552ab] hover:scale-110 active:scale-95 transition-all"
- >
- {darkMode ? <Sun size={20} /> : <Moon size={20} />}
- </button>
- </div>
- </div>
- </nav>
+        <button
+          onClick={() => navigate('/admin')}
+          className={`text-[10px] font-avenir-bold uppercase flex items-center gap-2 transition-all ${
+            viewMode === 'admin' 
+              ? 'text-[#1552ab] border-b-2 border-[#1552ab] pb-1' 
+              : 'text-[#1552ab]/50 hover:text-[#1552ab]'
+          }`}
+        >
+          <Shield size={13} /> {t('nav.admin', 'Admin')}
+          {isAdminAuthorized && <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />}
+        </button>
+      </div>
+    </div>
+  </nav>
  );
 };
 

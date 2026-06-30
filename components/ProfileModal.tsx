@@ -62,18 +62,18 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
  />
 
  {/* Modal Container */}
- <div className={`relative z-10 w-full max-w-4xl bg-[#f5f5f5] bg-white border border-black/10 rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-2xl transition-transform duration-500 ${isOpen ? 'translate-y-0 scale-100' : 'translate-y-4 scale-95'}`}>
+ <div className={`relative z-10 w-full max-w-4xl bg-white border border-[#1552ab]/15 rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-2xl transition-transform duration-500 ${isOpen ? 'translate-y-0 scale-100' : 'translate-y-4 scale-95'}`}>
  
  {/* Close Button */}
  <button 
  onClick={onClose} 
- className="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center bg-[#efefef]/40 backdrop-blur-2xl rounded-full text-[#111827]/80 hover:text-[#1552ab] hover:scale-110 hover:rotate-90 transition-all border border-black/10"
+ className="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center bg-[#efefef] hover:bg-[#1552ab] text-[#1552ab] hover:text-white hover:scale-110 hover:rotate-90 transition-all border border-[#1552ab]/10 rounded-full"
  >
  <X size={20} />
  </button>
 
  {/* Left Section: Photo and Basic Info */}
- <div className="w-full md:w-2/5 p-8 flex flex-col items-center bg-black/3 border-b md:border-b-0 md:border-r border-black/8 relative">
+ <div className="w-full md:w-2/5 p-8 flex flex-col items-center bg-black/3 border-b md:border-b-0 md:border-r border-[#1552ab]/10 relative">
  <div className="absolute inset-0 bg-gradient-to-b from-[#1552ab]/5 to-transparent pointer-events-none" />
 
  {/* Profile Picture */}
@@ -94,13 +94,13 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
 
  {/* Identity details */}
  <div className="text-center z-10 space-y-2">
- <h2 className="text-xl font-extrabold uppercase tracking-wide text-[#111827] leading-tight">
+ <h2 className="text-xl font-extrabold uppercase tracking-wide text-[#1552ab] leading-tight">
  {participant.name}
  </h2>
  <div className="inline-flex items-center gap-1 bg-[#1552ab]/10 text-[#1552ab] px-3 py-1 rounded-full text-[10px] font-avenir-bold uppercase tracking-wider">
  {participant.role}
  </div>
- <p className="text-xs text-[#111827]/50 font-avenir-medium tracking-wide">
+ <p className="text-xs text-[#1552ab]/50 font-avenir-medium tracking-wide">
  {participant.organization}
  </p>
  </div>
@@ -122,7 +122,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
  <span>{getPlatformIcon(account.platform)}</span>
  <span className="capitalize">{account.platform}</span>
  </span>
- <span className="text-[#111827]/40 group-hover:text-[#1552ab] transition-colors flex items-center gap-1">
+ <span className="text-[#1552ab]/40 group-hover:text-[#1552ab] transition-colors flex items-center gap-1">
  {account.handle} <ExternalLink size={10} />
  </span>
  </a>
@@ -141,7 +141,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
  <div className="relative pl-6">
  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#1552ab]" />
  <h4 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[4px] mb-3">Short Bio</h4>
- <p className="text-sm md:text-base font-avenir-roman leading-relaxed text-[#111827]/80">
+ <p className="text-sm md:text-base font-avenir-roman leading-relaxed text-[#1552ab]/80">
  {participant.short_bio}
  </p>
  </div>
@@ -152,8 +152,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
  {participant.ministry && (
  <div className="space-y-1">
  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Ministry Focus</span>
- <div className="text-sm font-avenir-medium text-[#111827] flex items-center gap-2">
- <Building size={14} className="text-[#111827]/20" />
+ <div className="text-sm font-avenir-medium text-[#1552ab] flex items-center gap-2">
+ <Building size={14} className="text-[#1552ab]/20" />
  {participant.ministry}
  </div>
  </div>
@@ -162,8 +162,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
  {participant.church && (
  <div className="space-y-1">
  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Church Affiliation</span>
- <div className="text-sm font-avenir-medium text-[#111827] flex items-center gap-2">
- <Globe size={14} className="text-[#111827]/20" />
+ <div className="text-sm font-avenir-medium text-[#1552ab] flex items-center gap-2">
+ <Globe size={14} className="text-[#1552ab]/20" />
  {participant.church}
  </div>
  </div>
@@ -171,8 +171,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
 
  <div className="space-y-1">
  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Residency Location</span>
- <div className="text-sm font-avenir-medium text-[#111827] flex items-center gap-2">
- <MapPin size={14} className="text-[#111827]/20" />
+ <div className="text-sm font-avenir-medium text-[#1552ab] flex items-center gap-2">
+ <MapPin size={14} className="text-[#1552ab]/20" />
  {participant.city ? `${participant.city}, ` : ''}{countryInfo.flag} {countryInfo.name}
  </div>
  </div>
@@ -185,7 +185,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Areas of Interest</span>
  <div className="flex flex-wrap gap-1.5">
  {participant.areas_of_interest.map(interest => (
- <span key={interest} className="px-3 py-1 bg-black/5 border border-black/10 rounded-full text-[9px] font-avenir-bold uppercase text-[#111827]/70">
+ <span key={interest} className="px-3 py-1 bg-black/5 border border-black/10 rounded-full text-[9px] font-avenir-bold uppercase text-[#1552ab]/70">
  {interest}
  </span>
  ))}
@@ -216,15 +216,15 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
  
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className="space-y-1">
- <span className="text-[8px] font-avenir-bold text-[#111827]/30 uppercase tracking-widest block">Contact Email</span>
- <a href={`mailto:${participant.email}`} className="text-xs font-avenir-medium text-[#111827] hover:text-[#1552ab] flex items-center gap-1.5">
+ <span className="text-[8px] font-avenir-bold text-[#1552ab]/30 uppercase tracking-widest block">Contact Email</span>
+ <a href={`mailto:${participant.email}`} className="text-xs font-avenir-medium text-[#1552ab] hover:text-[#1552ab] flex items-center gap-1.5">
  <Mail size={12} /> {participant.email || 'None'}
  </a>
  </div>
 
  <div className="space-y-1">
- <span className="text-[8px] font-avenir-bold text-[#111827]/30 uppercase tracking-widest block">Phone Number</span>
- <a href={`tel:${participant.phone}`} className="text-xs font-avenir-medium text-[#111827] hover:text-[#1552ab] flex items-center gap-1.5">
+ <span className="text-[8px] font-avenir-bold text-[#1552ab]/30 uppercase tracking-widest block">Phone Number</span>
+ <a href={`tel:${participant.phone}`} className="text-xs font-avenir-medium text-[#1552ab] hover:text-[#1552ab] flex items-center gap-1.5">
  <Phone size={12} /> {participant.phone || 'None'}
  </a>
  </div>

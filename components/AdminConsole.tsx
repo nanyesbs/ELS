@@ -82,12 +82,12 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
  };
 
  return (
- <div className="w-full space-y-8 animate-fade-in text-[#111827]">
+ <div className="w-full space-y-8 animate-fade-in text-[#1552ab]">
 
  {/* Metrics */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
  <div className="bg-black/5 p-6 rounded-2xl border border-black/10">
- <span className="text-[10px] font-avenir-bold text-[#111827]/50 uppercase tracking-[2px]">
+ <span className="text-[10px] font-avenir-bold text-[#1552ab]/50 uppercase tracking-[2px]">
  Total Registered
  </span>
  <span className="text-4xl font-extrabold mt-2 block text-[#1552ab]">
@@ -95,7 +95,7 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
  </span>
  </div>
  <div className="bg-black/5 p-6 rounded-2xl border border-black/10">
- <span className="text-[10px] font-avenir-bold text-[#111827]/50 uppercase tracking-[2px]">
+ <span className="text-[10px] font-avenir-bold text-[#1552ab]/50 uppercase tracking-[2px]">
  Completed Bios
  </span>
  <span className="text-4xl font-extrabold mt-2 block text-green-500">
@@ -103,7 +103,7 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
  </span>
  </div>
  <div className="bg-black/5 p-6 rounded-2xl border border-black/10">
- <span className="text-[10px] font-avenir-bold text-[#111827]/50 uppercase tracking-[2px]">
+ <span className="text-[10px] font-avenir-bold text-[#1552ab]/50 uppercase tracking-[2px]">
  Pending Bios
  </span>
  <span className="text-4xl font-extrabold mt-2 block text-yellow-500">
@@ -115,20 +115,20 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
  {/* Controls */}
  <div className="flex flex-col xl:flex-row justify-between items-stretch xl:items-center gap-4 bg-black/5 p-4 rounded-2xl border border-black/10">
  <div className="relative flex-1">
- <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#111827]/40" />
+ <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1552ab]/40" />
  <input
  type="text"
  placeholder="Search by name, email, or organization..."
  value={searchTerm}
  onChange={e => setSearchTerm(e.target.value)}
- className="w-full bg-transparent border-none p-3 pl-12 text-sm font-avenir-medium text-[#111827] outline-none placeholder:text-[#111827]/20 placeholder:text-[#111827]/30"
+ className="w-full bg-transparent border-none p-3 pl-12 text-sm font-avenir-medium text-[#1552ab] outline-none placeholder:text-[#1552ab]/20 placeholder:text-[#1552ab]/30"
  />
  </div>
  <div className="flex flex-wrap items-center gap-3">
  <select
  value={statusFilter}
  onChange={e => setStatusFilter(e.target.value as any)}
- className="bg-[#e8e8e8] border border-black/10 p-3.5 rounded-xl text-xs font-avenir-bold text-[#111827] outline-none"
+ className="bg-[#e8e8e8] border border-black/10 p-3.5 rounded-xl text-xs font-avenir-bold text-[#1552ab] outline-none"
  >
  <option value="ALL">All Statuses</option>
  <option value="registered">Pending Bio</option>
@@ -148,7 +148,7 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
  <div className="overflow-x-auto">
  <table className="w-full text-left border-collapse">
  <thead>
- <tr className="border-b border-black/10 text-[9px] font-avenir-bold uppercase tracking-[2px] text-[#111827]/50 bg-black/5">
+ <tr className="border-b border-black/10 text-[9px] font-avenir-bold uppercase tracking-[2px] text-[#1552ab]/50 bg-black/5">
  <th className="p-4 pl-6">Participant</th>
  <th className="p-4">Bio Profile</th>
  <th className="p-4">Contact</th>
@@ -165,10 +165,10 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
  onClick={() => setSelectedParticipant(p)}
  className="p-4 pl-6 space-y-1 cursor-pointer hover:text-[#1552ab] transition-colors"
  >
- <div className="font-avenir-bold text-[#111827]">
+ <div className="font-avenir-bold text-[#1552ab]">
  {p.registered_name || p.name || '—'}
  </div>
- <div className="text-[10px] text-[#111827]/40">
+ <div className="text-[10px] text-[#1552ab]/40">
  {p.email}
  </div>
  </td>
@@ -181,12 +181,12 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
  {p.status === 'completed' ? (
  <>
  <div className="font-avenir-bold text-[#1552ab]">{p.name}</div>
- <div className="text-[10px] text-[#111827]/50">
+ <div className="text-[10px] text-[#1552ab]/50">
  {p.role}{p.organization ? ` · ${p.organization}` : ''}
  </div>
  </>
  ) : (
- <span className="text-[#111827]/30 italic text-[10px]">
+ <span className="text-[#1552ab]/30 italic text-[10px]">
  No bio submitted yet
  </span>
  )}
@@ -195,7 +195,7 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
  {/* Contact */}
  <td 
  onClick={() => setSelectedParticipant(p)}
- className="p-4 space-y-1 text-[#111827]/60 cursor-pointer"
+ className="p-4 space-y-1 text-[#1552ab]/60 cursor-pointer"
  >
  <div className="flex items-center gap-1.5">
  <Mail size={10} /> {p.email}
@@ -255,7 +255,7 @@ const AdminConsole: React.FC<AdminConsoleProps> = ({
 
  {filteredParticipants.length === 0 && (
  <tr>
- <td colSpan={5} className="p-12 text-center text-[#111827]/30 text-xs italic">
+ <td colSpan={5} className="p-12 text-center text-[#1552ab]/30 text-xs italic">
  No participants match the current filter.
  </td>
  </tr>

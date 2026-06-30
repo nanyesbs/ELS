@@ -67,62 +67,75 @@ const SESSION_KEY = 'els_session_token';
 // SCREEN A: Landing Page (/)
 // ─────────────────────────────────────────────
 const LandingPage: React.FC = () => {
- const navigate = useNavigate();
+  const navigate = useNavigate();
 
- return (
- <div className="min-h-screen bg-[#efefef] text-[#111827] flex flex-col">
- <nav className="w-full px-6 md:px-12 py-6 flex items-center justify-between border-b border-black/8">
- <div className="flex items-center gap-3">
- <div className="w-8 h-8 rounded-full bg-[#1552ab]/20 border border-[#1552ab]/30 flex items-center justify-center text-[#1552ab] text-xs font-bold">E</div>
- <span className="text-xs font-avenir-bold uppercase tracking-[3px] text-[#111827]/60">ELS Madrid 2026</span>
- </div>
- <button
- onClick={() => navigate('/admin/login')}
- className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/30 hover:text-[#111827]/60 transition-colors flex items-center gap-1.5"
- >
- <Shield size={12} /> Admin
- </button>
- </nav>
+  return (
+    <div className="min-h-screen bg-[#efefef] text-[#1552ab] flex flex-col font-avenir">
+      {/* Navigation */}
+      <nav className="w-full px-6 md:px-12 py-6 flex items-center justify-between border-b border-[#1552ab]/10">
+        <div className="flex items-center gap-3">
+          <img src="/logo-e21.png" alt="21 Europe" className="h-8 object-contain" />
+          <img src="/logo-esbs.png" alt="Europe Shall Be Saved" className="h-8 object-contain" />
+          <span className="text-xs font-avenir-bold uppercase tracking-[3px] text-[#1552ab] ml-2 hidden sm:inline">
+            ELS | MADRID 2026
+          </span>
+        </div>
+        <button
+          onClick={() => navigate('/admin/login')}
+          className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab] hover:text-[#1552ab]/70 transition-colors flex items-center gap-1.5"
+        >
+          <Shield size={12} /> Admin
+        </button>
+      </nav>
 
- <main className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
- <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1552ab]/10 border border-[#1552ab]/20 rounded-full mb-10">
- <span className="w-1.5 h-1.5 rounded-full bg-[#1552ab] animate-pulse" />
- <span className="text-[10px] font-avenir-bold uppercase tracking-[3px] text-[#1552ab]">
- 10–12 November 2026 · Madrid, Spain
- </span>
- </div>
+      {/* Main Hero Section */}
+      <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center max-w-5xl mx-auto w-full">
+        {/* Logos & Text Container */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 mb-8 w-full">
+          <img src="/logo-text.png" alt="European Leaders Summit" className="h-16 sm:h-24 md:h-28 lg:h-32 object-contain" />
+          <div className="flex items-center gap-4">
+            <img src="/logo-e21.png" alt="21 Europe" className="h-12 sm:h-16 md:h-20 object-contain" />
+            <img src="/logo-esbs.png" alt="Europe Shall Be Saved" className="h-12 sm:h-16 md:h-20 object-contain" />
+          </div>
+        </div>
 
- <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold uppercase tracking-tight text-[#111827] max-w-4xl leading-none mb-6">
- Europe Shall<br />Be Saved
- </h1>
+        {/* Date Subtitle */}
+        <p className="text-xs sm:text-sm font-avenir-bold text-[#1552ab] uppercase tracking-[0.2em] mb-4">
+          10 - 12 NOVEMBER 2026
+        </p>
 
- <p className="text-base md:text-lg text-[#111827]/50 max-w-xl leading-relaxed mb-12">
- The ELS Retreat participant directory — connect with leaders, ministers,
- and change-makers gathering in Madrid this November.
- </p>
+        {/* Pill Location Badge */}
+        <div className="inline-block border border-[#1552ab] rounded-full px-8 py-2 text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[0.2em] mb-12">
+          MADRID, SPAIN
+        </div>
 
- <div className="flex flex-col sm:flex-row items-center gap-4">
- <button
- onClick={() => navigate('/sign-up')}
- className="flex items-center gap-3 px-8 py-5 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-2xl font-avenir-bold uppercase text-xs tracking-[3px] transition-all hover:scale-105 active:scale-95 shadow-lg"
- >
- Join the Directory <ArrowRight size={16} />
- </button>
- <p className="text-[10px] text-[#111827]/30 font-avenir-medium uppercase tracking-wider">
- Already registered?{' '}
- <span className="text-[#111827]/50">Check your email for your personal link.</span>
- </p>
- </div>
- </main>
+        {/* CTA Button */}
+        <div className="flex flex-col items-center gap-4">
+          <button
+            onClick={() => navigate('/sign-up')}
+            className="flex items-center gap-3 px-10 py-5 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-xl font-avenir-bold uppercase text-xs tracking-[3px] transition-all hover:scale-105 active:scale-95 shadow-md"
+          >
+            Join the Directory <ArrowRight size={16} />
+          </button>
+          <p className="text-[9px] sm:text-[10px] text-[#1552ab]/70 font-avenir-bold uppercase tracking-[0.15em] mt-2">
+            ALREADY REGISTERED?{' '}
+            <span className="text-[#1552ab] hover:underline cursor-pointer" onClick={() => navigate('/sign-up')}>
+              CHECK YOUR EMAIL FOR YOUR PERSONAL LINK.
+            </span>
+          </p>
+        </div>
+      </main>
 
- <footer className="border-t border-black/8 py-8 text-center">
- <p className="text-[10px] text-[#111827]/20 font-avenir-medium uppercase tracking-widest">
- Empowered21 + Europe Shall Be Saved · Global Church
- </p>
- </footer>
- </div>
- );
+      {/* Footer */}
+      <footer className="border-t border-[#1552ab]/10 py-8 text-center">
+        <p className="text-[9px] sm:text-[10px] text-[#1552ab]/80 font-avenir-bold uppercase tracking-[0.25em]">
+          EMPOWERED21 · EUROPE SHALL BE SAVED · GLOBAL CHURCH
+        </p>
+      </footer>
+    </div>
+  );
 };
+
 
 // ─────────────────────────────────────────────
 // SCREEN B: Sign-Up (/sign-up)
@@ -146,11 +159,11 @@ const SignUpPage: React.FC = () => {
  };
 
  return (
- <div className="min-h-screen bg-[#efefef] text-[#111827] py-20 md:py-32 px-4 animate-fade-in">
+ <div className="min-h-screen bg-[#efefef] text-[#1552ab] py-20 md:py-32 px-4 animate-fade-in">
  <div className="max-w-3xl mx-auto mb-8">
  <button
  onClick={() => navigate('/')}
- className="flex items-center gap-2 text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/40 hover:text-[#1552ab] transition-colors"
+ className="flex items-center gap-2 text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/40 hover:text-[#1552ab] transition-colors"
  >
  ← Back
  </button>
@@ -264,18 +277,18 @@ const TokenPage: React.FC = () => {
  // ── Invalid token state ───────────────────────────────────────
  if (loadStatus === 'invalid') {
  return (
- <div className="min-h-screen bg-[#efefef] flex flex-col items-center justify-center px-6 text-center text-[#111827]">
+ <div className="min-h-screen bg-[#efefef] flex flex-col items-center justify-center px-6 text-center text-[#1552ab]">
  <div className="w-16 h-16 bg-red-950/20 border border-red-500/30 rounded-full flex items-center justify-center mb-6">
  <X size={28} className="text-red-500" />
  </div>
  <h2 className="text-2xl font-bold uppercase tracking-tight mb-3">
  Access Link Not Found
  </h2>
- <p className="text-[#111827]/50 text-sm max-w-sm mb-2 leading-relaxed">
+ <p className="text-[#1552ab]/50 text-sm max-w-sm mb-2 leading-relaxed">
  This link is invalid or has been revoked.
  If you registered, check your email for your original access link.
  </p>
- <p className="text-[#111827]/30 text-xs max-w-xs mb-8 leading-relaxed">
+ <p className="text-[#1552ab]/30 text-xs max-w-xs mb-8 leading-relaxed">
  Need a new link? Re-register with your email address — if you're already in the system, a fresh link will be sent.
  </p>
  <button
@@ -291,9 +304,9 @@ const TokenPage: React.FC = () => {
  // ── Loading state ─────────────────────────────────────────────
  if (loadStatus === 'loading') {
  return (
- <div className="min-h-screen bg-[#efefef] flex flex-col items-center justify-center text-[#111827] gap-4">
+ <div className="min-h-screen bg-[#efefef] flex flex-col items-center justify-center text-[#1552ab] gap-4">
  <Loader2 size={36} className="animate-spin text-[#1552ab]" />
- <p className="text-[10px] uppercase tracking-widest text-[#111827]/40">Verifying access...</p>
+ <p className="text-[10px] uppercase tracking-widest text-[#1552ab]/40">Verifying access...</p>
  </div>
  );
  }
@@ -301,11 +314,11 @@ const TokenPage: React.FC = () => {
  // ── Bio form view (first-time completion or edit) ─────────────
  if (showEditForm && participant) {
  return (
- <div className="min-h-screen bg-[#efefef] text-[#111827] py-20 md:py-32 px-4">
+ <div className="min-h-screen bg-[#efefef] text-[#1552ab] py-20 md:py-32 px-4">
  <div className="max-w-3xl mx-auto mb-8">
  <button
  onClick={() => setShowEditForm(false)}
- className="flex items-center gap-2 text-[10px] font-avenir-bold uppercase tracking-widest text-[#111827]/40 hover:text-[#1552ab] transition-colors"
+ className="flex items-center gap-2 text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/40 hover:text-[#1552ab] transition-colors"
  >
  ← Back to Directory
  </button>
@@ -324,18 +337,14 @@ const TokenPage: React.FC = () => {
  const hasActiveFilters = filterCountry !== 'ALL' || filterRole !== 'ALL';
 
  return (
- <div className="min-h-screen bg-[#efefef] text-[#111827] transition-colors duration-500">
+ <div className="min-h-screen bg-[#efefef] text-[#1552ab] transition-colors duration-500">
  <Navbar
  viewMode="directory"
  setViewMode={() => {}}
- darkMode={darkMode}
- setDarkMode={setDarkMode}
  isAdminAuthorized={false}
- onEditBio={() => setShowEditForm(true)}
- onSignOut={() => navigate('/')}
  />
 
- <Header darkMode={darkMode} />
+ <Header />
 
  {/* "Edit my Bio" floating button — visible only when token is valid */}
  <div className="fixed bottom-8 right-6 z-50">
@@ -356,7 +365,7 @@ const TokenPage: React.FC = () => {
  <input
  type="text"
  placeholder={t('app.search', 'Search participants...')}
- className="w-full bg-transparent border-none p-3 md:p-4 pl-12 text-sm font-avenir-medium text-[#111827] outline-none placeholder:text-[#111827]/20 placeholder:text-[#111827]/30"
+ className="w-full bg-transparent border-none p-3 md:p-4 pl-12 text-sm font-avenir-medium text-[#1552ab] outline-none placeholder:text-[#1552ab]/20 placeholder:text-[#1552ab]/30"
  value={searchQuery}
  onChange={e => setSearchQuery(e.target.value)}
  />
@@ -392,7 +401,7 @@ const TokenPage: React.FC = () => {
  </div>
  ) : filtered.length === 0 ? (
  <div className="text-center py-40 border border-dashed border-black/10 rounded-3xl">
- <p className="text-sm text-[#111827]/40 font-avenir-medium uppercase tracking-wider">No profiles match your search.</p>
+ <p className="text-sm text-[#1552ab]/40 font-avenir-medium uppercase tracking-wider">No profiles match your search.</p>
  </div>
  ) : (
  <div className={`grid gap-4 md:gap-8 ${
@@ -414,7 +423,7 @@ const TokenPage: React.FC = () => {
 
  <footer className="mt-40 border-t border-black/8 py-24 bg-[#efefef] text-center">
  <div className="max-w-[1400px] mx-auto px-8 space-y-8">
- <p className="font-didot italic text-3xl text-[#111827]/30 max-w-3xl mx-auto leading-relaxed">
+ <p className="font-didot italic text-3xl text-[#1552ab]/30 max-w-3xl mx-auto leading-relaxed">
  {t('footer.vision')}
  </p>
  <div className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[4px]">
@@ -438,7 +447,7 @@ const TokenPage: React.FC = () => {
  <div className={`absolute right-0 top-0 h-full w-full max-w-sm bg-[#f5f5f5] bg-white shadow-2xl border-l border-black/10 flex flex-col transition-transform duration-500 ${isFilterOpen ? 'translate-x-0' : 'translate-x-full'}`}>
  <div className="p-8 border-b border-black/10 flex justify-between items-center bg-black/5">
  <h3 className="text-xs font-avenir-bold text-[#1552ab] uppercase tracking-[4px]">Filters</h3>
- <button onClick={() => setIsFilterOpen(false)} className="p-2 text-[#111827]/40 hover:text-[#1552ab]"><X size={24} /></button>
+ <button onClick={() => setIsFilterOpen(false)} className="p-2 text-[#1552ab]/40 hover:text-[#1552ab]"><X size={24} /></button>
  </div>
  <div className="flex-1 overflow-y-auto p-8 space-y-10">
  {[['Country', filterCountry, setFilterCountry, countriesList], ['Role', filterRole, setFilterRole, rolesList]].map(
@@ -446,7 +455,7 @@ const TokenPage: React.FC = () => {
  <div key={label as string} className="space-y-4">
  <span className="text-[9px] font-avenir-bold text-[#1552ab] uppercase tracking-[2px] block">{label as string}</span>
  <select value={value as string} onChange={e => (setter as any)(e.target.value)}
- className="w-full bg-black/5 border border-black/10 p-4 rounded-2xl text-xs font-avenir-medium text-[#111827] outline-none focus:border-[#1552ab]">
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-2xl text-xs font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab]">
  <option value="ALL">All</option>
  {(list as string[]).map(c => <option key={c} value={c} className="bg-[#f5f5f5]">{c}</option>)}
  </select>
@@ -456,7 +465,7 @@ const TokenPage: React.FC = () => {
  </div>
  <div className="p-8 border-t border-black/10 space-y-4">
  <button onClick={() => { setFilterCountry('ALL'); setFilterRole('ALL'); setSearchQuery(''); }}
- className="w-full py-4 text-[10px] font-avenir-bold text-[#111827]/40 hover:text-[#1552ab] uppercase tracking-[3px] transition-colors">
+ className="w-full py-4 text-[10px] font-avenir-bold text-[#1552ab]/40 hover:text-[#1552ab] uppercase tracking-[3px] transition-colors">
  Clear Filters
  </button>
  <button onClick={() => setIsFilterOpen(false)}
@@ -516,33 +525,33 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
  <div className="w-16 h-16 bg-[#1552ab]/20 border border-[#1552ab]/40 rounded-full flex items-center justify-center mb-6">
  <Shield size={28} className="text-[#1552ab]" />
  </div>
- <h1 className="text-xl font-avenir-bold text-center tracking-tight text-[#111827] uppercase">Admin Console</h1>
- <p className="text-[10px] tracking-[0.2em] font-avenir-medium uppercase text-[#111827]/40 mt-2">ELS Madrid 2026</p>
+ <h1 className="text-xl font-avenir-bold text-center tracking-tight text-[#1552ab] uppercase">Admin Console</h1>
+ <p className="text-[10px] tracking-[0.2em] font-avenir-medium uppercase text-[#1552ab]/40 mt-2">ELS Madrid 2026</p>
  </div>
  <form onSubmit={handleLogin} className="space-y-6">
  <div className="space-y-2">
- <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-[#111827]/50 pl-1 block">Email</label>
+ <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-[#1552ab]/50 pl-1 block">Email</label>
  <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  placeholder="esbsinterview@gmail.com"
  autoComplete="email" />
  </div>
  <div className="space-y-2">
- <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-[#111827]/50 pl-1 block">Password</label>
+ <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-[#1552ab]/50 pl-1 block">Password</label>
  <div className="relative">
  <input
  type={showPassword ? 'text' : 'password'}
  value={password}
  onChange={e => setPassword(e.target.value)}
  required
- className="w-full bg-black/5 border border-black/10 p-4 pr-12 rounded-xl text-sm text-[#111827] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-black/5 border border-black/10 p-4 pr-12 rounded-xl text-sm text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
  placeholder="••••••••"
  autoComplete="current-password"
  />
  <button
  type="button"
  onClick={() => setShowPassword(v => !v)}
- className="absolute right-4 top-1/2 -translate-y-1/2 text-[#111827]/30 hover:text-[#111827]/70 transition-colors"
+ className="absolute right-4 top-1/2 -translate-y-1/2 text-[#1552ab]/30 hover:text-[#1552ab]/70 transition-colors"
  tabIndex={-1}
  aria-label={showPassword ? 'Hide password' : 'Show password'}
  >
@@ -582,24 +591,24 @@ const AdminBiosTab: React.FC<{ participants: Participant[] }> = ({ participants 
     <div className="space-y-6">
       {/* Search */}
       <div className="relative max-w-sm">
-        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#111827]/40" />
+        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#1552ab]/40" />
         <input
           type="text"
           placeholder="Search bios..."
           value={query}
           onChange={e => setQuery(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 text-sm bg-white border border-black/10 rounded-xl text-[#111827] placeholder:text-[#111827]/30 outline-none focus:border-[#1552ab] transition-all"
+          className="w-full pl-9 pr-4 py-2.5 text-sm bg-white border border-black/10 rounded-xl text-[#1552ab] placeholder:text-[#1552ab]/30 outline-none focus:border-[#1552ab] transition-all"
         />
       </div>
 
       {/* Stats */}
-      <p className="text-[10px] font-avenir-bold uppercase tracking-[2px] text-[#111827]/40">
+      <p className="text-[10px] font-avenir-bold uppercase tracking-[2px] text-[#1552ab]/40">
         {filtered.length} of {completed.length} completed bios
       </p>
 
       {/* Grid */}
       {filtered.length === 0 ? (
-        <p className="text-sm text-[#111827]/40 py-20 text-center">No bios match your search.</p>
+        <p className="text-sm text-[#1552ab]/40 py-20 text-center">No bios match your search.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {filtered.map(p => (
@@ -621,7 +630,7 @@ const AdminBiosTab: React.FC<{ participants: Participant[] }> = ({ participants 
                 )}
                 {/* Country badge */}
                 {p.country && (
-                  <span className="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm text-[9px] font-bold uppercase tracking-wider text-[#111827]/60 px-2 py-1 rounded-full border border-black/8">
+                  <span className="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm text-[9px] font-bold uppercase tracking-wider text-[#1552ab]/60 px-2 py-1 rounded-full border border-black/8">
                     {p.country}
                   </span>
                 )}
@@ -629,7 +638,7 @@ const AdminBiosTab: React.FC<{ participants: Participant[] }> = ({ participants 
 
               {/* Info */}
               <div className="p-4 space-y-2">
-                <h3 className="font-avenir-bold text-[#111827] text-sm leading-tight">
+                <h3 className="font-avenir-bold text-[#1552ab] text-sm leading-tight">
                   {p.name || p.registered_name || '—'}
                 </h3>
                 {p.organization && (
@@ -638,12 +647,12 @@ const AdminBiosTab: React.FC<{ participants: Participant[] }> = ({ participants 
                   </p>
                 )}
                 {(p.ministry || p.role) && (
-                  <p className="text-[10px] text-[#111827]/50 truncate">
+                  <p className="text-[10px] text-[#1552ab]/50 truncate">
                     {p.ministry || p.role}
                   </p>
                 )}
                 {p.short_bio && (
-                  <p className="text-xs text-[#111827]/60 leading-relaxed line-clamp-3 mt-1">
+                  <p className="text-xs text-[#1552ab]/60 leading-relaxed line-clamp-3 mt-1">
                     {p.short_bio}
                   </p>
                 )}
@@ -688,7 +697,7 @@ const AdminTabs: React.FC<{
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-avenir-bold uppercase tracking-[2px] transition-all ${
               tab === t.id
                 ? 'bg-[#1552ab] text-white shadow-sm'
-                : 'text-[#111827]/50 hover:text-[#1552ab] hover:bg-black/5'
+                : 'text-[#1552ab]/50 hover:text-[#1552ab] hover:bg-black/5'
             }`}
           >
             <span>{t.icon}</span> {t.label}
@@ -735,7 +744,7 @@ const AdminDashboard: React.FC<{ isAdmin: boolean; onLogout: () => void }> = ({ 
  if (!isAdmin) return null;
 
  return (
- <div className="min-h-screen bg-[#efefef] text-[#111827] py-20 px-4">
+ <div className="min-h-screen bg-[#efefef] text-[#1552ab] py-20 px-4">
  <div className="max-w-[1400px] mx-auto">
  <div className="flex justify-between items-center mb-10 pb-6 border-b border-black/10">
  <div className="flex items-center gap-3">
@@ -750,7 +759,7 @@ const AdminDashboard: React.FC<{ isAdmin: boolean; onLogout: () => void }> = ({ 
  {loading ? (
  <div className="flex flex-col items-center py-40">
  <Loader2 className="animate-spin text-[#1552ab] mb-4" size={32} />
- <p className="text-xs text-[#111827]/40 uppercase tracking-wider">Loading data...</p>
+ <p className="text-xs text-[#1552ab]/40 uppercase tracking-wider">Loading data...</p>
  </div>
  ) : (
  <AdminTabs
@@ -828,7 +837,7 @@ const App: React.FC = () => {
 
  if (checkingAdmin) {
  return (
- <div className="min-h-screen bg-[#efefef] flex items-center justify-center text-[#111827]">
+ <div className="min-h-screen bg-[#efefef] flex items-center justify-center text-[#1552ab]">
  <Loader2 className="animate-spin text-[#1552ab]" size={32} />
  </div>
  );
