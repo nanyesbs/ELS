@@ -247,7 +247,7 @@ DROP POLICY IF EXISTS admin_profile_policy ON public.admin_users;
 CREATE POLICY admin_profile_policy ON public.admin_users
     FOR SELECT
     TO authenticated
-    USING (auth.uid() IN (SELECT id FROM public.admin_users));
+    USING (auth.uid() = id);
 
 -- 8. EXECUTE grants — keyed to actual caller:
 --
