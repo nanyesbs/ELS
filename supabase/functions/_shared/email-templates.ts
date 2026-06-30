@@ -77,6 +77,135 @@ export function buildEmailPayload(
   };
 }
 
+// ── Gmail SMTP sender ────────────────────────────────────────────────────────
+// Uses Google App Password to send from esbsinterview@gmail.com.
+// Set these secrets in Supabase:
+//   GMAIL_USER=esbsinterview@gmail.com
+//   GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx  (16-char Google App Password)
+//
+// How to get an App Password:
+//   1. myaccount.google.com/security → enable 2-Step Verification
+//   2. myaccount.google.com/apppasswords → create for "Mail"
+//   3. Copy the 16-char password (no spaces) into the Supabase secret.
+//
+export async function sendViaGmail(
+  recipientEmail: string,
+  recipientName: string,
+  subject: string,
+  htmlBody: string
+): Promise<void> {
+  const gmailUser     = Deno.env.get("GMAIL_USER");
+  const gmailPassword = Deno.env.get("GMAIL_APP_PASSWORD");
+  const senderName    = Deno.env.get("SENDER_NAME") || "ELS Madrid 2026";
+
+  if (!gmailUser || !gmailPassword) {
+    throw new Error("GMAIL_USER or GMAIL_APP_PASSWORD not set.");
+  }
+
+  // Build raw RFC 2822 message
+  const boundary = `els_${crypto.randomUUID().replace(/-/g, "")}`;
+  const encodedSubject = `=?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=`;
+  const rawMessage = [
+    `From: ${senderName} <${gmailUser}>`,
+    `To: ${recipientName} <${recipientEmail}>`,
+    `Subject: ${encodedSubject}`,
+    `MIME-Version: 1.0`,
+    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+    ``,
+    `--${boundary}`,
+    `Content-Type: text/plain; charset=UTF-8`,
+    ``,
+    `Hi ${recipientName},\n\n${subject}\n\nELS Madrid 2026 Team`,
+    ``,
+    `--${boundary}`,
+    `Content-Type: text/html; charset=UTF-8`,
+    ``,
+    htmlBody,
+    ``,
+    `--${boundary}--`,
+  ].join("\r\n");
+
+  // Gmail SMTP via fetch to Google's SMTP-to-HTTP relay is not supported.
+  // We use the Gmail REST API (send endpoint) with OAuth2 — but since we
+  // need a simple non-OAuth solution, we use the Resend API with Gmail SMTP
+  // credentials by proxying through a minimal SMTP-over-HTTP approach.
+  //
+  // ALTERNATIVE: Use smtp.gmail.com:587 via raw TCP (Deno.connect).
+  // Below is the STARTTLS implementation:
+
+  async function base64url(str: string): Promise<string> {
+    const encoded = new TextEncoder().encode(str);
+    let binary = "";
+    for (const byte of encoded) binary += String.fromCharCode(byte);
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+
+  // Use Gmail API via SMTP relay using fetch (Gmail REST API)
+  // This requires an OAuth2 token — too complex for server-side.
+  //
+  // Simplest working solution: POST to Gmail SMTP via the Gmail API
+  // using a service account or App Password.
+  // For App Password, we must use raw SMTP (TCP).
+  //
+  // Below implements raw SMTP over TCP using Deno.connect:
+  const conn = await Deno.connectTls({
+    hostname: "smtp.gmail.com",
+    port: 465,
+  });
+
+  const enc = new TextEncoder();
+  const dec = new TextDecoder();
+
+  async function read(): Promise<string> {
+    const buf = new Uint8Array(4096);
+    const n = await conn.read(buf);
+    return dec.decode(buf.subarray(0, n ?? 0));
+  }
+
+  async function write(data: string): Promise<void> {
+    await conn.write(enc.encode(data + "\r\n"));
+  }
+
+  try {
+    await read(); // 220 greeting
+
+    await write("EHLO smtp.gmail.com");
+    await read(); // 250 capabilities
+
+    // AUTH LOGIN
+    await write("AUTH LOGIN");
+    await read(); // 334 Username:
+    await write(btoa(gmailUser));
+    await read(); // 334 Password:
+    await write(btoa(gmailPassword));
+    const authResp = await read();
+    if (!authResp.startsWith("235")) {
+      throw new Error(`Gmail AUTH failed: ${authResp.trim()}`);
+    }
+
+    await write(`MAIL FROM:<${gmailUser}>`);
+    await read(); // 250 OK
+
+    await write(`RCPT TO:<${recipientEmail}>`);
+    await read(); // 250 OK
+
+    await write("DATA");
+    await read(); // 354 Start input
+
+    // Send the raw message, end with CRLF.CRLF
+    await conn.write(enc.encode(rawMessage + "\r\n.\r\n"));
+    const dataResp = await read();
+    if (!dataResp.startsWith("250")) {
+      throw new Error(`Gmail DATA failed: ${dataResp.trim()}`);
+    }
+
+    await write("QUIT");
+  } finally {
+    conn.close();
+  }
+}
+
+
 // Shared HTML email wrapper
 function emailWrapper(cfg: EmailConfig, bodyHtml: string): string {
   return `<!DOCTYPE html>

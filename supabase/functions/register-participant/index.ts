@@ -24,6 +24,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.8";
 import {
   getEmailConfig,
   buildEmailPayload,
+  sendViaGmail,
   registrationConfirmationEmail,
   resendAccessEmail,
 } from "../_shared/email-templates.ts";
@@ -191,8 +192,21 @@ async function sendEmail(
   rawToken: string
 ): Promise<void> {
   const cfg = getEmailConfig();
-  const resendApiKey = Deno.env.get("RESEND_API_KEY");
+  const gmailPassword = Deno.env.get("GMAIL_APP_PASSWORD");
+  const resendApiKey  = Deno.env.get("RESEND_API_KEY");
 
+  const { subject, html } =
+    type === "new"
+      ? registrationConfirmationEmail(cfg, recipientName, rawToken)
+      : resendAccessEmail(cfg, recipientName, rawToken);
+
+  // ── Priority 1: Gmail SMTP (works with any recipient) ────────────
+  if (gmailPassword) {
+    await sendViaGmail(recipientEmail, recipientName, subject, html);
+    return;
+  }
+
+  // ── Priority 2: Resend API ────────────────────────────────────────
   // In development, log the access link to function logs instead of sending.
   if (!resendApiKey) {
     console.warn(
@@ -200,11 +214,6 @@ async function sendEmail(
     );
     return;
   }
-
-  const { subject, html } =
-    type === "new"
-      ? registrationConfirmationEmail(cfg, recipientName, rawToken)
-      : resendAccessEmail(cfg, recipientName, rawToken);
 
   const payload = buildEmailPayload(
     cfg,
@@ -231,6 +240,6 @@ async function sendEmail(
   }
 
   console.log(
-    `[${type.toUpperCase()}] Access email sent to: ${recipientEmail}`
+    `[${type.toUpperCase()}] Resend email sent to: ${recipientEmail}`
   );
 }
