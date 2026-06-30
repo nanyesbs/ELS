@@ -1,0 +1,78 @@
+{
+    "nav": {
+        "directory": "Directory",
+        "map": "Map",
+        "admin": "Admin"
+    },
+    "header": {
+        "tagline": "EMPOWERED21 + EUROPE SHALL BE SAVED",
+        "title1": "ELS Retreat",
+        "title2": "Madrid 2026"
+    },
+    "footer": {
+        "vision": "\"TOGETHER FOR EUROPE'S SALVATION\"",
+        "tagline": "EMPOWERED21 + EUROPE SHALL BE SAVED"
+    },
+    "entry": {
+        "org": "Europe Shall Be Saved",
+        "retreat": "Madrid Retreat 2026",
+        "accessCode": "ADMIN ACCESS",
+        "enter": "Enter",
+        "invalidCode": "Invalid Password"
+    },
+    "app": {
+        "search": "Search participants...",
+        "viewList": "List View",
+        "viewColumns": "Columns View",
+        "viewGrid4": "Grid View",
+        "viewBio": "Bio View",
+        "sync": "Refresh Directory",
+        "refreshing": "Refreshing...",
+        "filter": {
+            "label": "Filters",
+            "advanced": "Advanced Filters",
+            "all": "All",
+            "geo": "Country",
+            "global": "Global",
+            "org": "Ministry / Organization",
+            "allOrg": "All Organizations",
+            "role": "Position / Role",
+            "allRole": "All Roles",
+            "clear": "Clear Filters",
+            "apply": "Apply Filters"
+        },
+        "loading": "Connecting to Database...",
+        "noResults": "No profiles found matching your search.",
+        "leaders": "Participants",
+        "leader": "Participant",
+        "count": "{{count}} Profiles Loaded",
+        "participants": "Participants",
+        "searchName": "Search name...",
+        "syncStatus": "Loading Profiles..."
+    },
+    "profile": {
+        "expandVision": "Expand Bio",
+        "titleLabel": "Role",
+        "orgLabel": "Organization",
+        "heritage": "Country",
+        "bioLabel": "Short Bio",
+        "phone": "Phone",
+        "email": "Email",
+        "website": "Website",
+        "socialMedia": "Social Media",
+        "verified": "PROFILE COMPLETED",
+        "contactLabel": "Contact Details"
+    },
+    "registration": {
+        "title": "Complete Your Bio",
+        "protocol": "ELS Madrid 2026",
+        "completeTitle": "Profile Setup Completed!",
+        "completeDesc": "Your bio has been saved successfully. An email has been sent containing your dashboard link and a permanent link to edit your details in the future.",
+        "returnDir": "Go to Directory",
+        "welcome": {
+            "title": "Profile Creation",
+            "desc": "Please set up your professional participant profile for the ELS Madrid 2026 retreat brochure.",
+            "start": "Start Profile Setup"
+        }
+    }
+}

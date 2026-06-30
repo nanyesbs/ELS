@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+
+  <!-- PWA and Mobile Optimization -->
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Reaching Germany Retreat 26" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- Touch Icons -->
+  <link rel="apple-touch-icon" href="/logo-light.png" />
+  <link rel="icon" type="image/png" href="/logo-light.png" />
+
+  <title>ELS Madrid 2026 Participant Directory</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              'els-blue': '#1b52a9',
+              'els-gray': '#eeeeee',
+            }
+          },
+          fontFamily: {
+            avenir: ['"Avenir Next"', 'Avenir', 'system-ui', 'sans-serif'],
+            didot: ['"Bodoni Moda"', 'serif'],
+          },
+          borderRadius: {
+            'card': '8px',
+            'modal': '12px',
+            'button': '6px',
+          },
+          boxShadow: {
+            'card': '0 4px 20px rgba(0,0,0,0.08)',
+            'modal': '0 20px 50px rgba(0,0,0,0.3)',
+            'glow': '0 0 15px rgba(27, 82, 169, 0.3)',
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'reveal': 'reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: 0 },
+              '100%': { opacity: 1 },
+            },
+            slideUp: {
+              '0%': { opacity: 0, transform: 'translateY(20px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            },
+            reveal: {
+              '0%': { clipPath: 'inset(0 100% 0 0)' },
+              '100%': { clipPath: 'inset(0 0 0 0)' },
+            }
+          }
+        },
+      },
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  <style>
+    /* Font Weight Definitions for Avenir */
+    @font-face {
+      font-family: 'Avenir Next';
+      src: local('Avenir Next Bold');
+      font-weight: 700;
+    }
+
+    @font-face {
+      font-family: 'Avenir Next';
+      src: local('Avenir Next Medium');
+      font-weight: 500;
+    }
+
+    @font-face {
+      font-family: 'Avenir Next';
+      src: local('Avenir Next Regular');
+      font-weight: 400;
+    }
+
+    @font-face {
+      font-family: 'Avenir Next';
+      src: local('Avenir Next Ultra Light');
+      font-weight: 350;
+    }
+
+    :root {
+      --brand-heaven-gold: #1b52a9;
+      --brand-gold: #eeeeee;
+      --brand-els-blue: #1b52a9;
+      --brand-els-gray: #eeeeee;
+    }
+
+    body {
+      font-family: "Avenir Next", Avenir, sans-serif;
+      background-color: #000000;
+      color: #ffffff;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* Prevent "bounce" effect and scroll bleeding on mobile */
+    html,
+    body {
+      overscroll-behavior-y: contain;
+    }
+
+    /* Inverted Mode: Light Background, Black Text */
+    .dark body {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .font-avenir-bold {
+      font-weight: 700;
+    }
+
+    .font-avenir-medium {
+      font-weight: 500;
+    }
+
+    .font-avenir-roman {
+      font-weight: 400;
+    }
+
+    .font-avenir-book {
+      font-weight: 350;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--brand-heaven-gold);
+      border-radius: 10px;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 768px) {
+      body {
+        -webkit-tap-highlight-color: rgba(187, 148, 70, 0.2);
+        -webkit-touch-callout: none;
+      }
+
+      /* Prevent zoom on input focus (iOS) */
+      input,
+      select,
+      textarea {
+        font-size: 16px !important;
+      }
+
+      /* Better scrolling on iOS */
+      * {
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+
+    /* Tablet Landscape Optimizations */
+    @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+      .custom-scrollbar {
+        max-height: 60vh;
+      }
+    }
+
+    /* Custom scrollbar for mobile */
+    .custom-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: var(--brand-heaven-gold) transparent;
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+        "xlsx": "https://esm.sh/xlsx@0.18.5",
+        "jszip": "https://esm.sh/jszip@3.10.1"
+      }
+    }
+  </script>
+</head>
+
+<body class="font-avenir">
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>
