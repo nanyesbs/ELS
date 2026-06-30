@@ -128,111 +128,37 @@ const LandingPage: React.FC = () => {
 //  SCREEN B: Sign-Up (/sign-up)
 // ─────────────────────────────────────────────
 const SignUpPage: React.FC = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [isDuplicate, setIsDuplicate] = useState(false);
-  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { setSession } = useSession();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    const result = await api.registerParticipant(name.trim(), email.trim());
-
-    if (!result.success) {
-      setError(result.error || 'Registration failed. Please try again.');
-      setLoading(false);
-      return;
+  const handleSignupComplete = async (token?: string) => {
+    if (token) {
+      const p = await api.getParticipantByToken(token);
+      if (p) {
+        setSession(token, p);
+        navigate(`/${token}`);
+      } else {
+        navigate('/');
+      }
+    } else {
+      navigate('/');
     }
-
-    setIsDuplicate(!!result.duplicate);
-    setSubmitted(true);
-    setLoading(false);
   };
 
-  if (submitted) {
-    return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-center px-6 text-center">
-        <div className="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mb-8">
-          <CheckCircle2 size={28} className="text-green-500" />
-        </div>
-        <h2 className="text-2xl font-extrabold uppercase tracking-tight text-white mb-3">
-          {isDuplicate ? 'New link sent!' : "You're registered!"}
-        </h2>
-        <p className="text-white/60 text-sm max-w-sm leading-relaxed mb-4">
-          {isDuplicate
-            ? `${email} is already registered. A new access link has been sent.`
-            : `Your personal access link has been sent to ${email}.`}
-        </p>
-        <p className="text-white/30 text-xs max-w-xs leading-relaxed">
-          This link is permanent — bookmark it or keep the email. It's the only way to access and edit your profile.
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center px-6 py-20">
-      <div className="w-full max-w-md">
-        <div className="flex flex-col items-center text-center mb-10">
-          <div className="w-14 h-14 bg-[#1b52a9]/15 border border-[#1b52a9]/30 rounded-full flex items-center justify-center mb-6">
-            <Mail size={24} className="text-[#1b52a9]" />
-          </div>
-          <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white mb-2">
-            Join the ELS Directory
-          </h1>
-          <p className="text-[10px] font-avenir-medium text-white/40 uppercase tracking-[2px]">
-            ELS Madrid 2026 · Participant Registration
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-2">
-            <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">
-              Full Name
-            </label>
-            <input
-              type="text" value={name} onChange={e => setName(e.target.value)}
-              required autoComplete="name" placeholder="Your full name"
-              className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-avenir-medium text-white outline-none focus:border-[#1b52a9] transition-all placeholder:text-white/20"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-white/50 pl-1 block">
-              Email Address
-            </label>
-            <input
-              type="email" value={email} onChange={e => setEmail(e.target.value)}
-              required autoComplete="email" placeholder="your@email.com"
-              className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-avenir-medium text-white outline-none focus:border-[#1b52a9] transition-all placeholder:text-white/20"
-            />
-          </div>
-
-          {error && (
-            <p className="text-[10px] font-avenir-bold text-red-500 text-center uppercase tracking-wider">
-              {error}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading || !name.trim() || !email.trim()}
-            className="w-full py-5 bg-[#1b52a9] hover:bg-[#1b52a9]/90 text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading
-              ? <><Loader2 size={14} className="animate-spin" /> Registering...</>
-              : <>Register & Receive Access Link <ArrowRight size={14} /></>}
-          </button>
-
-          <p className="text-center text-[10px] text-white/30 leading-relaxed">
-            You'll receive a permanent personal link by email. That link is your only access to the directory — keep it safe.
-          </p>
-        </form>
+    <div className="min-h-screen bg-black dark:bg-white text-white dark:text-black py-20 md:py-32 px-4 animate-fade-in">
+      <div className="max-w-3xl mx-auto mb-8">
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-[10px] font-avenir-bold uppercase tracking-widest text-white/40 dark:text-black/40 hover:text-[#1b52a9] transition-colors"
+        >
+          ← Back
+        </button>
       </div>
+      <RegistrationForm
+        mode="signup"
+        onComplete={handleSignupComplete}
+      />
     </div>
   );
 };

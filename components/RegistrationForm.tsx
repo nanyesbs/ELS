@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { Participant, SocialAccount } from '../types';
 
 interface RegistrationFormProps {
-    mode: 'create' | 'edit';
-    token: string;
-    initialData: Participant;
-    onComplete?: () => void;
+    mode: 'create' | 'edit' | 'signup';
+    token?: string;
+    initialData?: Participant;
+    onComplete?: (token?: string) => void;
 }
 
 const INTERESTS_OPTIONS = [
@@ -30,29 +30,29 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
     const [errorMessage, setErrorMessage] = useState('');
 
     const [formData, setFormData] = useState({
-        name: initialData.name || '',
-        country: initialData.country || '',
-        city: initialData.city || '',
-        organization: initialData.organization || '',
-        church: initialData.church || '',
-        ministry: initialData.ministry || '',
-        role: initialData.role || '',
-        short_bio: initialData.short_bio || '',
-        email: initialData.email || '',
-        phone: initialData.phone || '',
-        photo_url: initialData.photo_url || '',
+        name: initialData?.name || '',
+        country: initialData?.country || '',
+        city: initialData?.city || '',
+        organization: initialData?.organization || '',
+        church: initialData?.church || '',
+        ministry: initialData?.ministry || '',
+        role: initialData?.role || '',
+        short_bio: initialData?.short_bio || '',
+        email: initialData?.email || '',
+        phone: initialData?.phone || '',
+        photo_url: initialData?.photo_url || '',
     });
 
-    const [selectedInterests, setSelectedInterests] = useState<string[]>(initialData.areas_of_interest || []);
-    const [selectedLanguages, setSelectedLanguages] = useState<string[]>(initialData.languages_spoken || []);
-    const [socialAccounts, setSocialAccounts] = useState<SocialAccount[]>(initialData.social_media || [
+    const [selectedInterests, setSelectedInterests] = useState<string[]>(initialData?.areas_of_interest || []);
+    const [selectedLanguages, setSelectedLanguages] = useState<string[]>(initialData?.languages_spoken || []);
+    const [socialAccounts, setSocialAccounts] = useState<SocialAccount[]>(initialData?.social_media || [
         { platform: 'Instagram', handle: '' },
         { platform: 'LinkedIn', handle: '' },
         { platform: 'Website', handle: '' }
     ]);
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [previewUrl, setPreviewUrl] = useState<string>(initialData.photo_url || '');
+    const [previewUrl, setPreviewUrl] = useState<string>(initialData?.photo_url || '');
 
     const allCountries = useMemo(() => Country.getAllCountries(), []);
 
@@ -107,10 +107,11 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
 
             // 1. Upload photo if a new one is selected
             if (selectedFile) {
-                uploadedPhotoUrl = await api.uploadImage(selectedFile, `avatar-${token}`);
+                const photoToken = token || `signup-${Date.now()}`;
+                uploadedPhotoUrl = await api.uploadImage(selectedFile, `avatar-${photoToken}`);
             }
 
-            if (!uploadedPhotoUrl && mode === 'create') {
+            if (!uploadedPhotoUrl && (mode === 'create' || mode === 'signup')) {
                 throw new Error('Please upload a profile photo.');
             }
 
@@ -132,13 +133,33 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                 languages_spoken: selectedLanguages
             };
 
-            // 3. Submit payload via secure RPC token validation
-            const success = await api.submitBioByToken(token, payload);
-            if (!success) {
-                throw new Error('Failed to save profile. Token might be expired or invalid.');
+            // 3. Submit payload
+            if (mode === 'signup') {
+                const result = await api.registerParticipant(formData.name, formData.email, payload);
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to complete registration.');
+                }
+                if (result.duplicate) {
+                    setStatus('success');
+                    setErrorMessage('duplicate');
+                } else if (result.token) {
+                    setStatus('success');
+                    if (onComplete) {
+                        onComplete(result.token);
+                    }
+                } else {
+                    setStatus('success');
+                }
+            } else {
+                const success = await api.submitBioByToken(token!, payload);
+                if (!success) {
+                    throw new Error('Failed to save profile. Token might be expired or invalid.');
+                }
+                setStatus('success');
+                if (onComplete) {
+                    onComplete();
+                }
             }
-
-            setStatus('success');
         } catch (err: any) {
             console.error(err);
             setStatus('error');
@@ -149,23 +170,28 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
     };
 
     if (status === 'success') {
+        const isDuplicate = errorMessage === 'duplicate';
         return (
             <div className="flex flex-col items-center justify-center py-20 animate-fade-in text-center px-4 max-w-xl mx-auto">
                 <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mb-8 border border-green-500/20 shadow-glow">
                     <CheckCircle2 size={36} className="text-[#1b52a9] dark:text-green-600" />
                 </div>
                 <h2 className="text-3xl font-extrabold text-white dark:text-black uppercase tracking-tight mb-4">
-                    {t('registration.completeTitle', 'Profile Synchronized!')}
+                    {isDuplicate ? 'Access Link Sent!' : t('registration.completeTitle', 'Profile Synchronized!')}
                 </h2>
                 <p className="text-white/60 dark:text-black/60 text-sm leading-relaxed mb-12">
-                    {t('registration.completeDesc', 'Your bio has been saved successfully. An email has been sent containing your dashboard link and a permanent link to edit your details in the future.')}
+                    {isDuplicate
+                        ? `${formData.email} is already registered. A new access link has been sent.`
+                        : t('registration.completeDesc', 'Your bio has been saved successfully. An email has been sent containing your dashboard link and a permanent link to edit your details in the future.')}
                 </p>
-                <button
-                    onClick={onComplete}
-                    className="px-10 py-5 bg-[#1b52a9] hover:bg-[#1b52a9]/90 text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] shadow-glow active:scale-95 transition-all"
-                >
-                    {t('registration.returnDir', 'Go to Directory')}
-                </button>
+                {!isDuplicate && onComplete && (
+                    <button
+                        onClick={() => onComplete()}
+                        className="px-10 py-5 bg-[#1b52a9] hover:bg-[#1b52a9]/90 text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] shadow-glow active:scale-95 transition-all"
+                    >
+                        {t('registration.returnDir', 'Go to Directory')}
+                    </button>
+                )}
             </div>
         );
     }

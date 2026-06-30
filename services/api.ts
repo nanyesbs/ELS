@@ -24,13 +24,14 @@ export const api = {
   // --- Native Sign-Up (calls register-participant Edge Function) ---
   registerParticipant: async (
     name: string,
-    email: string
-  ): Promise<{ success: boolean; duplicate?: boolean; message?: string; error?: string }> => {
+    email: string,
+    bioData?: Partial<Participant>
+  ): Promise<{ success: boolean; duplicate?: boolean; message?: string; error?: string; token?: string }> => {
     const url = getEdgeFunctionUrl('register-participant');
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email }),
+      body: JSON.stringify({ name, email, bio_data: bioData }),
     });
 
     const data = await response.json();

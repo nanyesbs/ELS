@@ -87,6 +87,8 @@ Deno.serve(async (req) => {
     // rawToken is held only in this function's memory until emailed.
     // tokenHash is what gets written to the DB. rawToken is never persisted.
 
+    const bioData = body.bio_data || null;
+
     // ── Insert via SECURITY DEFINER RPC ──────────────────────────
     const { data: participantId, error: rpcError } = await supabase.rpc(
       "register_participant",
@@ -94,6 +96,7 @@ Deno.serve(async (req) => {
         p_email: email,
         p_registered_name: name,
         p_token_hash: tokenHash,
+        p_bio_data: bioData,
       }
     );
 
@@ -142,6 +145,7 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
+        token: rawToken,
         message:
           "Registration successful. Check your email for your permanent access link.",
       }),
