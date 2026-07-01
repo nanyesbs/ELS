@@ -1,54 +1,52 @@
 
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 
-interface HeaderProps {
- darkMode?: boolean;
-}
+const Header: React.FC = () => {
+  return (
+    <header className="w-full bg-[#efefef] py-10 md:py-14 px-6 md:px-16">
+      <div className="max-w-5xl mx-auto flex flex-col items-center md:items-start">
 
-const Header: React.FC<HeaderProps> = ({ darkMode }) => {
- const { t } = useTranslation();
+        {/* Title row: text + logos */}
+        <div className="flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-10">
+          {/* Big title */}
+          <h1
+            className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-[#1552ab] leading-[1.0] text-center md:text-left"
+            style={{ letterSpacing: '-0.02em' }}
+          >
+            European<br />
+            Leaders Summit
+          </h1>
 
- return (
- <header className="relative w-full h-[35vh] md:h-[40vh] flex flex-col items-center justify-center overflow-hidden bg-[#efefef] pt-10 md:pt-0">
- {/* Background Image with Overlay */}
- <div
- className="absolute inset-0 z-0 opacity-20"
- style={{
- backgroundImage: 'url("/header-bg.png")',
- backgroundSize: 'cover',
- backgroundPosition: 'center',
- }}
- />
- <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#efefef]/80 to-[#efefef]" />
+          {/* Logos stacked beside title */}
+          <div className="flex items-center gap-4 pb-1 flex-shrink-0">
+            <img
+              src="/logo-e21.png"
+              alt="21 Europe"
+              className="h-14 md:h-16 object-contain"
+            />
+            <img
+              src="/logo-esbs.png"
+              alt="Europe Shall Be Saved"
+              className="h-14 md:h-16 object-contain"
+            />
+          </div>
+        </div>
 
- {/* SVG Logo (Top Right Slot) */}
- <div className="absolute top-8 right-8 z-20 hidden lg:block">
- <div className="flex items-center gap-3 bg-[#efefef]/60 backdrop-blur-sm p-2.5 rounded-2xl border border-[#1552ab]/10">
-   <img src="/logo-e21.png" alt="21 Europe" className="h-7 object-contain" />
-   <img src="/logo-esbs.png" alt="Europe Shall Be Saved" className="h-7 object-contain" />
- </div>
- </div>
+        {/* Date */}
+        <p className="mt-4 text-xs md:text-sm font-semibold tracking-[0.35em] uppercase text-[#1552ab]/70 text-center md:text-left">
+          10 – 12 November 2026
+        </p>
 
- {/* Hero Content */}
- <div className="relative z-20 text-center px-4 max-w-4xl flex flex-col items-center">
- <span className="text-[9px] md:text-xs tracking-[0.4em] md:tracking-[0.5em] font-light text-[#1552ab]/80 uppercase mb-3 md:mb-4 animate-fade-in">
- {t('header.tagline', 'EMPOWERED21 + EUROPE SHALL BE SAVED')}
- </span>
+        {/* Location badge */}
+        <div className="mt-3">
+          <span className="inline-block border border-[#1552ab] rounded-full px-5 py-1.5 text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-[#1552ab]">
+            Madrid, Spain
+          </span>
+        </div>
 
- <h1 className="text-2xl sm:text-3xl md:text-6xl font-extrabold text-[#1552ab] uppercase leading-tight mb-4 md:mb-6">
- {t('header.title1', 'ELS RETREAT')} <br />
- <span className="tracking-tighter">{t('header.title2', 'MADRID 2026')}</span>
- </h1>
-
- <div className="w-16 md:w-24 h-[1px] md:h-[2px] bg-[var(--brand-heaven-gold)] mb-3" />
-
- <p className="text-[10px] md:text-lg font-normal text-white/90 text-[#1552ab]/90 tracking-[0.2em] md:tracking-widest uppercase">
- 10.11.26 – 12.11.26 | Madrid, Spain
- </p>
- </div>
- </header>
- );
+      </div>
+    </header>
+  );
 };
 
 export default Header;
