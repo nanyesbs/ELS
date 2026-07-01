@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import {
  Loader2, Search, RefreshCcw, LayoutGrid, Columns,
  Square, Filter, X, Shield, LogOut, ArrowRight,
- CheckCircle2, Mail, Edit3, Eye, EyeOff,
+ CheckCircle2, Mail, Edit3, Eye, EyeOff, MapPin,
 } from 'lucide-react';
 
 import Navbar from './components/Navbar';
@@ -21,6 +21,7 @@ import ParticipantCard from './components/ParticipantCard';
 import ProfileModal from './components/ProfileModal';
 import AdminConsole from './components/AdminConsole';
 import RegistrationForm from './components/RegistrationForm';
+import ParticipantMap from './components/ParticipantMap';
 import { Participant, LayoutMode } from './types';
 import { api } from './services/api';
 import { supabase } from './services/supabase';
@@ -203,6 +204,7 @@ const TokenPage: React.FC = () => {
  const [isFilterOpen, setIsFilterOpen] = useState(false);
  const [filterCountry, setFilterCountry] = useState('ALL');
  const [filterRole, setFilterRole] = useState('ALL');
+ const [viewTab, setViewTab] = useState<'directory' | 'map'>('directory');
 
  // ── Server-side token validation ──────────────────────────────
  // Every load hits the DB. No client state is trusted.
@@ -375,17 +377,39 @@ const TokenPage: React.FC = () => {
  <RefreshCcw size={18} />
  </button>
  <div className="w-px h-8 bg-white bg-[#efefef]/10 mx-1 hidden sm:block" />
+
+ {/* Map / Directory tab toggle */}
+ <div className="flex gap-1 bg-black/5 rounded-xl p-1 border border-black/10">
+   <button
+     onClick={() => setViewTab('directory')}
+     className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${
+       viewTab === 'directory' ? 'bg-[#1552ab] text-white shadow-sm' : 'text-[#1552ab]/60 hover:text-[#1552ab]'
+     }`}
+   >
+     <LayoutGrid size={13} /> Directory
+   </button>
+   <button
+     onClick={() => setViewTab('map')}
+     className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${
+       viewTab === 'map' ? 'bg-[#1552ab] text-white shadow-sm' : 'text-[#1552ab]/60 hover:text-[#1552ab]'
+     }`}
+   >
+     <MapPin size={13} /> Map
+   </button>
+ </div>
+
+ <div className="w-px h-8 bg-white bg-[#efefef]/10 mx-1 hidden sm:block" />
  <div className="hidden sm:flex gap-1">
  {(['list', 'grid2', 'grid4'] as LayoutMode[]).map(mode => (
  <button key={mode} onClick={() => setLayoutMode(mode)}
- className={`p-3 rounded-xl transition-all ${layoutMode === mode ? 'bg-[#1552ab] text-white' : 'text-[#1552ab] hover:bg-black/5'}`}>
+ className={`p-3 rounded-xl transition-all ${layoutMode === mode ? 'bg-[#1552ab] text-white' : 'text-[#1552ab] hover:bg-black/5'} ${viewTab === 'map' ? 'opacity-30 pointer-events-none' : ''}`}>
  {mode === 'list' ? <Square size={20} /> : mode === 'grid2' ? <Columns size={20} /> : <LayoutGrid size={20} />}
  </button>
  ))}
  </div>
  <div className="w-px h-8 bg-white bg-[#efefef]/10 mx-1" />
  <button onClick={() => setIsFilterOpen(true)}
- className={`flex items-center gap-2 px-4 py-3 rounded-xl font-avenir-bold text-[10px] uppercase tracking-[2px] transition-all ${hasActiveFilters ? 'bg-[#1552ab] text-white' : 'bg-black/5 text-[#1552ab] border border-[#1552ab]/20'}`}>
+ className={`flex items-center gap-2 px-4 py-3 rounded-xl font-avenir-bold text-[10px] uppercase tracking-[2px] transition-all ${viewTab === 'map' ? 'opacity-30 pointer-events-none' : ''} ${hasActiveFilters ? 'bg-[#1552ab] text-white' : 'bg-black/5 text-[#1552ab] border border-[#1552ab]/20'}`}>
  <Filter size={14} />
  <span className="hidden xs:inline">Filters</span>
  {hasActiveFilters && <span className="w-2 h-2 rounded-full bg-white animate-pulse" />}
@@ -393,8 +417,10 @@ const TokenPage: React.FC = () => {
  </div>
  </div>
 
- {/* Directory grid */}
- {dirLoading ? (
+  {/* Map or Directory */}
+  {viewTab === 'map' ? (
+    <ParticipantMap participants={publicList as Participant[]} />
+  ) : dirLoading ? (
  <div className="flex flex-col items-center justify-center py-40">
  <Loader2 className="animate-spin text-[#1552ab] mb-4" size={32} />
  <p className="text-[10px] text-[#1552ab] uppercase font-avenir-medium tracking-widest">Loading profiles...</p>
