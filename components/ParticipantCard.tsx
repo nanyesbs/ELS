@@ -104,7 +104,7 @@ const ParticipantCard: React.FC<ParticipantCardProps> = ({ participant, onClick,
               <div className="flex gap-1.5 items-center bg-[#efefef] p-1.5 px-3 rounded-full border border-[#1552ab]/10">
                 <span className="text-lg leading-none" title="Residency">{countryInfo.flag}</span>
                 <span className="text-[10px] font-avenir-bold text-[#1552ab]/75">
-                  {participant.city ? `${participant.city}, ` : ''}{countryInfo.name}
+                  {[participant.city, participant.state, countryInfo.name].filter(Boolean).join(', ')}
                 </span>
               </div>
               <ChevronRight size={16} className="text-[#1552ab]/40 group-hover:text-[#1552ab] group-hover:translate-x-1 transition-all" />
@@ -155,7 +155,7 @@ const ParticipantCard: React.FC<ParticipantCardProps> = ({ participant, onClick,
         <div className="flex items-center justify-center gap-2 mb-4">
           <span className="text-xl leading-none" title={countryInfo.name}>{countryInfo.flag}</span>
           <span className="text-[10px] font-avenir-bold text-[#1552ab]/60 uppercase tracking-wider">
-            {participant.city ? `${participant.city}, ` : ''}{countryInfo.name}
+            {[participant.city, participant.state, countryInfo.name].filter(Boolean).join(', ')}
           </span>
         </div>
 

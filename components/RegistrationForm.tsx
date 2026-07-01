@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { api } from '../services/api';
-import { Country } from 'country-state-city';
+import { Country, State, City } from 'country-state-city';
 import {
   ChevronRight, ChevronLeft, Send, Camera, User,
   Mail, Globe, Phone, Loader2, CheckCircle2, Save, FileImage
@@ -116,6 +116,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
     email: initialData?.email || '',
     name: initialData?.name || '',
     country: initialData?.country || '',
+    state: initialData?.state || '',
+    city: initialData?.city || '',
     nationality: initialData?.nationality || '',
     short_bio: initialData?.short_bio || '',
     // Section 2
@@ -144,6 +146,24 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
   const [promoPreview, setPromoPreview] = useState<string>(initialData?.promotional_picture_url || '');
 
   const allCountries = useMemo(() => Country.getAllCountries(), []);
+
+  // Derived state/city lists based on selected country/state
+  const selectedCountryIso = useMemo(
+    () => allCountries.find(c => c.name === formData.country)?.isoCode || '',
+    [formData.country, allCountries]
+  );
+  const selectedStateIso = useMemo(
+    () => State.getStatesOfCountry(selectedCountryIso).find(s => s.name === formData.state)?.isoCode || '',
+    [formData.state, selectedCountryIso]
+  );
+  const statesList = useMemo(
+    () => selectedCountryIso ? State.getStatesOfCountry(selectedCountryIso) : [],
+    [selectedCountryIso]
+  );
+  const citiesList = useMemo(
+    () => selectedCountryIso && selectedStateIso ? City.getCitiesOfState(selectedCountryIso, selectedStateIso) : [],
+    [selectedCountryIso, selectedStateIso]
+  );
 
   // ── Handlers ────────────────────────────────────────────────────────────────
   const handleChange = (
@@ -250,6 +270,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
         name: formData.name,
         email: formData.email,
         country: formData.country,
+        state: formData.state,
+        city: formData.city,
         nationality: formData.nationality,
         short_bio: formData.short_bio,
         organization: formData.organization,
@@ -395,12 +417,54 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                   <p className="text-[9px] text-[#1552ab]/40 pl-1 mt-0.5">This name will appear on your badge.</p>
                 </div>
 
-                <div className="space-y-1">
+                {/* Country / State / City cascade */}
+                <div className="space-y-1 md:col-span-2">
                   <label className={labelClass}>Resident Country</label>
-                  <select name="country" value={formData.country} onChange={handleChange} className={selectClass}>
+                  <select
+                    name="country"
+                    value={formData.country}
+                    onChange={(e) => {
+                      setFormData(prev => ({ ...prev, country: e.target.value, state: '', city: '' }));
+                    }}
+                    className={selectClass}
+                  >
                     <option value="">Select country</option>
                     {allCountries.map((c) => (
                       <option key={c.isoCode} value={c.name}>{c.flag} {c.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className={labelClass}>State / Province / Region</label>
+                  <select
+                    name="state"
+                    value={formData.state}
+                    onChange={(e) => {
+                      setFormData(prev => ({ ...prev, state: e.target.value, city: '' }));
+                    }}
+                    className={selectClass}
+                    disabled={statesList.length === 0}
+                  >
+                    <option value="">{statesList.length === 0 ? 'Select country first' : 'Select state'}</option>
+                    {statesList.map((s) => (
+                      <option key={s.isoCode} value={s.name}>{s.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className={labelClass}>City</label>
+                  <select
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    className={selectClass}
+                    disabled={citiesList.length === 0}
+                  >
+                    <option value="">{citiesList.length === 0 ? (formData.state ? 'No cities available' : 'Select state first') : 'Select city'}</option>
+                    {citiesList.map((c, i) => (
+                      <option key={i} value={c.name}>{c.name}</option>
                     ))}
                   </select>
                 </div>

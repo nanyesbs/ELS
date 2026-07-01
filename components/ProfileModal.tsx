@@ -240,7 +240,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Resident Country</span>
   <div className="text-sm font-avenir-medium text-[#1552ab] flex items-center gap-2">
   <MapPin size={14} className="text-[#1552ab]/20" />
-  {participant.city ? `${participant.city}, ` : ''}{countryInfo.flag} {countryInfo.name}
+  {[participant.city, participant.state, countryInfo.name].filter(Boolean).join(', ')} {countryInfo.flag}
   </div>
   </div>
 
