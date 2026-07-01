@@ -24,10 +24,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.8";
 import {
   getEmailConfig,
   buildEmailPayload,
-  sendViaGmail,
   registrationConfirmationEmail,
   resendAccessEmail,
 } from "../_shared/email-templates.ts";
+import { sendMail } from "../_shared/mailer.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -129,7 +129,15 @@ Deno.serve(async (req) => {
 
         const newAccessLink = `${Deno.env.get("APP_URL") || "https://elsconnection.vercel.app"}/${newRawToken}`;
         try {
-          await sendEmail("resend", recipientName, email, newRawToken);
+          const cfg = getEmailConfig();
+          const { subject, html } = resendAccessEmail(cfg, recipientName, newRawToken);
+          await sendMail({
+            to: email,
+            subject,
+            html,
+            recipientName,
+            rawToken: newRawToken,
+          });
           console.log(`[RESEND] Email sent to: ${email} | Link: ${newAccessLink}`);
         } catch (emailError: any) {
           console.warn(
@@ -156,7 +164,15 @@ Deno.serve(async (req) => {
     // below so an admin can resend it manually if needed.
     const accessLink = `${Deno.env.get("APP_URL") || "https://elsconnection.vercel.app"}/${rawToken}`;
     try {
-      await sendEmail("new", name, email, rawToken);
+      const cfg = getEmailConfig();
+      const { subject, html } = registrationConfirmationEmail(cfg, name, rawToken);
+      await sendMail({
+        to: email,
+        subject,
+        html,
+        recipientName: name,
+        rawToken,
+      });
       console.log(`[NEW] Email sent to: ${email} | Link: ${accessLink}`);
     } catch (emailError: any) {
       console.warn(
@@ -182,64 +198,3 @@ Deno.serve(async (req) => {
     );
   }
 });
-
-type EmailType = "new" | "resend";
-
-async function sendEmail(
-  type: EmailType,
-  recipientName: string,
-  recipientEmail: string,
-  rawToken: string
-): Promise<void> {
-  const cfg = getEmailConfig();
-  const gmailPassword = Deno.env.get("GMAIL_APP_PASSWORD");
-  const resendApiKey  = Deno.env.get("RESEND_API_KEY");
-
-  const { subject, html } =
-    type === "new"
-      ? registrationConfirmationEmail(cfg, recipientName, rawToken)
-      : resendAccessEmail(cfg, recipientName, rawToken);
-
-  // ── Priority 1: Gmail SMTP (works with any recipient) ────────────
-  if (gmailPassword) {
-    await sendViaGmail(recipientEmail, recipientName, subject, html);
-    return;
-  }
-
-  // ── Priority 2: Resend API ────────────────────────────────────────
-  // In development, log the access link to function logs instead of sending.
-  if (!resendApiKey) {
-    console.warn(
-      `[DEV] RESEND_API_KEY not set. Access link: ${cfg.appUrl}/${rawToken}`
-    );
-    return;
-  }
-
-  const payload = buildEmailPayload(
-    cfg,
-    recipientName,
-    recipientEmail,
-    rawToken,
-    subject,
-    html
-  );
-
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${resendApiKey}`,
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    const errText = await response.text();
-    console.error(`Resend API error for ${recipientEmail}: ${errText}`);
-    throw new Error(`Email delivery failed: ${errText}`);
-  }
-
-  console.log(
-    `[${type.toUpperCase()}] Resend email sent to: ${recipientEmail}`
-  );
-}

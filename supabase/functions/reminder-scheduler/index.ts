@@ -9,6 +9,7 @@ import {
   buildEmailPayload,
   reminderEmail,
 } from "../_shared/email-templates.ts";
+import { sendMail } from "../_shared/mailer.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -117,7 +118,10 @@ Deno.serve(async (req) => {
       }
 
       // Send reminder email
-      if (resendApiKey) {
+      const gmailUser = Deno.env.get("GMAIL_USER");
+      const gmailPass = Deno.env.get("GMAIL_PASS");
+
+      if (gmailUser || resendApiKey) {
         const recipientName = participant.registered_name || "ELS Participant";
         const recipientEmail = participant.email;
 
@@ -128,34 +132,22 @@ Deno.serve(async (req) => {
           isSecond
         );
 
-        const payload = buildEmailPayload(
-          cfg,
-          recipientName,
-          recipientEmail,
-          rawToken,
-          subject,
-          html
-        );
-
-        const emailRes = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${resendApiKey}`,
-          },
-          body: JSON.stringify(payload),
-        });
-
-        if (!emailRes.ok) {
-          const errText = await emailRes.text();
-          console.error(`Email failed for ${recipientEmail}: ${errText}`);
-        } else {
+        try {
+          await sendMail({
+            to: recipientEmail,
+            subject,
+            html,
+            recipientName,
+            rawToken,
+          });
           successCount++;
           console.log(`Reminder sent to: ${recipientEmail}`);
+        } catch (emailError: any) {
+          console.error(`Email failed for ${recipientEmail}: ${emailError.message}`);
         }
       } else {
         console.warn(
-          `[DEV] RESEND_API_KEY not set. Access link: ${cfg.appUrl}/access?token=${rawToken}`
+          `[DEV] Neither GMAIL credentials nor RESEND_API_KEY set. Access link: ${cfg.appUrl}/access?token=${rawToken}`
         );
         successCount++;
       }
