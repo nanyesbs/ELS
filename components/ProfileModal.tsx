@@ -36,6 +36,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
  if (!participant) return null;
 
  const countryInfo = findCountry(participant.country || '');
+ const nationalityInfo = findCountry(participant.nationality || '');
 
  const handleDeleteClick = async () => {
  if (onDelete && window.confirm('Are you sure you want to delete this profile?')) {
@@ -201,49 +202,84 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
 
  {/* Right Section: Detailed Profile */}
  <div className="flex-1 p-8 md:p-10 flex flex-col justify-between overflow-y-auto max-h-[70vh] md:max-h-none">
- <div className="space-y-8">
- 
- {/* Short Bio */}
- {participant.short_bio && (
- <div className="relative pl-6">
- <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#1552ab]" />
- <h4 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[4px] mb-3">Short Bio</h4>
- <p className="text-sm md:text-base font-avenir-roman leading-relaxed text-[#1552ab]/80">
- {participant.short_bio}
- </p>
- </div>
- )}
+  <div className="space-y-8">
+  {/* Bio / Background */}
+  {participant.short_bio && (
+  <div className="relative pl-6">
+  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#1552ab]" />
+  <h4 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[4px] mb-3">Bio / Background</h4>
+  <p className="text-sm md:text-base font-avenir-roman leading-relaxed text-[#1552ab]/80">
+  {participant.short_bio}
+  </p>
+  </div>
+  )}
 
- {/* Ministry Focus */}
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
- {participant.ministry && (
- <div className="space-y-1">
- <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Ministry Focus</span>
- <div className="text-sm font-avenir-medium text-[#1552ab] flex items-center gap-2">
- <Building size={14} className="text-[#1552ab]/20" />
- {participant.ministry}
- </div>
- </div>
- )}
+  {/* Ministry Focus & Countries */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+  {participant.ministry && (
+  <div className="space-y-1">
+  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Ministry Focus</span>
+  <div className="text-sm font-avenir-medium text-[#1552ab] flex items-center gap-2">
+  <Building size={14} className="text-[#1552ab]/20" />
+  {participant.ministry}
+  </div>
+  </div>
+  )}
 
- {participant.church && (
- <div className="space-y-1">
- <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Church Affiliation</span>
- <div className="text-sm font-avenir-medium text-[#1552ab] flex items-center gap-2">
- <Globe size={14} className="text-[#1552ab]/20" />
- {participant.church}
- </div>
- </div>
- )}
+  {participant.church && (
+  <div className="space-y-1">
+  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Church Affiliation</span>
+  <div className="text-sm font-avenir-medium text-[#1552ab] flex items-center gap-2">
+  <Globe size={14} className="text-[#1552ab]/20" />
+  {participant.church}
+  </div>
+  </div>
+  )}
 
- <div className="space-y-1">
- <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Residency Location</span>
- <div className="text-sm font-avenir-medium text-[#1552ab] flex items-center gap-2">
- <MapPin size={14} className="text-[#1552ab]/20" />
- {participant.city ? `${participant.city}, ` : ''}{countryInfo.flag} {countryInfo.name}
- </div>
- </div>
- </div>
+  <div className="space-y-1">
+  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Resident Country</span>
+  <div className="text-sm font-avenir-medium text-[#1552ab] flex items-center gap-2">
+  <MapPin size={14} className="text-[#1552ab]/20" />
+  {participant.city ? `${participant.city}, ` : ''}{countryInfo.flag} {countryInfo.name}
+  </div>
+  </div>
+
+  {participant.nationality && (
+  <div className="space-y-1">
+  <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">Nationality</span>
+  <div className="text-sm font-avenir-medium text-[#1552ab] flex items-center gap-2">
+  <span className="text-lg leading-none" title="Nationality">{nationalityInfo.flag}</span>
+  {nationalityInfo.name}
+  </div>
+  </div>
+  )}
+  </div>
+
+  {/* Organization Description */}
+  {participant.org_description && (
+    <div className="pt-4 border-t border-black/5">
+      <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block mb-1">Organization Description</span>
+      <p className="text-xs font-avenir-roman text-[#1552ab]/75 leading-relaxed">
+        {participant.org_description}
+      </p>
+    </div>
+  )}
+
+  {/* Company Flyer / Logo / Promo (Optional) */}
+  {participant.promotional_picture_url && (
+    <div className="pt-6 border-t border-black/8 space-y-3">
+      <span className="text-[8px] font-avenir-bold text-[#1552ab] uppercase tracking-widest block">
+        Company Flyer / Logo / Promo
+      </span>
+      <div className="w-full max-w-lg rounded-2xl overflow-hidden border border-[#1552ab]/15 bg-black/5 shadow-md">
+        <img 
+          src={participant.promotional_picture_url} 
+          alt="Company Flyer/Logo/Promo" 
+          className="w-full h-auto object-contain max-h-[300px]" 
+        />
+      </div>
+    </div>
+  )}
 
  {/* Interests & Languages */}
  <div className="space-y-6 pt-6 border-t border-black/8">
