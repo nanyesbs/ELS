@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Participant } from '../types';
-import { Building, ChevronRight, User } from 'lucide-react';
+import { Building, ChevronRight, User, Mail, Phone, Globe } from 'lucide-react';
 import { getIdentityPlaceholder, HIGH_QUALITY_PLACEHOLDER } from '../constants';
 import { findCountry } from '../utils';
 
@@ -63,6 +63,43 @@ const ParticipantCard: React.FC<ParticipantCardProps> = ({ participant, onClick,
               <span className="truncate max-w-[150px]">{participant.organization}</span>
             </div>
 
+            {/* Quick Connection Links */}
+            {(participant.public_email || participant.public_phone || participant.public_website) && (
+              <div className="hidden sm:flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                {participant.public_email && (
+                  <a 
+                    href={`mailto:${participant.public_email}`}
+                    title="Send Email"
+                    className="p-1.5 text-[#1552ab]/60 hover:text-[#1552ab] hover:bg-[#1552ab]/10 rounded-full transition-all border border-[#1552ab]/10"
+                  >
+                    <Mail size={12} />
+                  </a>
+                )}
+                {participant.public_phone && (
+                  <a 
+                    href={`https://wa.me/${participant.public_phone.replace(/\D/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="WhatsApp Chat"
+                    className="p-1.5 text-[#1552ab]/60 hover:text-[#1552ab] hover:bg-[#1552ab]/10 rounded-full transition-all border border-[#1552ab]/10"
+                  >
+                    <Phone size={12} />
+                  </a>
+                )}
+                {participant.public_website && (
+                  <a 
+                    href={participant.public_website.startsWith('http') ? participant.public_website : `https://${participant.public_website}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Visit Website"
+                    className="p-1.5 text-[#1552ab]/60 hover:text-[#1552ab] hover:bg-[#1552ab]/10 rounded-full transition-all border border-[#1552ab]/10"
+                  >
+                    <Globe size={12} />
+                  </a>
+                )}
+              </div>
+            )}
+
             <div className="flex items-center gap-3">
               <div className="flex gap-1.5 items-center bg-[#efefef] p-1.5 px-3 rounded-full border border-[#1552ab]/10">
                 <span className="text-lg leading-none" title="Residency">{countryInfo.flag}</span>
@@ -123,10 +160,47 @@ const ParticipantCard: React.FC<ParticipantCardProps> = ({ participant, onClick,
         </div>
 
         {/* Organization */}
-        <div className="flex items-center justify-center gap-2 text-xs md:text-sm text-[#1552ab]/60 font-avenir-roman mb-8 min-h-[1.5rem] w-full px-2">
+        <div className="flex items-center justify-center gap-2 text-xs md:text-sm text-[#1552ab]/60 font-avenir-roman mb-4 min-h-[1.5rem] w-full px-2">
           <Building size={12} className="text-[#1552ab]/60 shrink-0" />
           <span className="truncate line-clamp-1 max-w-[90%]">{participant.organization}</span>
         </div>
+
+        {/* Quick Connection Links */}
+        {(participant.public_email || participant.public_phone || participant.public_website) && (
+          <div className="flex items-center justify-center gap-3 mb-4" onClick={(e) => e.stopPropagation()}>
+            {participant.public_email && (
+              <a 
+                href={`mailto:${participant.public_email}`}
+                title="Send Email"
+                className="p-2 text-[#1552ab]/60 hover:text-[#1552ab] hover:bg-[#1552ab]/10 rounded-full transition-all border border-[#1552ab]/10"
+              >
+                <Mail size={12} />
+              </a>
+            )}
+            {participant.public_phone && (
+              <a 
+                href={`https://wa.me/${participant.public_phone.replace(/\D/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="WhatsApp Chat"
+                className="p-2 text-[#1552ab]/60 hover:text-[#1552ab] hover:bg-[#1552ab]/10 rounded-full transition-all border border-[#1552ab]/10"
+              >
+                <Phone size={12} />
+              </a>
+            )}
+            {participant.public_website && (
+              <a 
+                href={participant.public_website.startsWith('http') ? participant.public_website : `https://${participant.public_website}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Visit Website"
+                className="p-2 text-[#1552ab]/60 hover:text-[#1552ab] hover:bg-[#1552ab]/10 rounded-full transition-all border border-[#1552ab]/10"
+              >
+                <Globe size={12} />
+              </a>
+            )}
+          </div>
+        )}
 
         {/* View Profile Button */}
         <div className="w-full pt-6 border-t border-[#1552ab]/10 flex flex-col items-center">
@@ -137,6 +211,7 @@ const ParticipantCard: React.FC<ParticipantCardProps> = ({ participant, onClick,
         </div>
       </div>
     </div>
+
   );
 };
 

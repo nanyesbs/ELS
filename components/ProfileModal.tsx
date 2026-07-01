@@ -105,31 +105,98 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
  </p>
  </div>
 
- {/* Social media links */}
- {participant.social_media && participant.social_media.length > 0 && (
- <div className="mt-8 w-full border-t border-black/8 pt-6 z-10">
- <h4 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[4px] mb-4 text-center">Social Media</h4>
- <div className="flex flex-col gap-2">
- {participant.social_media.map((account, idx) => (
- <a 
- key={idx} 
- href={account.handle.startsWith('http') ? account.handle : `https://${account.platform.toLowerCase() === 'instagram' ? 'instagram.com/' : ''}${account.handle.replace('@', '')}`}
- target="_blank" 
- rel="noopener noreferrer"
- className="flex items-center justify-between p-3 bg-black/5 rounded-xl border border-black/8 hover:border-[#1552ab]/30 transition-all text-xs font-avenir-medium group"
- >
- <span className="flex items-center gap-2">
- <span>{getPlatformIcon(account.platform)}</span>
- <span className="capitalize">{account.platform}</span>
- </span>
- <span className="text-[#1552ab]/40 group-hover:text-[#1552ab] transition-colors flex items-center gap-1">
- {account.handle} <ExternalLink size={10} />
- </span>
- </a>
- ))}
- </div>
- </div>
- )}
+  {/* Connection / Contact info */}
+  {(participant.public_email || participant.public_phone || participant.public_website || participant.public_other || (participant.social_media && participant.social_media.length > 0)) && (
+    <div className="mt-8 w-full border-t border-black/8 pt-6 z-10 space-y-4">
+      <h4 className="text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[4px] mb-4 text-center">Connection</h4>
+      <div className="flex flex-col gap-2">
+        {/* Public Email */}
+        {participant.public_email && (
+          <a 
+            href={`mailto:${participant.public_email}`}
+            className="flex items-center justify-between p-3 bg-black/5 rounded-xl border border-black/8 hover:border-[#1552ab]/30 transition-all text-xs font-avenir-medium group"
+          >
+            <span className="flex items-center gap-2 text-[#1552ab]">
+              <Mail size={14} className="text-[#1552ab]/50" />
+              <span>Email</span>
+            </span>
+            <span className="text-[#1552ab]/70 group-hover:text-[#1552ab] transition-colors flex items-center gap-1 truncate max-w-[150px]">
+              {participant.public_email} <ExternalLink size={10} />
+            </span>
+          </a>
+        )}
+
+        {/* Public Phone */}
+        {participant.public_phone && (
+          <a 
+            href={`https://wa.me/${participant.public_phone.replace(/\D/g, '')}`}
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center justify-between p-3 bg-black/5 rounded-xl border border-black/8 hover:border-[#1552ab]/30 transition-all text-xs font-avenir-medium group"
+          >
+            <span className="flex items-center gap-2 text-[#1552ab]">
+              <Phone size={14} className="text-[#1552ab]/50" />
+              <span>WhatsApp</span>
+            </span>
+            <span className="text-[#1552ab]/70 group-hover:text-[#1552ab] transition-colors flex items-center gap-1">
+              {participant.public_phone} <ExternalLink size={10} />
+            </span>
+          </a>
+        )}
+
+        {/* Public Website */}
+        {participant.public_website && (
+          <a 
+            href={participant.public_website.startsWith('http') ? participant.public_website : `https://${participant.public_website}`}
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center justify-between p-3 bg-black/5 rounded-xl border border-black/8 hover:border-[#1552ab]/30 transition-all text-xs font-avenir-medium group"
+          >
+            <span className="flex items-center gap-2 text-[#1552ab]">
+              <Globe size={14} className="text-[#1552ab]/50" />
+              <span>Website</span>
+            </span>
+            <span className="text-[#1552ab]/70 group-hover:text-[#1552ab] transition-colors flex items-center gap-1 truncate max-w-[150px]">
+              {participant.public_website.replace(/https?:\/\/(www\.)?/, '')} <ExternalLink size={10} />
+            </span>
+          </a>
+        )}
+
+        {/* Public Other Handle */}
+        {participant.public_other && (
+          <div className="flex items-center justify-between p-3 bg-black/5 rounded-xl border border-black/8 text-xs font-avenir-medium">
+            <span className="flex items-center gap-2 text-[#1552ab]">
+              <MessageCircle size={14} className="text-[#1552ab]/50" />
+              <span>Social / Handle</span>
+            </span>
+            <span className="text-[#1552ab]/75 truncate max-w-[150px]">
+              {participant.public_other}
+            </span>
+          </div>
+        )}
+
+        {/* Legacy Social Media */}
+        {participant.social_media?.map((account, idx) => (
+          <a 
+            key={`legacy-${idx}`} 
+            href={account.handle.startsWith('http') ? account.handle : `https://${account.platform.toLowerCase() === 'instagram' ? 'instagram.com/' : ''}${account.handle.replace('@', '')}`}
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center justify-between p-3 bg-black/5 rounded-xl border border-black/8 hover:border-[#1552ab]/30 transition-all text-xs font-avenir-medium group"
+          >
+            <span className="flex items-center gap-2">
+              <span>{getPlatformIcon(account.platform)}</span>
+              <span className="capitalize text-[#1552ab]">{account.platform}</span>
+            </span>
+            <span className="text-[#1552ab]/70 group-hover:text-[#1552ab] transition-colors flex items-center gap-1">
+              {account.handle} <ExternalLink size={10} />
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
+
  </div>
 
  {/* Right Section: Detailed Profile */}
