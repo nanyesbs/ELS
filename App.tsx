@@ -344,6 +344,8 @@ const TokenPage: React.FC = () => {
  viewMode="directory"
  setViewMode={() => {}}
  isAdminAuthorized={false}
+ viewTab={viewTab}
+ setViewTab={setViewTab}
  />
 
  <Header />
@@ -378,27 +380,6 @@ const TokenPage: React.FC = () => {
  </button>
  <div className="w-px h-8 bg-white bg-[#efefef]/10 mx-1 hidden sm:block" />
 
- {/* Map / Directory tab toggle */}
- <div className="flex gap-1 bg-black/5 rounded-xl p-1 border border-black/10">
-   <button
-     onClick={() => setViewTab('directory')}
-     className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${
-       viewTab === 'directory' ? 'bg-[#1552ab] text-white shadow-sm' : 'text-[#1552ab]/60 hover:text-[#1552ab]'
-     }`}
-   >
-     <LayoutGrid size={13} /> Directory
-   </button>
-   <button
-     onClick={() => setViewTab('map')}
-     className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${
-       viewTab === 'map' ? 'bg-[#1552ab] text-white shadow-sm' : 'text-[#1552ab]/60 hover:text-[#1552ab]'
-     }`}
-   >
-     <MapPin size={13} /> Map
-   </button>
- </div>
-
- <div className="w-px h-8 bg-white bg-[#efefef]/10 mx-1 hidden sm:block" />
  <div className="hidden sm:flex gap-1">
  {(['list', 'grid2', 'grid4'] as LayoutMode[]).map(mode => (
  <button key={mode} onClick={() => setLayoutMode(mode)}
