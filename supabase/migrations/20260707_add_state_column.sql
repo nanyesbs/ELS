@@ -1,26 +1,13 @@
 -- ============================================================
--- ELS App — Migration 4: New Bio Fields (4-step form rewrite)
--- Adds 11 new columns for the updated registration form.
--- PRIVATE: testimony, upcoming_kingdom_events, dietary_restrictions
--- PUBLIC:  nationality, org_description, role_tags, promotional_picture_url,
---          public_phone, public_email, public_website, public_other
+-- ELS App — Migration 7: Add State Column
+-- Adds state column to participants and updates view & RPCs.
 -- ============================================================
 
--- 1. Add new columns to participants table
+-- 1. Add state column
 ALTER TABLE public.participants
-    ADD COLUMN IF NOT EXISTS nationality              TEXT,
-    ADD COLUMN IF NOT EXISTS org_description         TEXT,
-    ADD COLUMN IF NOT EXISTS role_tags               TEXT[],
-    ADD COLUMN IF NOT EXISTS promotional_picture_url TEXT,
-    ADD COLUMN IF NOT EXISTS public_phone            TEXT,
-    ADD COLUMN IF NOT EXISTS public_email            TEXT,
-    ADD COLUMN IF NOT EXISTS public_website          TEXT,
-    ADD COLUMN IF NOT EXISTS public_other            TEXT,
-    ADD COLUMN IF NOT EXISTS testimony               TEXT,
-    ADD COLUMN IF NOT EXISTS upcoming_kingdom_events TEXT,
-    ADD COLUMN IF NOT EXISTS dietary_restrictions    TEXT;
+    ADD COLUMN IF NOT EXISTS state TEXT;
 
--- 2. Update get_participant_by_token to return new fields
+-- 2. Update get_participant_by_token to return state
 DROP FUNCTION IF EXISTS public.get_participant_by_token(TEXT);
 
 CREATE OR REPLACE FUNCTION public.get_participant_by_token(p_token TEXT)
@@ -30,6 +17,8 @@ RETURNS TABLE (
     registered_name          TEXT,
     name                     TEXT,
     country                  TEXT,
+    state                    TEXT,
+    city                     TEXT,
     nationality              TEXT,
     short_bio                TEXT,
     organization             TEXT,
@@ -46,7 +35,6 @@ RETURNS TABLE (
     testimony                TEXT,
     upcoming_kingdom_events  TEXT,
     dietary_restrictions     TEXT,
-    city                     TEXT,
     church                   TEXT,
     ministry                 TEXT,
     languages_spoken         TEXT[],
@@ -64,12 +52,12 @@ BEGIN
     RETURN QUERY
     SELECT
         p.id, p.status, p.registered_name,
-        p.name, p.country, p.nationality, p.short_bio,
+        p.name, p.country, p.state, p.city, p.nationality, p.short_bio,
         p.organization, p.role, p.role_tags, p.org_description,
         p.photo_url, p.promotional_picture_url,
         p.public_phone, p.public_email, p.public_website, p.public_other,
         p.areas_of_interest, p.testimony, p.upcoming_kingdom_events, p.dietary_restrictions,
-        p.city, p.church, p.ministry, p.languages_spoken, p.social_media,
+        p.church, p.ministry, p.languages_spoken, p.social_media,
         p.email, p.phone, p.token_expires_at
     FROM public.participants p
     WHERE p.token_hash = v_hash
@@ -79,7 +67,7 @@ $$ LANGUAGE plpgsql;
 
 GRANT EXECUTE ON FUNCTION public.get_participant_by_token(TEXT) TO anon;
 
--- 3. Update submit_bio_by_token to persist new fields
+-- 3. Update submit_bio_by_token to support state
 DROP FUNCTION IF EXISTS public.submit_bio_by_token(TEXT, JSONB);
 
 CREATE OR REPLACE FUNCTION public.submit_bio_by_token(
@@ -103,6 +91,8 @@ BEGIN
     UPDATE public.participants SET
         name                    = COALESCE(p_bio_data->>'name',           name),
         country                 = COALESCE(p_bio_data->>'country',         country),
+        state                   = COALESCE(p_bio_data->>'state',           state),
+        city                    = COALESCE(p_bio_data->>'city',            city),
         nationality             = COALESCE(p_bio_data->>'nationality',     nationality),
         short_bio               = COALESCE(p_bio_data->>'short_bio',       short_bio),
         organization            = COALESCE(p_bio_data->>'organization',    organization),
@@ -123,7 +113,6 @@ BEGIN
         testimony               = COALESCE(p_bio_data->>'testimony',              testimony),
         upcoming_kingdom_events = COALESCE(p_bio_data->>'upcoming_kingdom_events', upcoming_kingdom_events),
         dietary_restrictions    = COALESCE(p_bio_data->>'dietary_restrictions',   dietary_restrictions),
-        city                    = COALESCE(p_bio_data->>'city',    city),
         church                  = COALESCE(p_bio_data->>'church',  church),
         ministry                = COALESCE(p_bio_data->>'ministry', ministry),
         social_media            = COALESCE((p_bio_data->'social_media'), social_media),
@@ -142,25 +131,19 @@ $$ LANGUAGE plpgsql;
 
 GRANT EXECUTE ON FUNCTION public.submit_bio_by_token(TEXT, JSONB) TO anon;
 
--- 4. Recreate public_participants VIEW with new public fields
---    PRIVATE (excluded): testimony, upcoming_kingdom_events, dietary_restrictions,
---                        email, phone, token_hash, registered_name, reminder fields
+-- 4. Recreate public_participants view to include state & city
 DROP VIEW IF EXISTS public.public_participants;
 CREATE OR REPLACE VIEW public.public_participants AS
 SELECT
     p.id, p.status,
-    p.name, p.country, p.nationality, p.short_bio,
+    p.name, p.country, p.state, p.city, p.nationality, p.short_bio,
     p.organization, p.role, p.role_tags, p.org_description,
     p.photo_url, p.promotional_picture_url,
     p.public_phone, p.public_email, p.public_website, p.public_other,
     p.areas_of_interest,
-    p.city,
     p.created_at, p.updated_at
 FROM public.participants p
 WHERE p.status = 'completed';
 
 ALTER VIEW public.public_participants OWNER TO postgres;
 GRANT SELECT ON public.public_participants TO anon, authenticated;
-
--- 5. Optional index
-CREATE INDEX IF NOT EXISTS idx_participants_nationality ON public.participants(nationality);

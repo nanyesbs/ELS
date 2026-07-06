@@ -69,7 +69,7 @@ export async function sendMail(options: MailOptions): Promise<void> {
         url: accessLink,
         token_link: accessLink,
         token_url: accessLink,
-        event_name: "Empowered21 + Europe Shall Be Saved (ELS) Retreat",
+        event_name: "European Leaders Summit",
         event_dates: "10-12 November 2026",
         event_location: "Madrid, Spain",
         location: "Madrid, Spain",

@@ -25,5 +25,11 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "exclude": [
+    "supabase",
+    "node_modules",
+    "dist",
+    "services/syncService.ts"
+  ]
 }

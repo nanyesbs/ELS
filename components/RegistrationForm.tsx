@@ -61,11 +61,11 @@ const DRAFT_KEY = 'els_registration_draft';
 
 // ─── Shared UI helpers ────────────────────────────────────────────────────────
 const inputClass =
-  'w-full bg-white border border-[#1552ab]/20 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] focus:ring-2 focus:ring-[#1552ab]/10 transition-all placeholder:text-[#1552ab]/30';
+  'w-full bg-white/80 dark:bg-white/5 border border-[#1552ab]/20 dark:border-white/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] dark:text-white outline-none focus:border-[#1552ab] dark:focus:border-white focus:ring-4 focus:ring-[#1552ab]/8 dark:focus:ring-white/8 transition-all placeholder:text-[#1552ab]/40 dark:placeholder:white/35 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] backdrop-blur-md';
 const labelClass =
-  'text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 pl-1 block mb-1';
+  'text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/50 dark:text-white/40 pl-1 block mb-1';
 const selectClass =
-  'w-full bg-[#f5f5f5] border border-[#1552ab]/20 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab] transition-all';
+  'w-full bg-white/70 dark:bg-white/5 border border-[#1552ab]/20 dark:border-white/10 p-4 rounded-xl text-sm font-avenir-medium text-[#1552ab] dark:text-white outline-none focus:border-[#1552ab] dark:focus:border-white focus:ring-4 focus:ring-[#1552ab]/8 dark:focus:ring-white/8 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] backdrop-blur-md';
 
 function SectionHeader({ step, title }: { step: number; title: string }) {
   return (
@@ -86,15 +86,16 @@ function TagButton({
   label: string;
   selected: boolean;
   onClick: () => void;
+  key?: React.Key;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`px-3 py-1.5 text-[10px] font-avenir-bold uppercase tracking-wider rounded-lg border transition-all ${
+      className={`px-3.5 py-2 text-[10px] font-avenir-bold uppercase tracking-wider rounded-xl border transition-all duration-200 min-h-[36px] ${
         selected
-          ? 'bg-[#1552ab] border-[#1552ab] text-white shadow-sm'
-          : 'border-[#1552ab]/20 text-[#1552ab]/60 hover:border-[#1552ab]/60 bg-white'
+          ? 'bg-[#1552ab] dark:bg-white border-[#1552ab] dark:border-white text-white dark:text-[#121829] shadow-sm scale-[1.02]'
+          : 'border-[#1552ab]/10 dark:border-white/10 text-[#1552ab]/60 dark:text-white/60 hover:border-[#1552ab]/40 dark:hover:border-white/40 bg-white/50 dark:bg-white/5 backdrop-blur-sm'
       }`}
     >
       {label}
@@ -372,10 +373,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-avenir-bold transition-all duration-300 border-2 ${
                     isActive
-                      ? 'bg-white border-[#1552ab] text-[#1552ab] scale-110 shadow-sm'
+                      ? 'bg-white/90 backdrop-blur-sm border-[#1552ab] text-[#1552ab] scale-110 shadow-sm'
                       : isDone
                       ? 'bg-[#1552ab] border-[#1552ab] text-white'
-                      : 'bg-[#efefef] border-[#1552ab]/15 text-[#1552ab]/30'
+                      : 'bg-[#efefef]/60 border-[#1552ab]/15 text-[#1552ab]/30'
                   }`}
                 >
                   {isDone ? <CheckCircle2 size={14} /> : `0${num}`}
@@ -390,7 +391,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
       </div>
 
       {/* Form card */}
-      <div className="bg-white border border-[#1552ab]/10 rounded-3xl p-6 sm:p-10 shadow-sm">
+      <div className="bg-white/80 dark:bg-[#121829]/80 backdrop-blur-xl border border-[#1552ab]/10 dark:border-white/10 rounded-3xl p-6 sm:p-10 shadow-card">
         <form onSubmit={handleSubmit} className="space-y-8">
 
           {/* ── STEP 1: Personal Information ─────────────────────────────── */}
@@ -698,7 +699,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
               {step < TOTAL_STEPS ? (
                 <button
                   type="button" onClick={handleNextValidated}
-                  className="px-7 py-3 bg-[#1552ab] text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[3px] hover:bg-[#0f387a] transition-all flex items-center gap-2 shadow-sm"
+                  className="px-7 py-3 bg-[#1552ab] text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[3px] hover:bg-[#0f387a] active:scale-95 transition-all flex items-center gap-2 shadow-sm hover:shadow-glow"
                 >
                   Next <ChevronRight size={14} />
                 </button>
@@ -706,13 +707,13 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                 <>
                   <button
                     type="button" onClick={handleSaveDraft} disabled={loading}
-                    className="px-5 py-3 border border-[#1552ab]/20 text-[#1552ab]/60 rounded-xl font-avenir-bold uppercase text-[10px] tracking-[3px] hover:text-[#1552ab] hover:border-[#1552ab]/50 transition-all flex items-center gap-2"
+                    className="px-5 py-3 border border-[#1552ab]/15 dark:border-white/10 text-[#1552ab]/60 dark:text-white/50 rounded-xl font-avenir-bold uppercase text-[10px] tracking-[3px] hover:text-[#1552ab] dark:hover:text-white hover:border-[#1552ab]/40 bg-white/50 dark:bg-white/5 backdrop-blur-sm transition-all flex items-center gap-2"
                   >
                     <Save size={13} /> Save Draft
                   </button>
                   <button
                     type="submit" disabled={loading}
-                    className="px-7 py-3 bg-[#1552ab] text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] hover:bg-[#0f387a] transition-all flex items-center gap-2 shadow-sm active:scale-95"
+                    className="px-7 py-3 bg-[#1552ab] text-white rounded-xl font-avenir-bold uppercase text-[10px] tracking-[4px] hover:bg-[#0f387a] transition-all flex items-center gap-2 shadow-sm hover:shadow-glow active:scale-95"
                   >
                     {loading ? (
                       <><Loader2 size={13} className="animate-spin" /><span>Synchronizing...</span></>

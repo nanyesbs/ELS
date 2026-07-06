@@ -23,6 +23,8 @@ export interface Participant {
   // Bio Fields — Section 1: Personal Information
   name?: string;
   country?: string;           // Resident country
+  state?: string;             // [NEW] Resident state
+  city?: string;              // Resident city
   nationality?: string;       // [NEW] Nationality
   short_bio?: string;         // Bio / Background
 
@@ -47,7 +49,6 @@ export interface Participant {
   dietary_restrictions?: string;   // [NEW] PRIVATE — admin only
 
   // Legacy fields — kept for backward compat, not shown in new form
-  city?: string;
   church?: string;
   ministry?: string;
   languages_spoken?: string[];
@@ -58,6 +59,12 @@ export interface Participant {
 
   created_at?: string;
   updated_at?: string;
+
+  // Privacy / Map
+  hide_on_map?: boolean;       // Opt out of map + directory display
+
+  // Computed at runtime (not stored in DB)
+  distanceKm?: number;         // Distance in km from the viewer's location
 }
 
 

@@ -36,9 +36,10 @@
             didot: ['"Bodoni Moda"', 'serif'],
           },
           borderRadius: {
-            'card': '8px',
-            'modal': '12px',
-            'button': '6px',
+            'card': '12px',
+            'modal': '20px',
+            'button': '10px',
+            'xl-card': '16px',
           },
           boxShadow: {
             'card': '0 4px 20px rgba(0,0,0,0.08)',
@@ -97,12 +98,38 @@
       src: local('Avenir Next Ultra Light');
       font-weight: 350;
     }
-
     :root {
       --brand-heaven-gold: #1552ab;
       --brand-gold: #efefef;
       --brand-els-blue: #1552ab;
       --brand-els-gray: #efefef;
+
+      /* Design Token Scale */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-pill: 9999px;
+
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+
+      --shadow-card: 0 4px 30px rgba(21, 82, 171, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
+      --shadow-card-hover: 0 10px 40px rgba(21, 82, 171, 0.12), 0 1px 8px rgba(0, 0, 0, 0.04);
+      --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.08);
+      --shadow-glow: 0 0 25px rgba(21, 82, 171, 0.2);
+
+      /* Glassmorphism Styles */
+      --glass-bg-light: rgba(255, 255, 255, 0.7);
+      --glass-bg-dark: rgba(18, 24, 41, 0.7);
+      --glass-border-light: rgba(21, 82, 171, 0.08);
+      --glass-border-dark: rgba(255, 255, 255, 0.08);
     }
 
     body {
@@ -111,6 +138,11 @@
       color: #1552ab;
       -webkit-font-smoothing: antialiased;
       transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    html.dark body {
+      background-color: #0a0f1d;
+      color: #f8fafc;
     }
 
     /* Prevent "bounce" effect and scroll bleeding on mobile */
@@ -144,8 +176,47 @@
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #1552ab;
+      background: rgba(21,82,171,0.4);
       border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #1552ab;
+    }
+
+    /* Firefox scrollbar */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(21,82,171,0.4) transparent;
+    }
+
+    /* Skeleton shimmer animation */
+    @keyframes shimmer {
+      0% { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+
+    .skeleton {
+      background: linear-gradient(
+        90deg,
+        rgba(21,82,171,0.06) 25%,
+        rgba(21,82,171,0.12) 50%,
+        rgba(21,82,171,0.06) 75%
+      );
+      background-size: 800px 100%;
+      animation: shimmer 1.5s infinite linear;
+      border-radius: 8px;
+    }
+
+    html.dark .skeleton {
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0.04) 25%,
+        rgba(255,255,255,0.08) 50%,
+        rgba(255,255,255,0.04) 75%
+      );
+      background-size: 800px 100%;
+      animation: shimmer 1.5s infinite linear;
     }
 
     @keyframes fade-in {
@@ -153,7 +224,6 @@
         opacity: 0;
         transform: translateY(8px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -161,7 +231,35 @@
     }
 
     .animate-fade-in {
-      animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* Staggered card entrance */
+    @keyframes card-enter {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .card-stagger {
+      animation: card-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: calc(var(--card-index, 0) * 35ms);
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .animate-fade-in,
+      .card-stagger,
+      .skeleton {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
     }
 
     /* Mobile Optimizations */
@@ -197,18 +295,7 @@
       scrollbar-color: var(--brand-heaven-gold) transparent;
     }
   </style>
-  <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@^19.2.3",
-        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-        "react/": "https://esm.sh/react@^19.2.3/",
-        "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-        "xlsx": "https://esm.sh/xlsx@0.18.5",
-        "jszip": "https://esm.sh/jszip@3.10.1"
-      }
-    }
-  </script>
+
 </head>
 
 <body class="font-avenir">

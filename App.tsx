@@ -1,19 +1,21 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import {
- BrowserRouter as Router,
- Routes,
- Route,
- Navigate,
- useNavigate,
- useParams,
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useParams,
 } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { useTranslation } from 'react-i18next';
 import {
- Loader2, Search, RefreshCcw, LayoutGrid, Columns,
- Square, Filter, X, Shield, LogOut, ArrowRight,
- CheckCircle2, Mail, Edit3, Eye, EyeOff, MapPin,
+  Loader2, Search, RefreshCcw, LayoutGrid, Columns,
+  Square, Filter, X, Shield, LogOut, ArrowRight,
+  CheckCircle2, Mail, Edit3, Eye, EyeOff, MapPin,
+  Users, FileText,
 } from 'lucide-react';
+import SkeletonCard from './components/SkeletonCard';
 
 import Navbar from './components/Navbar';
 import Header from './components/Header';
@@ -25,6 +27,7 @@ import ParticipantMap from './components/ParticipantMap';
 import { Participant, LayoutMode } from './types';
 import { api } from './services/api';
 import { supabase } from './services/supabase';
+import { getCoords } from './geo-utils';
 
 // ─────────────────────────────────────────────
 // SESSION CONTEXT
@@ -71,66 +74,81 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#efefef] text-[#1552ab] flex flex-col font-avenir">
+    <div className="min-h-screen bg-[#efefef] text-[#1552ab] flex flex-col font-avenir overflow-hidden">
+
       {/* Navigation */}
-      <nav className="w-full px-6 md:px-12 py-6 flex items-center justify-between border-b border-[#1552ab]/10">
+      <nav className="relative z-10 w-full px-6 md:px-12 py-5 flex items-center justify-between border-b border-[#1552ab]/8 bg-white/60 backdrop-blur-xl">
         <div className="flex items-center gap-3">
-          <img src="/logo-e21.png" alt="21 Europe" className="h-8 object-contain" />
-          <img src="/logo-esbs.png" alt="Europe Shall Be Saved" className="h-8 object-contain" />
-          <span className="text-xs font-avenir-bold uppercase tracking-[3px] text-[#1552ab] ml-2 hidden sm:inline">
+          <img src="/logo-e21.png" alt="21 Europe" className="h-7 object-contain" />
+          <img src="/logo-esbs.png" alt="Europe Shall Be Saved" className="h-7 object-contain" />
+          <span className="text-[10px] font-avenir-bold uppercase tracking-[3px] text-[#1552ab] ml-2 hidden sm:inline border-l border-[#1552ab]/20 pl-3">
             ELS | MADRID 2026
           </span>
         </div>
         <button
           onClick={() => navigate('/admin/login')}
-          className="text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab] hover:text-[#1552ab]/70 transition-colors flex items-center gap-1.5"
+          className="flex items-center gap-1.5 min-h-[44px] px-3 text-[10px] font-avenir-bold uppercase tracking-widest text-[#1552ab]/40 hover:text-[#1552ab] transition-colors"
+          aria-label="Admin login"
         >
-          <Shield size={12} /> Admin
+          <Shield size={13} /> Admin
         </button>
       </nav>
 
-      {/* Main Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center max-w-5xl mx-auto w-full">
-        {/* Logos & Text Container */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 mb-8 w-full">
-          <img src="/logo-text.png" alt="European Leaders Summit" className="h-16 sm:h-24 md:h-28 lg:h-32 object-contain" />
-          <div className="flex items-center gap-4">
-            <img src="/logo-e21.png" alt="21 Europe" className="h-12 sm:h-16 md:h-20 object-contain" />
-            <img src="/logo-esbs.png" alt="Europe Shall Be Saved" className="h-12 sm:h-16 md:h-20 object-contain" />
+      {/* Hero */}
+      <main className="relative flex-1 flex flex-col items-center justify-center px-6 py-16 text-center">
+        {/* Background radial gradient */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(21,82,171,0.07) 0%, transparent 70%)' }}
+        />
+        {/* Decorative rings */}
+        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-[#1552ab]/5" aria-hidden="true" />
+        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-[#1552ab]/7" aria-hidden="true" />
+
+        <div className="relative z-10 max-w-4xl mx-auto w-full animate-fade-in">
+          {/* Logos & Text Container */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 mb-8 w-full">
+            <img src="/logo-text.png" alt="European Leaders Summit" className="h-16 sm:h-24 md:h-28 lg:h-32 object-contain" />
+            <div className="hidden md:block w-px h-20 bg-gradient-to-b from-transparent via-[#1552ab]/20 to-transparent" />
+            <div className="flex items-center gap-5">
+              <img src="/logo-e21.png" alt="21 Europe" className="h-12 sm:h-16 md:h-20 object-contain" />
+              <img src="/logo-esbs.png" alt="Europe Shall Be Saved" className="h-12 sm:h-16 md:h-20 object-contain" />
+            </div>
           </div>
-        </div>
 
-        {/* Date Subtitle */}
-        <p className="text-xs sm:text-sm font-avenir-bold text-[#1552ab] uppercase tracking-[0.2em] mb-4">
-          10 - 12 NOVEMBER 2026
-        </p>
-
-        {/* Pill Location Badge */}
-        <div className="inline-block border border-[#1552ab] rounded-full px-8 py-2 text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[0.2em] mb-12">
-          MADRID, SPAIN
-        </div>
-
-        {/* CTA Button */}
-        <div className="flex flex-col items-center gap-4">
-          <button
-            onClick={() => navigate('/sign-up')}
-            className="flex items-center gap-3 px-10 py-5 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-xl font-avenir-bold uppercase text-xs tracking-[3px] transition-all hover:scale-105 active:scale-95 shadow-md"
-          >
-            Join the Directory <ArrowRight size={16} />
-          </button>
-          <p className="text-[9px] sm:text-[10px] text-[#1552ab]/70 font-avenir-bold uppercase tracking-[0.15em] mt-2">
-            ALREADY REGISTERED?{' '}
-            <span className="text-[#1552ab] hover:underline cursor-pointer" onClick={() => navigate('/sign-up')}>
-              CHECK YOUR EMAIL FOR YOUR PERSONAL LINK.
-            </span>
+          {/* Date */}
+          <p className="text-[10px] sm:text-xs font-avenir-bold text-[#1552ab]/60 uppercase tracking-[0.3em] mb-5">
+            10 – 12 NOVEMBER 2026
           </p>
+
+          {/* Location pill */}
+          <div className="inline-flex items-center gap-2 border border-[#1552ab]/15 rounded-full px-7 py-2 text-[10px] font-avenir-bold text-[#1552ab] uppercase tracking-[0.25em] mb-12 bg-white/60 backdrop-blur-md shadow-sm">
+            <MapPin size={11} /> MADRID, SPAIN
+          </div>
+
+          {/* CTA */}
+          <div className="flex flex-col items-center gap-4">
+            <button
+              onClick={() => navigate('/sign-up')}
+              className="flex items-center gap-3 px-10 py-5 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-2xl font-avenir-bold uppercase text-xs tracking-[3px] transition-all hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl hover:shadow-[#1552ab]/20"
+            >
+              Join the Directory <ArrowRight size={16} />
+            </button>
+            <p className="text-[9px] sm:text-[10px] text-[#1552ab]/50 font-avenir-bold uppercase tracking-[0.15em] mt-1">
+              Already registered?{' '}
+              <span className="text-[#1552ab] hover:underline cursor-pointer" onClick={() => navigate('/sign-up')}>
+                Check your email for your personal link.
+              </span>
+            </p>
+          </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#1552ab]/10 py-8 text-center">
-        <p className="text-[9px] sm:text-[10px] text-[#1552ab]/80 font-avenir-bold uppercase tracking-[0.25em]">
-          EMPOWERED21 · EUROPE SHALL BE SAVED · GLOBAL CHURCH
+      <footer className="relative z-10 border-t border-[#1552ab]/10 py-7 text-center">
+        <p className="text-[9px] sm:text-[10px] text-[#1552ab]/50 font-avenir-bold uppercase tracking-[0.3em]">
+          EMPOWERED21 · EUROPE SHALL BE SAVED
         </p>
       </footer>
     </div>
@@ -205,6 +223,7 @@ const TokenPage: React.FC = () => {
  const [filterCountry, setFilterCountry] = useState('ALL');
  const [filterRole, setFilterRole] = useState('ALL');
  const [viewTab, setViewTab] = useState<'directory' | 'map'>('directory');
+ const [viewerCoords, setViewerCoords] = useState<[number, number] | null>(null);
 
  // ── Server-side token validation ──────────────────────────────
  // Every load hits the DB. No client state is trusted.
@@ -231,6 +250,22 @@ const TokenPage: React.FC = () => {
  if (darkMode) { document.documentElement.classList.add('dark'); localStorage.setItem('els_theme', 'dark'); }
  else { document.documentElement.classList.remove('dark'); localStorage.setItem('els_theme', 'light'); }
  }, [darkMode]);
+
+ // ── Geolocation — viewer coordinates for distance display ─────
+ useEffect(() => {
+ if (!navigator.geolocation) return;
+ navigator.geolocation.getCurrentPosition(
+ (pos) => setViewerCoords([pos.coords.latitude, pos.coords.longitude]),
+ () => {
+   // Fallback: use the viewer's own profile city coords
+    if (participant?.city && participant?.country) {
+      const c = getCoords(participant.city!, participant.country!);
+      if (c) setViewerCoords(c);
+    }
+ },
+ { timeout: 8000, maximumAge: 60_000 }
+ );
+ }, [participant]);
 
  const loadDirectory = async () => {
  setDirLoading(true);
@@ -346,15 +381,18 @@ const TokenPage: React.FC = () => {
  isAdminAuthorized={false}
  viewTab={viewTab}
  setViewTab={setViewTab}
+ darkMode={darkMode}
+ setDarkMode={setDarkMode}
  />
 
  <Header />
 
- {/* "Edit my Bio" floating button — visible only when token is valid */}
- <div className="fixed bottom-8 right-6 z-50">
+ {/* "Edit my Bio" FAB — bottom-24 stays above mobile gesture bar */}
+ <div className="fixed bottom-24 right-5 z-50">
  <button
  onClick={() => setShowEditForm(true)}
- className="flex items-center gap-2 px-5 py-3.5 bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-2xl font-avenir-bold uppercase text-[10px] tracking-[2px] shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95"
+ className="flex items-center gap-2 px-5 py-3.5 min-h-[52px] bg-[#1552ab] hover:bg-[#1552ab]/90 text-white rounded-2xl font-avenir-bold uppercase text-[10px] tracking-[2px] shadow-lg hover:shadow-xl hover:shadow-[#1552ab]/30 transition-all hover:scale-105 active:scale-95"
+ aria-label={participant?.status === 'completed' ? 'Edit my Bio' : 'Complete my Bio'}
  >
  <Edit3 size={14} />
  {participant?.status === 'completed' ? 'Edit my Bio' : 'Complete my Bio'}
@@ -365,13 +403,14 @@ const TokenPage: React.FC = () => {
  {/* Controls */}
  <div className="flex flex-col xl:flex-row justify-between items-stretch xl:items-center gap-4 bg-black/5 p-3 md:p-4 rounded-3xl border border-black/10 backdrop-blur-md mb-10">
  <div className="relative flex-1">
- <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1552ab]" />
+ <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1552ab]/50" />
  <input
  type="text"
- placeholder={t('app.search', 'Search participants...')}
- className="w-full bg-transparent border-none p-3 md:p-4 pl-12 text-sm font-avenir-medium text-[#1552ab] outline-none placeholder:text-[#1552ab]/20 placeholder:text-[#1552ab]/30"
+ placeholder={t('app.search', 'Search participants…')}
+ className="w-full bg-transparent border-none p-3 md:p-4 pl-12 text-sm font-avenir-medium text-[#1552ab] outline-none placeholder:text-[#1552ab]/50"
  value={searchQuery}
  onChange={e => setSearchQuery(e.target.value)}
+ aria-label="Search participants"
  />
  </div>
  <div className="flex items-center justify-end gap-2 h-full px-2">
@@ -400,33 +439,116 @@ const TokenPage: React.FC = () => {
 
   {/* Map or Directory */}
   {viewTab === 'map' ? (
-    <ParticipantMap participants={publicList as Participant[]} />
+    <ParticipantMap participants={publicList as Participant[]} darkMode={darkMode} viewerCoords={viewerCoords} />
   ) : dirLoading ? (
- <div className="flex flex-col items-center justify-center py-40">
- <Loader2 className="animate-spin text-[#1552ab] mb-4" size={32} />
- <p className="text-[10px] text-[#1552ab] uppercase font-avenir-medium tracking-widest">Loading profiles...</p>
- </div>
- ) : filtered.length === 0 ? (
- <div className="text-center py-40 border border-dashed border-black/10 rounded-3xl">
- <p className="text-sm text-[#1552ab]/40 font-avenir-medium uppercase tracking-wider">No profiles match your search.</p>
- </div>
- ) : (
- <div className={`grid gap-4 md:gap-8 ${
- layoutMode === 'grid4' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
- : layoutMode === 'grid2' ? 'grid-cols-1 sm:grid-cols-2'
- : 'grid-cols-1'}`}>
- {filtered.map(p => (
- <ParticipantCard
- key={p.id}
- participant={p as Participant}
- onClick={() => setSelectedProfile(p as Participant)}
- layout={layoutMode === 'list' ? 'list' : 'grid'}
- isOwnProfile={participant?.id === p.id}
- />
- ))}
- </div>
- )}
+    /* Skeleton grid — matches real card dimensions */
+    <div className={`grid gap-4 md:gap-6 ${
+      layoutMode === 'grid4' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+      : layoutMode === 'grid2' ? 'grid-cols-1 sm:grid-cols-2'
+      : 'grid-cols-1'
+    }`}>
+      {Array.from({ length: layoutMode === 'grid4' ? 12 : layoutMode === 'grid2' ? 6 : 5 }).map((_, i) => (
+        <SkeletonCard key={i} layout={layoutMode === 'list' ? 'list' : 'grid'} />
+      ))}
+    </div>
+  ) : filtered.length === 0 ? (
+    <div className="text-center py-40 border border-dashed border-[#1552ab]/10 rounded-3xl">
+      <p className="text-sm text-[#1552ab]/40 font-avenir-medium uppercase tracking-wider">No profiles match your search.</p>
+    </div>
+  ) : (
+    <div className={`grid gap-4 md:gap-6 ${
+      layoutMode === 'grid4' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+      : layoutMode === 'grid2' ? 'grid-cols-1 sm:grid-cols-2'
+      : 'grid-cols-1'
+    }`}>
+      {filtered.map((p, idx) => (
+        <ParticipantCard
+          key={p.id}
+          participant={p as Participant}
+          onClick={() => setSelectedProfile(p as Participant)}
+          layout={layoutMode === 'list' ? 'list' : 'grid'}
+          isOwnProfile={participant?.id === p.id}
+          cardIndex={idx}
+        />
+      ))}
+    </div>
+  )}
  </main>
+
+      {/* Filter drawer — pill buttons replace native selects */}
+      <div className={`fixed inset-0 z-[200] transition-all duration-300 ${isFilterOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsFilterOpen(false)} />
+        <div className={`absolute right-0 top-0 h-full w-full max-w-sm bg-white/90 dark:bg-[#121829]/95 backdrop-blur-2xl shadow-modal border-l border-[#1552ab]/8 dark:border-white/10 flex flex-col transition-transform duration-300 ${isFilterOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+
+          <div className="px-7 py-5 border-b border-black/8 dark:border-white/10 flex justify-between items-center">
+            <h3 className="text-xs font-avenir-bold text-[#1552ab] dark:text-white uppercase tracking-[3px]">Filters</h3>
+            <button
+              onClick={() => setIsFilterOpen(false)}
+              className="w-10 h-10 flex items-center justify-center text-[#1552ab]/40 dark:text-white/40 hover:text-[#1552ab] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all"
+              aria-label="Close filters"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-7 space-y-8">
+            {/* Country */}
+            <div className="space-y-3">
+              <span className="text-[10px] font-avenir-bold text-[#1552ab]/60 dark:text-white/60 uppercase tracking-[2px] block">Country</span>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setFilterCountry('ALL')}
+                  className={`px-3.5 py-2 rounded-xl text-[10px] font-avenir-bold uppercase tracking-[1.5px] transition-all border ${
+                    filterCountry === 'ALL' ? 'bg-[#1552ab] text-white border-[#1552ab]' : 'bg-black/4 dark:bg-white/5 text-[#1552ab]/70 dark:text-white/70 border-black/10 dark:border-white/10 hover:border-[#1552ab]/40'
+                  }`}
+                >All</button>
+                {countriesList.map(c => (
+                  <button
+                    key={c}
+                    onClick={() => setFilterCountry(c)}
+                    className={`px-3.5 py-2 rounded-xl text-[10px] font-avenir-bold uppercase tracking-[1.5px] transition-all border ${
+                      filterCountry === c ? 'bg-[#1552ab] text-white border-[#1552ab]' : 'bg-black/4 dark:bg-white/5 text-[#1552ab]/70 dark:text-white/70 border-black/10 dark:border-white/10 hover:border-[#1552ab]/40'
+                    }`}
+                  >{c}</button>
+                ))}
+              </div>
+            </div>
+
+            {/* Role */}
+            <div className="space-y-3">
+              <span className="text-[10px] font-avenir-bold text-[#1552ab]/60 dark:text-white/60 uppercase tracking-[2px] block">Role</span>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setFilterRole('ALL')}
+                  className={`px-3.5 py-2 rounded-xl text-[10px] font-avenir-bold uppercase tracking-[1.5px] transition-all border ${
+                    filterRole === 'ALL' ? 'bg-[#1552ab] text-white border-[#1552ab]' : 'bg-black/4 dark:bg-white/5 text-[#1552ab]/70 dark:text-white/70 border-black/10 dark:border-white/10 hover:border-[#1552ab]/40'
+                  }`}
+                >All</button>
+                {rolesList.map(r => (
+                  <button
+                    key={r}
+                    onClick={() => setFilterRole(r)}
+                    className={`px-3.5 py-2 rounded-xl text-[10px] font-avenir-bold uppercase tracking-[1.5px] transition-all border ${
+                      filterRole === r ? 'bg-[#1552ab] text-white border-[#1552ab]' : 'bg-black/4 dark:bg-white/5 text-[#1552ab]/70 dark:text-white/70 border-black/10 dark:border-white/10 hover:border-[#1552ab]/40'
+                    }`}
+                  >{r}</button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="p-7 border-t border-black/8 dark:border-white/10 space-y-3">
+            <button
+              onClick={() => { setFilterCountry('ALL'); setFilterRole('ALL'); setSearchQuery(''); }}
+              className="w-full py-3.5 min-h-[44px] text-[10px] font-avenir-bold text-[#1552ab]/40 dark:text-white/40 hover:text-[#1552ab] dark:hover:text-white uppercase tracking-[2.5px] transition-colors"
+            >Clear All</button>
+            <button
+              onClick={() => setIsFilterOpen(false)}
+              className="w-full py-4 min-h-[52px] bg-[#1552ab] hover:bg-[#1552ab]/90 text-white font-avenir-bold uppercase text-[10px] tracking-[3px] rounded-2xl active:scale-95 transition-all"
+            >Apply Filters</button>
+          </div>
+        </div>
+      </div>
 
  <footer className="mt-40 border-t border-black/8 py-24 bg-[#efefef] text-center">
  <div className="max-w-[1400px] mx-auto px-8 space-y-8">
@@ -447,43 +569,8 @@ const TokenPage: React.FC = () => {
  isAdmin={false}
  />
  )}
-
- {/* Filter drawer */}
- <div className={`fixed inset-0 z-[200] transition-all duration-500 ${isFilterOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
- <div className="absolute inset-0 bg-[#efefef]/80 backdrop-blur-sm" onClick={() => setIsFilterOpen(false)} />
- <div className={`absolute right-0 top-0 h-full w-full max-w-sm bg-[#f5f5f5] bg-white shadow-2xl border-l border-black/10 flex flex-col transition-transform duration-500 ${isFilterOpen ? 'translate-x-0' : 'translate-x-full'}`}>
- <div className="p-8 border-b border-black/10 flex justify-between items-center bg-black/5">
- <h3 className="text-xs font-avenir-bold text-[#1552ab] uppercase tracking-[4px]">Filters</h3>
- <button onClick={() => setIsFilterOpen(false)} className="p-2 text-[#1552ab]/40 hover:text-[#1552ab]"><X size={24} /></button>
- </div>
- <div className="flex-1 overflow-y-auto p-8 space-y-10">
- {[['Country', filterCountry, setFilterCountry, countriesList], ['Role', filterRole, setFilterRole, rolesList]].map(
- ([label, value, setter, list]) => (
- <div key={label as string} className="space-y-4">
- <span className="text-[9px] font-avenir-bold text-[#1552ab] uppercase tracking-[2px] block">{label as string}</span>
- <select value={value as string} onChange={e => (setter as any)(e.target.value)}
- className="w-full bg-black/5 border border-black/10 p-4 rounded-2xl text-xs font-avenir-medium text-[#1552ab] outline-none focus:border-[#1552ab]">
- <option value="ALL">All</option>
- {(list as string[]).map(c => <option key={c} value={c} className="bg-[#f5f5f5]">{c}</option>)}
- </select>
- </div>
- )
- )}
- </div>
- <div className="p-8 border-t border-black/10 space-y-4">
- <button onClick={() => { setFilterCountry('ALL'); setFilterRole('ALL'); setSearchQuery(''); }}
- className="w-full py-4 text-[10px] font-avenir-bold text-[#1552ab]/40 hover:text-[#1552ab] uppercase tracking-[3px] transition-colors">
- Clear Filters
- </button>
- <button onClick={() => setIsFilterOpen(false)}
- className="w-full py-5 bg-[#1552ab] text-white font-avenir-bold uppercase text-[10px] tracking-[4px] rounded-2xl active:scale-95 transition-all">
- Apply
- </button>
- </div>
- </div>
- </div>
- </div>
- );
+  </div>
+  );
 };
 
 // ─────────────────────────────────────────────
@@ -527,7 +614,7 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
 
  return (
  <div className="min-h-screen bg-[#efefef] flex items-center justify-center p-6">
- <div className="w-full max-w-md bg-black/5 border border-black/10 rounded-[2rem] p-8 md:p-12 shadow-2xl backdrop-blur-2xl">
+ <div className="w-full max-w-md bg-white/70 backdrop-blur-2xl border border-[#1552ab]/12 rounded-[2rem] p-8 md:p-12 shadow-modal">
  <div className="flex flex-col items-center mb-10">
  <div className="w-16 h-16 bg-[#1552ab]/20 border border-[#1552ab]/40 rounded-full flex items-center justify-center mb-6">
  <Shield size={28} className="text-[#1552ab]" />
@@ -539,7 +626,7 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
  <div className="space-y-2">
  <label className="text-[9px] font-avenir-bold uppercase tracking-[2px] text-[#1552ab]/50 pl-1 block">Email</label>
  <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
- className="w-full bg-black/5 border border-black/10 p-4 rounded-xl text-sm text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-white/80 border border-[#1552ab]/15 p-4 rounded-xl text-sm text-[#1552ab] outline-none focus:border-[#1552ab] focus:ring-4 focus:ring-[#1552ab]/8 transition-all placeholder:text-[#1552ab]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
  placeholder="esbsinterview@gmail.com"
  autoComplete="email" />
  </div>
@@ -551,7 +638,7 @@ const AdminLoginPage: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
  value={password}
  onChange={e => setPassword(e.target.value)}
  required
- className="w-full bg-black/5 border border-black/10 p-4 pr-12 rounded-xl text-sm text-[#1552ab] outline-none focus:border-[#1552ab] transition-all"
+ className="w-full bg-white/80 border border-[#1552ab]/15 p-4 pr-12 rounded-xl text-sm text-[#1552ab] outline-none focus:border-[#1552ab] focus:ring-4 focus:ring-[#1552ab]/8 transition-all placeholder:text-[#1552ab]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
  placeholder="••••••••"
  autoComplete="current-password"
  />
@@ -619,7 +706,7 @@ const AdminBiosTab: React.FC<{ participants: Participant[] }> = ({ participants 
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {filtered.map(p => (
-            <div key={p.id} className="bg-white rounded-2xl border border-black/8 overflow-hidden shadow-sm hover:shadow-md transition-all group">
+            <div key={p.id} className="bg-white/80 dark:bg-[#121829]/80 backdrop-blur-md rounded-2xl border border-[#1552ab]/8 dark:border-white/10 overflow-hidden shadow-card hover:shadow-card-hover transition-all group">
               {/* Photo */}
               <div className="h-40 bg-[#efefef] flex items-center justify-center overflow-hidden relative">
                 {p.photo_url ? (
@@ -692,22 +779,22 @@ const AdminTabs: React.FC<{
 
   return (
     <div>
-      {/* Tab bar */}
-      <div className="flex gap-1 p-1 bg-black/5 rounded-2xl w-fit mb-8 border border-black/8">
+      {/* Tab bar — Lucide vector icons, 44pt min touch targets */}
+      <div className="flex gap-1 p-1 bg-black/5 dark:bg-white/5 rounded-2xl w-fit mb-8 border border-black/8 dark:border-white/8">
         {([
-          { id: 'participants', label: 'Participants', icon: '👥' },
-          { id: 'bios', label: 'Bios', icon: '📋' },
-        ] as const).map(t => (
+          { id: 'participants' as const, label: 'Participants', icon: <Users size={13} /> },
+          { id: 'bios' as const, label: 'Bios', icon: <FileText size={13} /> },
+        ]).map(t => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-avenir-bold uppercase tracking-[2px] transition-all ${
+            className={`flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl text-[10px] font-avenir-bold uppercase tracking-[2px] transition-all ${
               tab === t.id
                 ? 'bg-[#1552ab] text-white shadow-sm'
-                : 'text-[#1552ab]/50 hover:text-[#1552ab] hover:bg-black/5'
+                : 'text-[#1552ab]/50 dark:text-white/50 hover:text-[#1552ab] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
             }`}
           >
-            <span>{t.icon}</span> {t.label}
+            {t.icon} {t.label}
           </button>
         ))}
       </div>
