@@ -3,7 +3,7 @@ import { Participant } from '../types';
 import {
   X, Building, Globe, MapPin, Mail, Phone, ExternalLink,
   ShieldCheck, Link2, MessageCircle,
-  Instagram, Linkedin, Facebook, Twitter,
+  Instagram, Linkedin, Facebook, Twitter, Youtube, Twitch,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { getIdentityPlaceholder } from '../constants';
@@ -64,7 +64,26 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
     if (p.includes('linkedin')) return <Linkedin size={14} />;
     if (p.includes('facebook')) return <Facebook size={14} />;
     if (p.includes('twitter') || p.includes('x')) return <Twitter size={14} />;
+    if (p.includes('youtube')) return <Youtube size={14} />;
+    if (p.includes('twitch')) return <Twitch size={14} />;
     return <Link2 size={14} />;
+  };
+
+  const getSocialUrl = (platform: string, handle: string) => {
+    const clean = handle.trim().replace(/^@/, '');
+    if (clean.startsWith('http://') || clean.startsWith('https://')) {
+      return clean;
+    }
+    const p = platform.toLowerCase();
+    if (p.includes('instagram')) return `https://instagram.com/${clean}`;
+    if (p.includes('facebook')) return `https://facebook.com/${clean}`;
+    if (p.includes('youtube')) return `https://youtube.com/@${clean}`;
+    if (p.includes('tiktok')) return `https://tiktok.com/@${clean}`;
+    if (p.includes('twitch')) return `https://twitch.tv/${clean}`;
+    if (p.includes('linkedin')) return `https://linkedin.com/in/${clean}`;
+    if (p.includes('twitter') || p.includes('x')) return `https://x.com/${clean}`;
+    if (p.includes('thread')) return `https://threads.net/@${clean}`;
+    return `https://${clean}`;
   };
 
   const labelClass = 'text-[10px] font-avenir-bold text-[#1552ab]/50 dark:text-white/50 uppercase tracking-[2.5px] block mb-1';
@@ -210,7 +229,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
               {participant.social_media?.map((account, idx) => (
                 <a
                   key={`social-${idx}`}
-                  href={account.handle.startsWith('http') ? account.handle : `https://${account.platform.toLowerCase() === 'instagram' ? 'instagram.com/' : ''}${account.handle.replace('@', '')}`}
+                  href={getSocialUrl(account.platform, account.handle)}
                   target="_blank" rel="noopener noreferrer"
                   className={contactRowClass}
                 >

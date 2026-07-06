@@ -6,7 +6,7 @@ import {
   Mail, Globe, Phone, Loader2, CheckCircle2, Save, FileImage
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Participant } from '../types';
+import { Participant, SocialAccount } from '../types';
 
 interface RegistrationFormProps {
   mode: 'create' | 'edit' | 'signup';
@@ -146,6 +146,23 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
   const [promoFile, setPromoFile] = useState<File | null>(null);
   const [promoPreview, setPromoPreview] = useState<string>(initialData?.promotional_picture_url || '');
 
+  // Social media state
+  const [socialMedia, setSocialMedia] = useState<SocialAccount[]>(initialData?.social_media || []);
+  const [newPlatform, setNewPlatform] = useState('');
+  const [newHandle, setNewHandle] = useState('');
+
+  const handleAddSocial = () => {
+    if (newPlatform && newHandle.trim()) {
+      const cleanHandle = newHandle.trim();
+      setSocialMedia((prev) => {
+        const filtered = prev.filter((s) => s.platform.toLowerCase() !== newPlatform.toLowerCase());
+        return [...filtered, { platform: newPlatform, handle: cleanHandle }];
+      });
+      setNewHandle('');
+      setNewPlatform('');
+    }
+  };
+
   const allCountries = useMemo(() => Country.getAllCountries(), []);
 
   // Derived state/city lists based on selected country/state
@@ -232,7 +249,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
 
   // Save draft to localStorage
   const handleSaveDraft = () => {
-    const draft = { formData, selectedRoles, selectedInterests, profilePreview, promoPreview };
+    const draft = { formData, selectedRoles, selectedInterests, profilePreview, promoPreview, socialMedia };
     localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     alert('Draft saved locally.');
   };
@@ -285,6 +302,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
         public_email: formData.public_email,
         public_website: formData.public_website,
         public_other: formData.public_other,
+        social_media: socialMedia,
         areas_of_interest: selectedInterests,
         testimony: formData.testimony,
         upcoming_kingdom_events: formData.upcoming_kingdom_events,
@@ -617,11 +635,82 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                 </div>
 
                 <div className="space-y-1">
-                  <label className={labelClass}>Other (Instagram / Social)</label>
+                  <label className={labelClass}>Other (Telegram / Skype / Custom handle)</label>
                   <input
                     type="text" name="public_other" value={formData.public_other} onChange={handleChange}
-                    className={inputClass} placeholder="@instagram / handle"
+                    className={inputClass} placeholder="Telegram: @handle / other"
                   />
+                </div>
+
+                {/* Dynamic Social Media Profiles */}
+                <div className="space-y-4 md:col-span-2 border-t border-[#1552ab]/10 dark:border-white/10 pt-6">
+                  <label className={labelClass}>Social Media Profiles</label>
+                  <p className="text-[10px] text-[#1552ab]/50 dark:text-white/40 mb-3">
+                    Add links to your social media profiles (Instagram, Facebook, YouTube, TikTok, Twitch, LinkedIn, X, Threads).
+                  </p>
+
+                  {socialMedia.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                      {socialMedia.map((s, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-3.5 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10 text-xs">
+                          <span className="flex items-center gap-2 text-[#1552ab] dark:text-white font-avenir-bold">
+                            <span className="capitalize">{s.platform}</span>
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[#1552ab]/60 dark:text-white/60 truncate max-w-[120px]">{s.handle}</span>
+                            <button
+                              type="button"
+                              onClick={() => setSocialMedia(prev => prev.filter((_, i) => i !== idx))}
+                              className="text-red-500 hover:text-red-700 font-avenir-bold text-[10px] uppercase tracking-wider pl-2"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <select
+                      value={newPlatform}
+                      onChange={(e) => setNewPlatform(e.target.value)}
+                      className={`${selectClass} sm:w-1/3`}
+                    >
+                      <option value="">Select Platform</option>
+                      <option value="Instagram">Instagram</option>
+                      <option value="Facebook">Facebook</option>
+                      <option value="YouTube">YouTube</option>
+                      <option value="TikTok">TikTok</option>
+                      <option value="Twitch">Twitch</option>
+                      <option value="LinkedIn">LinkedIn</option>
+                      <option value="X">X (Twitter)</option>
+                      <option value="Threads">Threads</option>
+                    </select>
+
+                    <div className="flex-1 flex gap-2">
+                      <input
+                        type="text"
+                        value={newHandle}
+                        onChange={(e) => setNewHandle(e.target.value)}
+                        placeholder={
+                          newPlatform === 'LinkedIn' ? 'profile-url-or-username' :
+                          newPlatform === 'YouTube' ? '@channel' :
+                          newPlatform ? 'username / @handle' : 'Choose platform first'
+                        }
+                        className={inputClass}
+                        disabled={!newPlatform}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddSocial}
+                        disabled={!newPlatform || !newHandle.trim()}
+                        className="px-5 bg-[#1552ab] dark:bg-white text-white dark:text-[#121829] rounded-xl font-avenir-bold text-[10px] uppercase tracking-wider disabled:opacity-40"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
               </div>

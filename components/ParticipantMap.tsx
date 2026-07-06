@@ -36,6 +36,13 @@ import {
   Link,
   Languages,
   ChevronDown,
+  Instagram,
+  Linkedin,
+  Facebook,
+  Twitter,
+  Youtube,
+  Twitch,
+  ExternalLink,
 } from 'lucide-react';
 
 // ─── Fix Leaflet default icon paths ───────────────────────────────────────────
@@ -320,6 +327,34 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   );
 };
 
+const getPlatformIcon = (platform: string) => {
+  const p = platform.toLowerCase();
+  if (p.includes('instagram')) return <Instagram size={14} />;
+  if (p.includes('linkedin')) return <Linkedin size={14} />;
+  if (p.includes('facebook')) return <Facebook size={14} />;
+  if (p.includes('twitter') || p.includes('x')) return <Twitter size={14} />;
+  if (p.includes('youtube')) return <Youtube size={14} />;
+  if (p.includes('twitch')) return <Twitch size={14} />;
+  return <Link size={14} />;
+};
+
+const getSocialUrl = (platform: string, handle: string) => {
+  const clean = handle.trim().replace(/^@/, '');
+  if (clean.startsWith('http://') || clean.startsWith('https://')) {
+    return clean;
+  }
+  const p = platform.toLowerCase();
+  if (p.includes('instagram')) return `https://instagram.com/${clean}`;
+  if (p.includes('facebook')) return `https://facebook.com/${clean}`;
+  if (p.includes('youtube')) return `https://youtube.com/@${clean}`;
+  if (p.includes('tiktok')) return `https://tiktok.com/@${clean}`;
+  if (p.includes('twitch')) return `https://twitch.tv/${clean}`;
+  if (p.includes('linkedin')) return `https://linkedin.com/in/${clean}`;
+  if (p.includes('twitter') || p.includes('x')) return `https://x.com/${clean}`;
+  if (p.includes('thread')) return `https://threads.net/@${clean}`;
+  return `https://${clean}`;
+};
+
 // ─── Bio Overlay (full profile) ───────────────────────────────────────────────
 interface BioOverlayProps {
   participant: Participant | null;
@@ -568,14 +603,21 @@ const BioOverlay: React.FC<BioOverlayProps> = ({ participant: p, onClose, darkMo
           {hasSocial && (
             <div className={`border-t ${divider} pt-4`}>
               <SectionLabel label="Social Media" />
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {p.social_media!.map((s, i) => (
-                  <div key={i} className={`flex items-center gap-2 text-sm ${textSub}`}>
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${chipBg}`}>
-                      {s.platform}
-                    </span>
+                  <a
+                    key={i}
+                    href={getSocialUrl(s.platform, s.handle)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`flex items-center gap-3 text-sm ${darkMode ? 'text-blue-300' : 'text-[#1552ab]'} hover:opacity-80 active:opacity-60 transition-opacity`}
+                  >
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${chipBg}`}>
+                      {getPlatformIcon(s.platform)}
+                    </div>
                     <span className="truncate">{s.handle}</span>
-                  </div>
+                    <ExternalLink size={9} className="opacity-45" />
+                  </a>
                 ))}
               </div>
             </div>
