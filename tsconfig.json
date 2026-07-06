@@ -30,6 +30,7 @@
     "supabase",
     "node_modules",
     "dist",
-    "services/syncService.ts"
+    "services/syncService.ts",
+    "AntigravityManager"
   ]
 }

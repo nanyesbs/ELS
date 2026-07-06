@@ -553,9 +553,8 @@ const BioOverlay: React.FC<BioOverlayProps> = ({ participant: p, onClose, darkMo
               <SectionLabel label="Contact" />
               <div className="space-y-2.5">
                 {p.public_phone && (
-                  <a
+                  <a className={`flex items-center gap-3 text-sm ${textSub} hover:opacity-80 active:opacity-60 transition-opacity`}
                     href={`tel:${p.public_phone}`}
-                    className={`flex items-center gap-3 text-sm ${textSub} hover:opacity-80 active:opacity-60 transition-opacity`}
                   >
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${chipBg}`}>
                       <Phone size={13} />
@@ -564,9 +563,8 @@ const BioOverlay: React.FC<BioOverlayProps> = ({ participant: p, onClose, darkMo
                   </a>
                 )}
                 {p.public_email && (
-                  <a
+                  <a className={`flex items-center gap-3 text-sm ${darkMode ? 'text-blue-300' : 'text-[#1552ab]'} hover:opacity-80 active:opacity-60 transition-opacity`}
                     href={`mailto:${p.public_email}`}
-                    className={`flex items-center gap-3 text-sm ${darkMode ? 'text-blue-300' : 'text-[#1552ab]'} hover:opacity-80 active:opacity-60 transition-opacity`}
                   >
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${chipBg}`}>
                       <Mail size={13} />
@@ -575,11 +573,10 @@ const BioOverlay: React.FC<BioOverlayProps> = ({ participant: p, onClose, darkMo
                   </a>
                 )}
                 {p.public_website && (
-                  <a
-                    href={p.public_website.startsWith('http') ? p.public_website : `https://${p.public_website}`}
-                    target="_blank"
+                  <a target="_blank"
                     rel="noopener noreferrer"
                     className={`flex items-center gap-3 text-sm ${darkMode ? 'text-blue-300' : 'text-[#1552ab]'} hover:opacity-80 active:opacity-60 transition-opacity`}
+                    href={p.public_website.startsWith('http') ? p.public_website : `https://${p.public_website}`}
                   >
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${chipBg}`}>
                       <Globe size={13} />
@@ -605,8 +602,7 @@ const BioOverlay: React.FC<BioOverlayProps> = ({ participant: p, onClose, darkMo
               <SectionLabel label="Social Media" />
               <div className="space-y-2.5">
                 {p.social_media!.map((s, i) => (
-                  <a
-                    key={i}
+                  <a key={i}
                     href={getSocialUrl(s.platform, s.handle)}
                     target="_blank"
                     rel="noopener noreferrer"
