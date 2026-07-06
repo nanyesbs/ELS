@@ -6,8 +6,9 @@
  * • Photo pins  – rounded avatar with white ring, brand shadow
  * • City clusters  – stacked "pile of photos" + count badge, city label below
  * • Distance  – Haversine from viewer's geolocation (or profile city fallback)
- * • Bottom sheet  – slide-up drawer with participant details on pin click
- * • Sorted sidebar list  – closest first (inside bottom sheet)
+ * • Bottom sheet  – slide-up drawer with swipe-to-close on mobile
+ * • Full bio overlay  – all public fields, responsive layout
+ * • Responsive  – mobile portrait/landscape, tablet portrait/landscape
  * • hide_on_map  – participants who opted out are skipped
  */
 
@@ -17,15 +18,27 @@ import React, {
   useMemo,
   useState,
   useCallback,
+  TouchEvent,
 } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Participant } from '../types';
 import { getCoords } from '../geo-utils';
 import { haversineKm, formatDistance } from '../haversine';
-import { X, MapPin, Navigation } from 'lucide-react';
+import {
+  X,
+  MapPin,
+  Navigation,
+  Building2,
+  Globe,
+  Phone,
+  Mail,
+  Link,
+  Languages,
+  ChevronDown,
+} from 'lucide-react';
 
-// ─── Fix Leaflet default icon paths (broken in Vite/webpack) ──────────────────
+// ─── Fix Leaflet default icon paths ───────────────────────────────────────────
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({ iconRetinaUrl: '', iconUrl: '', shadowUrl: '' });
 
@@ -33,7 +46,6 @@ L.Icon.Default.mergeOptions({ iconRetinaUrl: '', iconUrl: '', shadowUrl: '' });
 interface ParticipantMapProps {
   participants: Participant[];
   darkMode?: boolean;
-  /** Coordinates of the logged-in viewer for distance calculation */
   viewerCoords?: [number, number] | null;
 }
 
@@ -42,16 +54,14 @@ interface PinGroup {
   lng: number;
   city: string;
   country: string;
-  members: Participant[]; // already enriched with distanceKm
+  members: Participant[];
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const BRAND_BLUE = '#1b52a9';
-const CLUSTER_OVERLAP = 10; // px offset per stacked avatar
+const CLUSTER_OVERLAP = 10;
 
-// ─── Photo pin helpers ────────────────────────────────────────────────────────
-
-/** Build a data-URL avatar circle HTML for a single participant */
+// ─── Avatar helpers ───────────────────────────────────────────────────────────
 function buildAvatarHtml(
   p: Participant,
   size: number,
@@ -87,75 +97,55 @@ function buildAvatarHtml(
     ">${inner}</div>`;
 }
 
-/** Build a city label below the cluster */
 function buildCityLabel(city: string, darkMode: boolean): string {
   const bg = darkMode ? 'rgba(18,24,41,0.82)' : 'rgba(255,255,255,0.88)';
   const color = darkMode ? '#f8fafc' : BRAND_BLUE;
   return `
     <div style="
       position:absolute;
-      bottom:-22px;
-      left:50%;
+      bottom:-22px;left:50%;
       transform:translateX(-50%);
       white-space:nowrap;
       background:${bg};
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
+      backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
       color:${color};
       font-size:9px;font-weight:700;
       font-family:system-ui,sans-serif;
-      letter-spacing:0.08em;
-      text-transform:uppercase;
-      padding:2px 7px;
-      border-radius:20px;
+      letter-spacing:0.08em;text-transform:uppercase;
+      padding:2px 7px;border-radius:20px;
       border:1px solid rgba(27,82,169,0.15);
       box-shadow:0 2px 8px rgba(27,82,169,0.12);
       pointer-events:none;
     ">${city}</div>`;
 }
 
-/** Build a count badge for clusters > 3 */
 function buildCountBadge(count: number): string {
   return `
     <div style="
-      position:absolute;
-      top:-5px;right:-5px;
-      width:18px;height:18px;
-      border-radius:50%;
-      background:#ff3b30;
-      border:2px solid white;
-      color:white;
-      font-size:8px;font-weight:800;
-      font-family:system-ui,sans-serif;
+      position:absolute;top:-5px;right:-5px;
+      width:18px;height:18px;border-radius:50%;
+      background:#ff3b30;border:2px solid white;color:white;
+      font-size:8px;font-weight:800;font-family:system-ui,sans-serif;
       display:flex;align-items:center;justify-content:center;
-      z-index:99;
-      box-shadow:0 1px 4px rgba(0,0,0,0.3);
+      z-index:99;box-shadow:0 1px 4px rgba(0,0,0,0.3);
     ">${count > 9 ? '9+' : count}</div>`;
 }
 
-/** Full DivIcon for a group — stacks up to 3 avatars */
 function buildGroupIcon(group: PinGroup, darkMode: boolean): L.DivIcon {
   const members = group.members;
-  const AVATAR = 44; // px diameter
+  const AVATAR = 44;
   const maxShow = Math.min(members.length, 3);
   const totalW = AVATAR + (maxShow - 1) * CLUSTER_OVERLAP;
-  const totalH = AVATAR + 24; // + label height
+  const totalH = AVATAR + 24;
 
   let avatarsHtml = '';
   for (let i = 0; i < maxShow; i++) {
-    const zIndex = maxShow - i;
-    const offsetX = i * CLUSTER_OVERLAP;
-    avatarsHtml += buildAvatarHtml(members[i], AVATAR, zIndex, offsetX);
+    avatarsHtml += buildAvatarHtml(members[i], AVATAR, maxShow - i, i * CLUSTER_OVERLAP);
   }
   const countBadge = members.length > 1 ? buildCountBadge(members.length) : '';
   const cityLabel = buildCityLabel(group.city, darkMode);
 
-  const html = `
-    <div style="position:relative;width:${totalW}px;height:${totalH}px;">
-      ${avatarsHtml}
-      ${countBadge}
-      ${cityLabel}
-    </div>`;
+  const html = `<div style="position:relative;width:${totalW}px;height:${totalH}px;">${avatarsHtml}${countBadge}${cityLabel}</div>`;
 
   return L.divIcon({
     html,
@@ -166,21 +156,7 @@ function buildGroupIcon(group: PinGroup, darkMode: boolean): L.DivIcon {
   });
 }
 
-// ─── Global popup style injection ────────────────────────────────────────────
-function injectPopupStyle(darkMode: boolean) {
-  const styleId = 'els-popup-dynamic-styles';
-  let el = document.getElementById(styleId);
-  if (!el) {
-    el = document.createElement('style');
-    el.id = styleId;
-    document.head.appendChild(el);
-  }
-  el.textContent = darkMode
-    ? `.els-popup .leaflet-popup-content-wrapper{background:rgba(18,24,41,0.9)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;color:#f8fafc!important;border-radius:20px!important;border:1px solid rgba(255,255,255,0.1)!important;box-shadow:0 10px 40px rgba(0,0,0,0.4)!important;padding:0!important}.els-popup .leaflet-popup-content{margin:12px!important}.els-popup .leaflet-popup-tip-container{display:none!important}.els-popup .leaflet-popup-close-button{color:#94a3b8!important;top:8px!important;right:10px!important;font-size:18px!important}`
-    : `.els-popup .leaflet-popup-content-wrapper{background:rgba(255,255,255,0.92)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;color:${BRAND_BLUE}!important;border-radius:20px!important;border:1px solid rgba(27,82,169,0.1)!important;box-shadow:0 10px 30px rgba(27,82,169,0.1)!important;padding:0!important}.els-popup .leaflet-popup-content{margin:12px!important}.els-popup .leaflet-popup-tip-container{display:none!important}.els-popup .leaflet-popup-close-button{color:#1b52a9!important;top:8px!important;right:10px!important;font-size:18px!important}`;
-}
-
-// ─── Bottom Sheet ─────────────────────────────────────────────────────────────
+// ─── Bottom Sheet (with swipe-to-close) ──────────────────────────────────────
 interface BottomSheetProps {
   group: PinGroup | null;
   onClose: () => void;
@@ -194,38 +170,74 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   onSelectParticipant,
   darkMode,
 }) => {
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const dragStartY = useRef<number>(0);
+  const dragCurrentY = useRef<number>(0);
+
+  // Swipe-to-close
+  const onTouchStart = (e: TouchEvent) => {
+    dragStartY.current = e.touches[0].clientY;
+    dragCurrentY.current = e.touches[0].clientY;
+  };
+  const onTouchMove = (e: TouchEvent) => {
+    dragCurrentY.current = e.touches[0].clientY;
+    const delta = dragCurrentY.current - dragStartY.current;
+    if (delta > 0 && sheetRef.current) {
+      sheetRef.current.style.transform = `translateY(${delta}px)`;
+    }
+  };
+  const onTouchEnd = () => {
+    const delta = dragCurrentY.current - dragStartY.current;
+    if (sheetRef.current) {
+      sheetRef.current.style.transform = '';
+    }
+    if (delta > 80) onClose();
+  };
+
   if (!group) return null;
 
   const bg = darkMode
-    ? 'bg-[#121829]/95 border-white/10'
-    : 'bg-white/95 border-[#1552ab]/10';
+    ? 'bg-[#121829]/97 border-white/10'
+    : 'bg-white/97 border-[#1552ab]/10';
   const textPrimary = darkMode ? 'text-white' : 'text-[#1552ab]';
   const textSub = darkMode ? 'text-white/50' : 'text-[#1552ab]/50';
+  const cardBg = darkMode
+    ? 'bg-white/5 hover:bg-white/10 active:bg-white/15'
+    : 'bg-[#1552ab]/4 hover:bg-[#1552ab]/8 active:bg-[#1552ab]/12';
 
-  // Sort by distance
   const sorted = [...group.members].sort(
     (a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity)
   );
 
   return (
     <div
+      ref={sheetRef}
       className={`
         absolute bottom-0 left-0 right-0 z-[1001]
-        ${bg} border-t backdrop-blur-xl
-        rounded-t-3xl shadow-2xl
-        animate-slide-up
-        max-h-[60%] flex flex-col
+        ${bg} border-t backdrop-blur-2xl
+        rounded-t-[28px] shadow-2xl
+        els-slide-up
+        flex flex-col
+        transition-transform duration-200
+        max-h-[55%] landscape:max-h-[70%] sm:max-h-[45%] md:max-h-[40%]
       `}
-      style={{ fontFamily: 'system-ui, sans-serif' }}
     >
-      {/* Handle + header */}
-      <div className="flex-shrink-0 px-5 pt-3 pb-4">
-        <div className="mx-auto w-10 h-1 rounded-full bg-current opacity-20 mb-4" />
+      {/* Drag handle area */}
+      <div
+        className="flex-shrink-0 flex flex-col items-center pt-3 pb-1 cursor-grab active:cursor-grabbing select-none touch-none"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        <div className="w-10 h-1 rounded-full bg-current opacity-20" />
+      </div>
+
+      {/* Header */}
+      <div className="flex-shrink-0 px-5 pt-1 pb-3">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className={`font-bold text-base ${textPrimary}`}>
-              {group.city}
-              {group.country ? `, ${group.country}` : ''}
+            <h3 className={`font-bold text-base leading-tight ${textPrimary}`}>
+              {group.city}{group.country ? `, ${group.country}` : ''}
             </h3>
             <p className={`text-xs mt-0.5 ${textSub}`}>
               {group.members.length} participant{group.members.length !== 1 ? 's' : ''}
@@ -233,7 +245,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
           </div>
           <button
             onClick={onClose}
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 ${
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 ${
               darkMode ? 'bg-white/10 text-white' : 'bg-[#1552ab]/8 text-[#1552ab]'
             }`}
             aria-label="Close"
@@ -244,26 +256,17 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
       </div>
 
       {/* Participant list */}
-      <div className="overflow-y-auto px-5 pb-6 space-y-3 flex-1">
+      <div className="overflow-y-auto px-5 pb-6 space-y-2.5 flex-1">
         {sorted.map((p) => {
           const name = p.name || p.registered_name || '—';
-          const hasPhoto = Boolean(p.photo_url);
-          const initials = name
-            .split(' ')
-            .map((w) => w[0])
-            .slice(0, 2)
-            .join('')
-            .toUpperCase();
+          const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+          const roles = p.role_tags?.length ? p.role_tags : p.role ? [p.role] : [];
 
           return (
             <button
               key={p.id}
               onClick={() => onSelectParticipant(p)}
-              className={`w-full flex items-center gap-3 p-3 rounded-2xl transition-all text-left active:scale-[0.97] ${
-                darkMode
-                  ? 'bg-white/5 hover:bg-white/10'
-                  : 'bg-[#1552ab]/4 hover:bg-[#1552ab]/8'
-              }`}
+              className={`w-full flex items-center gap-3 p-3 rounded-2xl transition-all text-left ${cardBg}`}
             >
               {/* Avatar */}
               <div
@@ -274,12 +277,8 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
                   boxShadow: '0 2px 10px rgba(27,82,169,0.3)',
                 }}
               >
-                {hasPhoto ? (
-                  <img
-                    src={p.photo_url!}
-                    alt={name}
-                    className="w-full h-full object-cover"
-                  />
+                {p.photo_url ? (
+                  <img src={p.photo_url} alt={name} className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-white font-bold text-sm">{initials}</span>
                 )}
@@ -288,8 +287,15 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <p className={`font-bold text-sm truncate ${textPrimary}`}>{name}</p>
-                {p.role && (
-                  <p className={`text-xs truncate ${textSub}`}>{p.role}</p>
+                {roles.length > 0 && (
+                  <p className={`text-xs truncate mt-0.5 ${textSub}`}>
+                    {roles.slice(0, 2).join(' · ')}
+                  </p>
+                )}
+                {p.organization && (
+                  <p className={`text-[10px] truncate mt-0.5 ${textSub} opacity-70`}>
+                    {p.organization}
+                  </p>
                 )}
               </div>
 
@@ -314,6 +320,273 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   );
 };
 
+// ─── Bio Overlay (full profile) ───────────────────────────────────────────────
+interface BioOverlayProps {
+  participant: Participant | null;
+  onClose: () => void;
+  darkMode: boolean;
+}
+
+const BioOverlay: React.FC<BioOverlayProps> = ({ participant: p, onClose, darkMode }) => {
+  if (!p) return null;
+
+  const name = p.name || p.registered_name || '—';
+  const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+  const roles = p.role_tags?.length ? p.role_tags : p.role ? [p.role] : [];
+
+  const locationParts = [p.city, p.state, p.country].filter(Boolean);
+  const hasContact = p.public_phone || p.public_email || p.public_website || p.public_other;
+  const hasSocial = p.social_media && p.social_media.length > 0;
+
+  const textPrimary = darkMode ? 'text-white' : 'text-[#1552ab]';
+  const textSub = darkMode ? 'text-white/60' : 'text-[#1552ab]/60';
+  const textMuted = darkMode ? 'text-white/40' : 'text-[#1552ab]/40';
+  const divider = darkMode ? 'border-white/8' : 'border-[#1552ab]/8';
+  const chipBg = darkMode ? 'bg-white/10 text-white/90' : 'bg-[#1552ab]/8 text-[#1552ab]';
+  const chipBgAccent = darkMode ? 'bg-blue-500/20 text-blue-300' : 'bg-[#1552ab]/12 text-[#1552ab]';
+
+  // Label helper
+  const SectionLabel = ({ label }: { label: string }) => (
+    <p className={`text-[10px] font-bold uppercase tracking-widest ${textMuted} mb-1.5`}>
+      {label}
+    </p>
+  );
+
+  return (
+    <div
+      className={`
+        absolute inset-0 z-[1002] flex flex-col
+        ${darkMode ? 'bg-[#0d1220]/98' : 'bg-[#f7f8fc]/98'}
+        backdrop-blur-2xl overflow-hidden
+        els-fade-in
+      `}
+    >
+      {/* Sticky header */}
+      <div
+        className={`flex-shrink-0 flex items-center gap-3 px-4 py-3 border-b ${divider} backdrop-blur-xl
+          ${darkMode ? 'bg-[#0d1220]/90' : 'bg-[#f7f8fc]/90'}
+          sm:px-6
+        `}
+      >
+        <button
+          onClick={onClose}
+          className={`w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 flex-shrink-0 ${
+            darkMode ? 'bg-white/10 text-white' : 'bg-[#1552ab]/8 text-[#1552ab]'
+          }`}
+          aria-label="Close profile"
+        >
+          <X size={16} />
+        </button>
+        <span className={`text-xs font-bold uppercase tracking-widest ${textMuted}`}>
+          Participant Profile
+        </span>
+      </div>
+
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Promo / cover image */}
+        {p.promotional_picture_url && (
+          <div className="w-full h-36 sm:h-48 overflow-hidden flex-shrink-0">
+            <img
+              src={p.promotional_picture_url}
+              alt="Organization banner"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+
+        {/* Hero section */}
+        <div className="px-5 pt-5 pb-4 sm:px-8 sm:pt-6">
+          {/* Portrait layout on mobile, row on tablet */}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:gap-6">
+            {/* Photo */}
+            <div
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center mx-auto sm:mx-0 mb-4 sm:mb-0"
+              style={{
+                background: BRAND_BLUE,
+                border: `3px solid ${darkMode ? 'rgba(255,255,255,0.25)' : 'rgba(27,82,169,0.2)'}`,
+                boxShadow: '0 6px 24px rgba(27,82,169,0.25)',
+              }}
+            >
+              {p.photo_url ? (
+                <img src={p.photo_url} alt={name} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-white font-bold text-3xl sm:text-4xl">{initials}</span>
+              )}
+            </div>
+
+            {/* Name + meta */}
+            <div className="text-center sm:text-left flex-1">
+              <h2 className={`font-bold text-2xl sm:text-3xl leading-tight ${textPrimary}`}>
+                {name}
+              </h2>
+
+              {/* Role tags */}
+              {roles.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-2 justify-center sm:justify-start">
+                  {roles.map((r, i) => (
+                    <span key={i} className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${chipBgAccent}`}>
+                      {r}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Location */}
+              {locationParts.length > 0 && (
+                <div className={`flex items-center gap-1.5 mt-2 text-sm ${textSub} justify-center sm:justify-start`}>
+                  <MapPin size={13} className="flex-shrink-0" />
+                  <span>{locationParts.join(', ')}</span>
+                </div>
+              )}
+
+              {/* Nationality */}
+              {p.nationality && (
+                <p className={`text-xs mt-1 ${textMuted}`}>
+                  🌍 {p.nationality}
+                </p>
+              )}
+
+              {/* Distance */}
+              {p.distanceKm !== undefined && (
+                <div className={`inline-flex items-center gap-1 mt-2 text-[10px] font-bold uppercase tracking-wide ${
+                  darkMode ? 'text-blue-300/80' : 'text-[#1552ab]/50'
+                }`}>
+                  <Navigation size={9} />
+                  {formatDistance(p.distanceKm)} de você
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Sections */}
+        <div className="px-5 sm:px-8 pb-10 space-y-5">
+
+          {/* Short bio */}
+          {p.short_bio && (
+            <div className={`border-t ${divider} pt-4`}>
+              <SectionLabel label="Bio" />
+              <p className={`text-sm leading-relaxed ${textSub}`}>{p.short_bio}</p>
+            </div>
+          )}
+
+          {/* Organization */}
+          {(p.organization || p.org_description) && (
+            <div className={`border-t ${divider} pt-4`}>
+              <SectionLabel label="Organization" />
+              {p.organization && (
+                <div className={`flex items-center gap-2 font-semibold text-sm ${textPrimary} mb-1`}>
+                  <Building2 size={14} className="flex-shrink-0 opacity-60" />
+                  {p.organization}
+                </div>
+              )}
+              {p.org_description && (
+                <p className={`text-sm leading-relaxed ${textSub} mt-1`}>{p.org_description}</p>
+              )}
+            </div>
+          )}
+
+          {/* Areas of interest */}
+          {p.areas_of_interest?.length ? (
+            <div className={`border-t ${divider} pt-4`}>
+              <SectionLabel label="Areas of Interest" />
+              <div className="flex flex-wrap gap-2">
+                {p.areas_of_interest.map((area) => (
+                  <span key={area} className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${chipBg}`}>
+                    {area}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {/* Languages */}
+          {p.languages_spoken?.length ? (
+            <div className={`border-t ${divider} pt-4`}>
+              <SectionLabel label="Languages" />
+              <div className={`flex items-center gap-2 ${textSub}`}>
+                <Languages size={13} className="flex-shrink-0 opacity-60" />
+                <span className="text-sm">{p.languages_spoken.join(', ')}</span>
+              </div>
+            </div>
+          ) : null}
+
+          {/* Contact */}
+          {hasContact && (
+            <div className={`border-t ${divider} pt-4`}>
+              <SectionLabel label="Contact" />
+              <div className="space-y-2.5">
+                {p.public_phone && (
+                  <a
+                    href={`tel:${p.public_phone}`}
+                    className={`flex items-center gap-3 text-sm ${textSub} hover:opacity-80 active:opacity-60 transition-opacity`}
+                  >
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${chipBg}`}>
+                      <Phone size={13} />
+                    </div>
+                    <span>{p.public_phone}</span>
+                  </a>
+                )}
+                {p.public_email && (
+                  <a
+                    href={`mailto:${p.public_email}`}
+                    className={`flex items-center gap-3 text-sm ${darkMode ? 'text-blue-300' : 'text-[#1552ab]'} hover:opacity-80 active:opacity-60 transition-opacity`}
+                  >
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${chipBg}`}>
+                      <Mail size={13} />
+                    </div>
+                    <span className="truncate">{p.public_email}</span>
+                  </a>
+                )}
+                {p.public_website && (
+                  <a
+                    href={p.public_website.startsWith('http') ? p.public_website : `https://${p.public_website}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`flex items-center gap-3 text-sm ${darkMode ? 'text-blue-300' : 'text-[#1552ab]'} hover:opacity-80 active:opacity-60 transition-opacity`}
+                  >
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${chipBg}`}>
+                      <Globe size={13} />
+                    </div>
+                    <span className="truncate">{p.public_website.replace(/^https?:\/\//, '')}</span>
+                  </a>
+                )}
+                {p.public_other && (
+                  <div className={`flex items-center gap-3 text-sm ${textSub}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${chipBg}`}>
+                      <Link size={13} />
+                    </div>
+                    <span className="truncate">{p.public_other}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Social media */}
+          {hasSocial && (
+            <div className={`border-t ${divider} pt-4`}>
+              <SectionLabel label="Social Media" />
+              <div className="space-y-2">
+                {p.social_media!.map((s, i) => (
+                  <div key={i} className={`flex items-center gap-2 text-sm ${textSub}`}>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${chipBg}`}>
+                      {s.platform}
+                    </span>
+                    <span className="truncate">{s.handle}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 const ParticipantMap: React.FC<ParticipantMapProps> = ({
   participants,
@@ -328,27 +601,18 @@ const ParticipantMap: React.FC<ParticipantMapProps> = ({
   const [activeGroup, setActiveGroup] = useState<PinGroup | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<Participant | null>(null);
 
-  // ── Compute groups + distances ───────────────────────────────────────────────
+  // ── Groups + distances ───────────────────────────────────────────────────────
   const groups = useMemo<PinGroup[]>(() => {
-    injectPopupStyle(darkMode);
-
     const completed = participants.filter(
       (p) => p.status === 'completed' && !p.hide_on_map
     );
-
-    // Enrich with distanceKm
     const enriched: Participant[] = completed.map((p) => {
       if (!viewerCoords) return p;
       const coords = getCoords((p.city || '').trim(), (p.country || '').trim());
       if (!coords) return p;
       return {
         ...p,
-        distanceKm: haversineKm(
-          viewerCoords[0],
-          viewerCoords[1],
-          coords[0],
-          coords[1]
-        ),
+        distanceKm: haversineKm(viewerCoords[0], viewerCoords[1], coords[0], coords[1]),
       };
     });
 
@@ -358,41 +622,29 @@ const ParticipantMap: React.FC<ParticipantMapProps> = ({
       const country = (p.country || '').trim();
       const coords = getCoords(city, country);
       if (!coords) continue;
-
       const key = `${coords[0]},${coords[1]}`;
       if (byKey.has(key)) {
         byKey.get(key)!.members.push(p);
       } else {
-        byKey.set(key, {
-          lat: coords[0],
-          lng: coords[1],
-          city,
-          country,
-          members: [p],
-        });
+        byKey.set(key, { lat: coords[0], lng: coords[1], city, country, members: [p] });
       }
     }
 
-    // Sort members in each group by distance
     for (const g of byKey.values()) {
-      g.members.sort(
-        (a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity)
-      );
+      g.members.sort((a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity));
     }
 
     return Array.from(byKey.values());
-  }, [participants, darkMode, viewerCoords]);
+  }, [participants, viewerCoords]);
 
   // Stats
   const stats = useMemo(() => {
-    const completed = participants.filter(
-      (p) => p.status === 'completed' && !p.hide_on_map
-    );
+    const completed = participants.filter((p) => p.status === 'completed' && !p.hide_on_map);
     const countries = new Set(completed.map((p) => p.country).filter(Boolean));
     return { leaders: completed.length, countries: countries.size };
   }, [participants]);
 
-  // ── Map initialization ───────────────────────────────────────────────────────
+  // ── Tile layer ───────────────────────────────────────────────────────────────
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
     const map = L.map(containerRef.current, {
@@ -403,13 +655,9 @@ const ParticipantMap: React.FC<ParticipantMapProps> = ({
     });
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     mapRef.current = map;
-    return () => {
-      map.remove();
-      mapRef.current = null;
-    };
+    return () => { map.remove(); mapRef.current = null; };
   }, []);
 
-  // ── Tile layer sync ──────────────────────────────────────────────────────────
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -417,14 +665,14 @@ const ParticipantMap: React.FC<ParticipantMapProps> = ({
     const tileUrl = darkMode
       ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
       : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-    const tileLayer = L.tileLayer(tileUrl, {
+    const layer = L.tileLayer(tileUrl, {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 19,
     });
-    tileLayer.addTo(map);
-    tileLayerRef.current = tileLayer;
+    layer.addTo(map);
+    tileLayerRef.current = layer;
   }, [darkMode]);
 
   // ── Markers ──────────────────────────────────────────────────────────────────
@@ -436,29 +684,21 @@ const ParticipantMap: React.FC<ParticipantMapProps> = ({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-
-    // Remove old markers
     markersRef.current.forEach((m) => map.removeLayer(m));
     markersRef.current = [];
-
     for (const group of groups) {
       const icon = buildGroupIcon(group, darkMode);
       const marker = L.marker([group.lat, group.lng], { icon });
-
       marker.on('click', () => {
-        // Pan map toward pin
         map.panTo([group.lat, group.lng], { animate: true, duration: 0.4 });
         handleGroupClick(group);
       });
-
       marker.addTo(map);
       markersRef.current.push(marker);
     }
   }, [groups, darkMode, handleGroupClick]);
 
-  // ── Handle profile open (delegated to parent via callback) ───────────────────
-  // We surface it via a local overlay — simple modal-over-map
-  const closeBottomSheet = () => {
+  const closeAll = () => {
     setActiveGroup(null);
     setSelectedProfile(null);
   };
@@ -468,206 +708,77 @@ const ParticipantMap: React.FC<ParticipantMapProps> = ({
       className="relative w-full rounded-2xl overflow-hidden border border-[#1552ab]/15 dark:border-white/10 shadow-card"
       style={{ fontFamily: 'system-ui, sans-serif' }}
     >
-      {/* Counter badge */}
+      {/* Stats badge */}
       <div
         className="absolute top-3 left-3 z-[1000] flex items-center gap-2
           bg-white/90 dark:bg-[#121829]/95 backdrop-blur border border-[#1552ab]/15 dark:border-white/15
-          rounded-full px-4 py-2 shadow-sm"
+          rounded-full px-3 py-1.5 shadow-sm"
       >
         <MapPin size={11} className="text-[#1b52a9] dark:text-white opacity-70" />
-        <span className="text-[11px] font-bold text-[#1b52a9] dark:text-white uppercase tracking-wider">
+        <span className="text-[10px] font-bold text-[#1b52a9] dark:text-white uppercase tracking-wider">
           {stats.leaders} leader{stats.leaders !== 1 ? 's' : ''}
         </span>
         <span className="text-[#1552ab]/30 dark:text-white/30">·</span>
-        <span className="text-[11px] font-bold text-[#1b52a9] dark:text-white uppercase tracking-wider">
+        <span className="text-[10px] font-bold text-[#1b52a9] dark:text-white uppercase tracking-wider">
           {stats.countries} countr{stats.countries !== 1 ? 'ies' : 'y'}
         </span>
       </div>
 
-      {/* Map container */}
+      {/* Map container — responsive height */}
       <div
         ref={containerRef}
-        style={{ height: 'clamp(340px, 44vw, 520px)', width: '100%' }}
+        className="w-full"
+        style={{
+          height: 'clamp(300px, 50vw, 520px)',
+        }}
       />
 
       {/* Empty state */}
       {groups.length === 0 && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#efefef]/80 dark:bg-[#0a0f1d]/85 backdrop-blur-sm z-[999] pointer-events-none">
+          <MapPin size={28} className="text-[#1552ab]/30 dark:text-white/30 mb-3" />
           <p className="text-sm text-[#1552ab]/60 dark:text-white/60 font-bold uppercase tracking-widest text-center px-8">
             No mapped participants yet.
-            <br />
-            <span className="font-normal text-[11px] normal-case tracking-normal mt-1 block">
-              Participants appear here once they complete their bio with a city.
-            </span>
+          </p>
+          <p className="text-[11px] text-[#1552ab]/40 dark:text-white/40 mt-1 text-center px-8">
+            Participants appear here once they complete their bio with a city.
           </p>
         </div>
       )}
 
       {/* Bottom Sheet */}
-      <BottomSheet
-        group={activeGroup}
-        onClose={closeBottomSheet}
-        onSelectParticipant={(p) => setSelectedProfile(p)}
+      {!selectedProfile && (
+        <BottomSheet
+          group={activeGroup}
+          onClose={closeAll}
+          onSelectParticipant={(p) => setSelectedProfile(p)}
+          darkMode={darkMode}
+        />
+      )}
+
+      {/* Full Bio Overlay */}
+      <BioOverlay
+        participant={selectedProfile}
+        onClose={() => setSelectedProfile(null)}
         darkMode={darkMode}
       />
 
-      {/* Participant Bio overlay (when user taps an avatar in the bottom sheet) */}
-      {selectedProfile && (
-        <div
-          className="absolute inset-0 z-[1002] flex flex-col bg-white/95 dark:bg-[#121829]/98 backdrop-blur-xl overflow-y-auto"
-          style={{ fontFamily: 'system-ui, sans-serif' }}
-        >
-          {/* Header bar */}
-          <div className="flex items-center gap-3 px-5 py-4 border-b border-[#1552ab]/8 dark:border-white/8 flex-shrink-0">
-            <button
-              onClick={() => setSelectedProfile(null)}
-              className="w-9 h-9 rounded-full bg-[#1552ab]/8 dark:bg-white/10 flex items-center justify-center text-[#1552ab] dark:text-white hover:scale-110 transition-transform"
-            >
-              <X size={16} />
-            </button>
-            <span className="text-xs font-bold uppercase tracking-widest text-[#1552ab]/50 dark:text-white/50">
-              Participant Profile
-            </span>
-          </div>
-
-          {/* Profile content */}
-          <div className="flex-1 p-6 space-y-5">
-            {/* Photo + name */}
-            <div className="flex items-center gap-4">
-              <div
-                className="w-20 h-20 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center"
-                style={{
-                  background: BRAND_BLUE,
-                  border: '3px solid rgba(255,255,255,0.6)',
-                  boxShadow: '0 4px 20px rgba(27,82,169,0.3)',
-                }}
-              >
-                {selectedProfile.photo_url ? (
-                  <img
-                    src={selectedProfile.photo_url}
-                    alt={selectedProfile.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-white font-bold text-2xl">
-                    {(selectedProfile.name || selectedProfile.registered_name || '?')
-                      .split(' ')
-                      .map((w) => w[0])
-                      .slice(0, 2)
-                      .join('')
-                      .toUpperCase()}
-                  </span>
-                )}
-              </div>
-              <div>
-                <h2 className="font-bold text-xl text-[#1552ab] dark:text-white leading-tight">
-                  {selectedProfile.name || selectedProfile.registered_name || '—'}
-                </h2>
-                {selectedProfile.role && (
-                  <p className="text-sm text-[#1552ab]/60 dark:text-white/60 mt-1">
-                    {selectedProfile.role}
-                  </p>
-                )}
-                {selectedProfile.distanceKm !== undefined && (
-                  <div className="flex items-center gap-1 mt-2 text-[10px] font-bold uppercase tracking-wide text-[#1552ab]/50 dark:text-blue-300/70">
-                    <Navigation size={9} />
-                    {formatDistance(selectedProfile.distanceKm)} de você
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Location */}
-            {(selectedProfile.city || selectedProfile.country) && (
-              <div className="flex items-center gap-2 text-sm text-[#1552ab]/70 dark:text-white/70">
-                <MapPin size={14} />
-                {[selectedProfile.city, selectedProfile.country]
-                  .filter(Boolean)
-                  .join(', ')}
-              </div>
-            )}
-
-            {/* Organization */}
-            {selectedProfile.organization && (
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#1552ab]/40 dark:text-white/40 mb-1">
-                  Organization
-                </p>
-                <p className="text-sm font-medium text-[#1552ab] dark:text-white">
-                  {selectedProfile.organization}
-                </p>
-              </div>
-            )}
-
-            {/* Short bio */}
-            {selectedProfile.short_bio && (
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#1552ab]/40 dark:text-white/40 mb-1">
-                  Bio
-                </p>
-                <p className="text-sm text-[#1552ab]/80 dark:text-white/80 leading-relaxed">
-                  {selectedProfile.short_bio}
-                </p>
-              </div>
-            )}
-
-            {/* Areas of interest */}
-            {selectedProfile.areas_of_interest?.length ? (
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#1552ab]/40 dark:text-white/40 mb-2">
-                  Areas of Interest
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProfile.areas_of_interest.map((area) => (
-                    <span
-                      key={area}
-                      className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[#1552ab]/8 text-[#1552ab] dark:bg-white/10 dark:text-white"
-                    >
-                      {area}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
-            {/* Contact */}
-            {(selectedProfile.public_email || selectedProfile.public_website) && (
-              <div className="space-y-2">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#1552ab]/40 dark:text-white/40 mb-1">
-                  Contact
-                </p>
-                {selectedProfile.public_email && (
-                  <a
-                    href={`mailto:${selectedProfile.public_email}`}
-                    className="block text-sm text-[#1552ab] dark:text-blue-300 underline underline-offset-2"
-                  >
-                    {selectedProfile.public_email}
-                  </a>
-                )}
-                {selectedProfile.public_website && (
-                  <a
-                    href={selectedProfile.public_website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block text-sm text-[#1552ab] dark:text-blue-300 underline underline-offset-2 truncate"
-                  >
-                    {selectedProfile.public_website}
-                  </a>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* CSS for slide-up animation */}
+      {/* Animations */}
       <style>{`
-        @keyframes slideUp {
+        @keyframes elsSlideUp {
           from { transform: translateY(100%); opacity: 0; }
           to   { transform: translateY(0);   opacity: 1; }
         }
-        .animate-slide-up {
-          animation: slideUp 0.32s cubic-bezier(0.32, 0.72, 0, 1) both;
+        .els-slide-up { animation: elsSlideUp 0.32s cubic-bezier(0.32, 0.72, 0, 1) both; }
+
+        @keyframes elsFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        .els-fade-in { animation: elsFadeIn 0.2s ease both; }
+
+        @media (orientation: landscape) and (max-width: 900px) {
+          .els-map-container { height: clamp(220px, 38vh, 380px) !important; }
         }
       `}</style>
     </div>
