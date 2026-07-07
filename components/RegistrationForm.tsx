@@ -441,6 +441,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                   <label className={labelClass}>Resident Country</label>
                   <select
                     name="country"
+                    aria-label="Resident Country"
                     value={formData.country}
                     onChange={(e) => {
                       setFormData(prev => ({ ...prev, country: e.target.value, state: '', city: '' }));
@@ -458,6 +459,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                   <label className={labelClass}>State / Province / Region</label>
                   <select
                     name="state"
+                    aria-label="State / Province / Region"
                     value={formData.state}
                     onChange={(e) => {
                       setFormData(prev => ({ ...prev, state: e.target.value, city: '' }));
@@ -476,6 +478,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                   <label className={labelClass}>City</label>
                   <select
                     name="city"
+                    aria-label="City"
                     value={formData.city}
                     onChange={handleChange}
                     className={selectClass}
@@ -490,7 +493,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
 
                 <div className="space-y-1">
                   <label className={labelClass}>Nationality *</label>
-                  <select name="nationality" value={formData.nationality} onChange={handleChange} required className={selectClass}>
+                  <select name="nationality" aria-label="Nationality" value={formData.nationality} onChange={handleChange} required className={selectClass}>
                     <option value="">Select nationality</option>
                     {allCountries.map((c) => (
                       <option key={c.isoCode} value={c.name}>{c.flag} {c.name}</option>
@@ -567,7 +570,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
                       : <User className="text-[#1552ab]/20" size={28} />}
                     <label className="absolute inset-0 bg-[#1552ab]/10 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity">
                       <Camera className="text-[#1552ab]" size={16} />
-                      <input type="file" accept="image/jpeg,image/png" onChange={handleProfileFile} className="hidden" />
+                      <input type="file" accept="image/jpeg,image/png" onChange={handleProfileFile} className="hidden" aria-label="Upload profile photo" />
                     </label>
                   </div>
                   <div className="space-y-2">
@@ -673,6 +676,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ mode, token, initia
 
                   <div className="flex flex-col sm:flex-row gap-3">
                     <select
+                      aria-label="Select social media platform"
                       value={newPlatform}
                       onChange={(e) => setNewPlatform(e.target.value)}
                       className={`${selectClass} sm:w-1/3`}

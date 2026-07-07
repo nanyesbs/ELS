@@ -98,9 +98,8 @@ const LandingPage: React.FC = () => {
       <main className="relative flex-1 flex flex-col items-center justify-center px-6 py-16 text-center">
         {/* Background radial gradient */}
         <div
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 bg-hero-gradient"
           aria-hidden="true"
-          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(21,82,171,0.07) 0%, transparent 70%)' }}
         />
         {/* Decorative rings */}
         <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-[#1552ab]/5" aria-hidden="true" />
@@ -414,7 +413,7 @@ const TokenPage: React.FC = () => {
  />
  </div>
  <div className="flex items-center justify-end gap-2 h-full px-2">
- <button onClick={loadDirectory} className="p-3 text-[#1552ab]/60 hover:text-[#1552ab] hover:bg-black/5 rounded-xl transition-all">
+ <button onClick={loadDirectory} aria-label="Refresh directory" title="Refresh" className="p-3 text-[#1552ab]/60 hover:text-[#1552ab] hover:bg-black/5 rounded-xl transition-all">
  <RefreshCcw size={18} />
  </button>
  <div className="w-px h-8 bg-white bg-[#efefef]/10 mx-1 hidden sm:block" />

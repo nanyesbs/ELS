@@ -6,12 +6,8 @@ const Header: React.FC = () => {
 
       {/* Subtle radial gradient decoration */}
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 bg-header-gradient"
         aria-hidden="true"
-        style={{
-          background:
-            'radial-gradient(ellipse 70% 60% at 50% -10%, rgba(21,82,171,0.08) 0%, transparent 70%)',
-        }}
       />
 
       {/* Decorative circle — top-right */}

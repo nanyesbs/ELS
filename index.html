@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <!-- PWA and Mobile Optimization -->
   <meta name="theme-color" content="#1552ab" media="(prefers-color-scheme: dark)" />
@@ -284,9 +284,9 @@
         font-size: 16px !important;
       }
 
-      /* Better scrolling on iOS */
+      /* Better touch interaction on iOS */
       * {
-        -webkit-overflow-scrolling: touch;
+        touch-action: manipulation;
       }
     }
 
@@ -301,6 +301,40 @@
     .custom-scrollbar {
       scrollbar-width: thin;
       scrollbar-color: var(--brand-heaven-gold) transparent;
+    }
+    /* ── Utility classes replacing inline styles ── */
+
+    /* Decorative radial gradients (App.tsx hero + Header.tsx) */
+    .bg-hero-gradient {
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(21,82,171,0.07) 0%, transparent 70%);
+    }
+    .bg-header-gradient {
+      background: radial-gradient(ellipse 70% 60% at 50% -10%, rgba(21,82,171,0.08) 0%, transparent 70%);
+    }
+
+    /* Map avatar pill (ParticipantMap bottom-sheet list) */
+    .map-avatar-pin {
+      background: #1552ab;
+      border: 2px solid rgba(255,255,255,0.4);
+      box-shadow: 0 2px 10px rgba(27,82,169,0.3);
+    }
+
+    /* Map profile photo ring */
+    .map-photo-ring {
+      background: #1552ab;
+      border: 3px solid rgba(27,82,169,0.2);
+      box-shadow: 0 6px 24px rgba(27,82,169,0.25);
+    }
+    .map-photo-ring--dark {
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    /* Map wrapper font + responsive height */
+    .font-system {
+      font-family: system-ui, sans-serif;
+    }
+    .map-container-height {
+      height: clamp(300px, 50vw, 520px);
     }
   </style>
 

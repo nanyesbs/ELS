@@ -277,12 +277,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
             >
               {/* Avatar */}
               <div
-                className="w-12 h-12 rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center"
-                style={{
-                  background: BRAND_BLUE,
-                  border: '2px solid rgba(255,255,255,0.4)',
-                  boxShadow: '0 2px 10px rgba(27,82,169,0.3)',
-                }}
+                className="map-avatar-pin w-12 h-12 rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center"
               >
                 {p.photo_url ? (
                   <img src={p.photo_url} alt={name} className="w-full h-full object-cover" />
@@ -436,12 +431,7 @@ const BioOverlay: React.FC<BioOverlayProps> = ({ participant: p, onClose, darkMo
           <div className="flex flex-col sm:flex-row sm:items-start sm:gap-6">
             {/* Photo */}
             <div
-              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center mx-auto sm:mx-0 mb-4 sm:mb-0"
-              style={{
-                background: BRAND_BLUE,
-                border: `3px solid ${darkMode ? 'rgba(255,255,255,0.25)' : 'rgba(27,82,169,0.2)'}`,
-                boxShadow: '0 6px 24px rgba(27,82,169,0.25)',
-              }}
+              className={`map-photo-ring w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center mx-auto sm:mx-0 mb-4 sm:mb-0 ${darkMode ? 'map-photo-ring--dark' : ''}`}
             >
               {p.photo_url ? (
                 <img src={p.photo_url} alt={name} className="w-full h-full object-cover" />
@@ -743,8 +733,7 @@ const ParticipantMap: React.FC<ParticipantMapProps> = ({
 
   return (
     <div
-      className="relative w-full rounded-2xl overflow-hidden border border-[#1552ab]/15 dark:border-white/10 shadow-card"
-      style={{ fontFamily: 'system-ui, sans-serif' }}
+      className="relative w-full rounded-2xl overflow-hidden border border-[#1552ab]/15 dark:border-white/10 shadow-card font-system"
     >
       {/* Stats badge */}
       <div
@@ -765,10 +754,7 @@ const ParticipantMap: React.FC<ParticipantMapProps> = ({
       {/* Map container — responsive height */}
       <div
         ref={containerRef}
-        className="w-full"
-        style={{
-          height: 'clamp(300px, 50vw, 520px)',
-        }}
+        className="w-full map-container-height"
       />
 
       {/* Empty state */}
